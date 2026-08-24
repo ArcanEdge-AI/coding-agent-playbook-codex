@@ -296,12 +296,17 @@ retire_legacy_manifest() {
 
 add_or_replace_playbook_section() {
   local target="$1"
-  local title="$2"
-  local body="$3"
+  local body="$2"
   local start_marker='<!-- coding-agent-playbook-codex:start -->'
   local end_marker='<!-- coding-agent-playbook-codex:end -->'
   local legacy_start_marker='<!-- codex-agent-playbook:start -->'
   local legacy_end_marker='<!-- codex-agent-playbook:end -->'
+
+  body="${body//$'\r\n'/$'\n'}"
+  body="${body//$'\r'/$'\n'}"
+  while [[ "$body" == *$'\n' ]]; do
+    body="${body%$'\n'}"
+  done
 
   if [[ -f "$target" ]]; then
     local current_start_count current_end_count current_start_line current_end_line current_line_ending
@@ -390,7 +395,7 @@ add_or_replace_playbook_section() {
         body="${body//$'\r\n'/$'\n'}"
         body="${body//$'\n'/$'\r\n'}"
       fi
-      section="$start_marker$newline# $title$newline$newline$body$newline$end_marker$newline"
+      section="$start_marker$newline$body$newline$end_marker$newline"
       temp="$(mktemp "${target}.coding-agent-playbook-codex.XXXXXX")"
       awk -v start="$active_start_marker" -v end="$active_end_marker" -v section="$section" -v newline="$newline" '
         {
@@ -425,7 +430,7 @@ add_or_replace_playbook_section() {
   backup_file "$target"
 
   if [[ "$DRY_RUN" == "1" ]]; then
-    say "[dry-run] Would append $title to $target"
+    say "[dry-run] Would append the Coding Agent Playbook — Codex Edition section to $target"
     return
   fi
 
@@ -447,7 +452,6 @@ add_or_replace_playbook_section() {
       printf '%s%s' "$newline" "$newline"
     fi
     printf '%s%s' "$start_marker" "$newline"
-    printf '# %s%s%s' "$title" "$newline" "$newline"
     printf '%s%s' "$body" "$newline"
     printf '%s%s' "$end_marker" "$newline"
   } >> "$target"
@@ -584,7 +588,7 @@ validate_install_manifest "$PREVIOUS_MANIFEST_PATH"
 
 if [[ "$MODE" == "full" ]]; then
   BODY="$(cat "$GLOBAL_INSTRUCTIONS")"
-  add_or_replace_playbook_section "$TARGET_AGENTS_MD" "Coding Agent Playbook — Codex Edition Global Instructions" "$BODY"
+  add_or_replace_playbook_section "$TARGET_AGENTS_MD" "$BODY"
 else
   remove_playbook_section "$TARGET_AGENTS_MD"
 fi

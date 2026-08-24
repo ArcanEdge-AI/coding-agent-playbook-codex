@@ -281,7 +281,7 @@ function Get-ExactMarkerMatches {
 }
 
 function AddOrReplace-PlaybookSection {
-  param([string]$Target, [string]$Title, [string]$Body)
+  param([string]$Target, [string]$Body)
 
   $StartMarker = "<!-- coding-agent-playbook-codex:start -->"
   $EndMarker = "<!-- coding-agent-playbook-codex:end -->"
@@ -290,7 +290,8 @@ function AddOrReplace-PlaybookSection {
   $Parent = Split-Path -Parent $Target
   $Newline = "`n"
   $NormalizedBody = ($Body -replace "`r`n", "`n") -replace "`r", "`n"
-  $Section = "$StartMarker$Newline# $Title$Newline$Newline$NormalizedBody$Newline$EndMarker"
+  $NormalizedBody = ($NormalizedBody -replace "`n+\z", "") + "`n"
+  $Section = "$StartMarker$Newline$NormalizedBody$EndMarker"
 
   if (Test-Path -LiteralPath $Target -PathType Leaf) {
     $Existing = Get-Content -LiteralPath $Target -Raw
@@ -298,7 +299,7 @@ function AddOrReplace-PlaybookSection {
     if ($Newline -eq "`r`n") {
       $NormalizedBody = $NormalizedBody -replace "`n", "`r`n"
     }
-    $Section = "$StartMarker$Newline# $Title$Newline$Newline$NormalizedBody$Newline$EndMarker"
+    $Section = "$StartMarker$Newline$NormalizedBody$EndMarker"
     $CurrentStarts = @(Get-ExactMarkerMatches $Existing $StartMarker)
     $CurrentEnds = @(Get-ExactMarkerMatches $Existing $EndMarker)
     $LegacyStarts = @(Get-ExactMarkerMatches $Existing $LegacyStartMarker)
@@ -346,7 +347,7 @@ function AddOrReplace-PlaybookSection {
   Backup-File $Target
 
   if ($DryRun) {
-    Write-Step "[dry-run] Would append $Title to $Target"
+    Write-Step "[dry-run] Would append the Coding Agent Playbook — Codex Edition section to $Target"
   } else {
     if (Test-Path -LiteralPath $Target -PathType Leaf) {
       Set-Content -LiteralPath $Target -Value ($Existing + $Newline + $Newline + $Section) -Encoding UTF8 -NoNewline
@@ -448,7 +449,7 @@ if ($Mode -eq "full" -and
 
 if ($Mode -eq "full") {
   $Body = Get-Content -LiteralPath $GlobalInstructions -Raw
-  AddOrReplace-PlaybookSection $TargetAgentsMd "Coding Agent Playbook — Codex Edition Global Instructions" $Body
+  AddOrReplace-PlaybookSection $TargetAgentsMd $Body
 } else {
   Remove-PlaybookSection $TargetAgentsMd
 }
