@@ -90,7 +90,7 @@ notes: >-
 - Keep the record current while the work remains active.
 - Use repository-relative paths whenever possible.
 - Keep `thread_title` aligned with the naming standard for newly created threads.
-- Keep task-created auxiliary worktree ownership, integration target, cleanup condition, and final disposition aligned with `references/worktrees.md`.
+- Keep task-created auxiliary worktree ownership, integration target, cleanup condition, and final disposition aligned with `$worktree-lifecycle`.
 - Do not create one worktree per agent. Only the owning root may create, adopt, repurpose, move, or remove an auxiliary worktree.
 - Before task completion, mark every task-created auxiliary `removed` with verification or `preserved` with its exact blocker and next action. Do not defer cleanup to scheduled automation.
 - Detect the repository's actual default branch instead of assuming `main` or `master`.

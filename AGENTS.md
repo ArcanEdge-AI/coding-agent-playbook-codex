@@ -1,12 +1,15 @@
 # Repository Coding Agent Instructions
 
-This repository is a public playbook for Codex custom instructions, reference documents, skills, and custom subagent definitions.
+This repository is a public Codex plugin for engineering workflow skills, with optional lean global instructions and personal custom subagent definitions.
 
 Repository-specific guidance overrides the global instructions where it is more specific.
 
 ## Repository Goals
 
 - Keep the playbook useful for many teams and codebases.
+- Keep the Codex plugin and repository marketplace manifests aligned with the current documented schemas.
+- Keep situational workflow detail in skill-owned references so the always-on global guidance stays small.
+- Keep each instruction or procedure in one canonical home.
 - Keep global guidance tool-agnostic and durable.
 - Keep repository-specific, machine-specific, and workflow-specific details out of global instructions.
 - Prefer concise, practical guidance over long theory.
@@ -25,6 +28,7 @@ Repository-specific guidance overrides the global instructions where it is more 
 - Do not copy configuration paths, file names, agent formats, model identifiers, or command vocabulary from another coding-agent environment into this repository.
 - Prefer terms like "safety", "access control", and "sensitive access material" when public documentation does not need product-specific terminology.
 - Keep templates reusable and clearly marked as templates.
+- Treat top-level `skills/` as the plugin payload; do not duplicate it under `.agents/skills`.
 - Keep generic behavioral policy aligned with the companion Claude Code playbook. When a difference is intentional, document the concrete harness capability that requires it instead of preserving unexplained drift.
 
 ## Validation
@@ -37,10 +41,12 @@ This repo is mostly Markdown and TOML. Before finalizing meaningful changes:
 - Confirm every bundled role has exactly one Terra profile and one Luna profile and that no profile exceeds the canonical tier declared by its filename and model field.
 - Confirm smaller-model profiles include clear stop and escalation conditions.
 - Confirm each `SKILL.md` has YAML frontmatter with `name` and `description`.
+- Confirm `.codex-plugin/plugin.json` and `.agents/plugins/marketplace.json` pass the current Codex plugin validator.
+- Confirm every required skill reference and asset is reachable from its owning `SKILL.md` and that no superseded top-level `references/` or `codex-prompts/` content remains.
 - Confirm links and paths in `README.md` match the repository tree.
 - Confirm install docs and scripts reference the current Codex agent files.
-- Confirm PowerShell and Bash installers default normal installs and updates to full mode, create a marked global section on first install, maintain the managed-file manifest, retire only unchanged formerly managed files, and preserve customized or unrelated files.
-- Confirm installer validation lists include `references/worktrees.md`, `references/templates/worktree-manifest.md`, and `skills/worktree-lifecycle/SKILL.md`.
+- Confirm PowerShell and Bash companion installers default normal installs and updates to full mode, create a marked global section on first install, install only custom-agent files in their current managed manifest, recognize legacy `references`, `skills`, and `agents` roots, retire only unchanged formerly managed files, and preserve customized or unrelated files.
+- Confirm support-only mode removes a valid current or legacy playbook-owned global section, preserves unrelated content, and fails closed on malformed markers.
 - Compare generic policy changes with the companion Claude Code playbook and either align them or record the concrete harness-specific reason for divergence.
 - Search the final diff for paths, schemas, model names, and commands that belong to another coding-agent environment; remove any accidental contamination before merging.
 

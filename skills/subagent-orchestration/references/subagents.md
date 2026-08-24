@@ -88,7 +88,7 @@ Start with the current workspace and an auxiliary-worktree budget of zero. Do no
 
 Only the root may raise the finite worktree budget, issue a worktree permit, create or adopt an auxiliary worktree, repurpose it, or remove it. Root may authorize one active auxiliary without additional approval; two or more require user approval for the exact count and reasons. Every child receives an exact workspace assignment. A descendant may report an isolation need but must not create, move, or remove a worktree. Retries reuse their compatible assigned workspace.
 
-Consult `references/worktrees.md` for creation, integration, cleanup, and preservation gates. Before task completion, the root must integrate and safely remove every task-created auxiliary worktree or preserve it with its exact owner, path, branch or HEAD, blocker, and next action. Do not defer task-owned cleanup to scheduled automation.
+Use `$worktree-lifecycle` for creation, integration, cleanup, and preservation gates. Before task completion, the root must integrate and safely remove every task-created auxiliary worktree or preserve it with its exact owner, path, branch or HEAD, blocker, and next action. Do not defer task-owned cleanup to scheduled automation.
 
 ## Independent Project Threads
 
@@ -96,7 +96,7 @@ Independent Codex project threads are not ordinary subagents. They may have sepa
 
 When multiple independent threads are already working on related project areas:
 
-- consult `references/multi-session-coordination.md`
+- use `$multi-session-coordination`
 - use the `multi-session-coordination` skill
 - identify shared ownership, dependencies, contracts, and integration risks before adding more parallel implementation work
 - do not treat one thread's summary as authoritative without checking primary evidence
@@ -112,7 +112,7 @@ Detect the project name and derive the concise description from the task instead
 
 ## Mandatory Model Routing
 
-Consult `references/model-routing.md` before spawning a subagent when it is available.
+Consult `model-routing.md` before spawning a subagent.
 
 - Explicitly select the custom profile or model for each delegated task when the environment permits it.
 - Use the smallest model and lowest reasoning effort likely to complete the bounded assignment reliably.

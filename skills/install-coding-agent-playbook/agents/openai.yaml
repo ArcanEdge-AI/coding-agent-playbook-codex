@@ -1,0 +1,4 @@
+interface:
+  display_name: "Install Coding Agent Playbook"
+  short_description: "Install optional global guidance and custom agents"
+  default_prompt: "Use $install-coding-agent-playbook to preview and install the optional companion configuration."

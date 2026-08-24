@@ -66,7 +66,7 @@ Before creating or adopting a task-local auxiliary worktree, record:
 | Cleanup condition | Evidence that will make removal safe. |
 | State | `proposed`, `active`, `integration-ready`, `cleanup-ready`, `removed`, or `preserved`. |
 
-Use `references/templates/worktree-manifest.md` when the ledger needs to persist across phases or sessions. A concise entry in the working plan is enough for a small task.
+Use `worktree-manifest.md` when the ledger needs to persist across phases or sessions. A concise entry in the working plan is enough for a small task.
 
 ## Creation Procedure
 

@@ -9,428 +9,199 @@
 </p>
 
 <p align="center">
-  An open-source engineering operating model for Codex: installable instructions, model-aware subagents, bounded delegation, independent review, and validation.
+  An open-source engineering operating model for Codex: progressive-disclosure skills, model-aware subagents, bounded delegation, independent review, and validation.
 </p>
 
 <p align="center">
-  <a href="#install-with-one-prompt">Install</a> ·
+  <a href="#install">Install</a> ·
   <a href="#the-operating-model">Operating Model</a> ·
-  <a href="#quick-start">Quick Start</a> ·
-  <a href="#harness-editions">Harness Editions</a> ·
-  <a href="#why-this-exists">Why This Exists</a> ·
-  <a href="#developed-through-real-world-use">Real-World Use</a> ·
+  <a href="#codex-native-structure">Codex-Native Structure</a> ·
   <a href="#public-evidence">Evidence</a> ·
-  <a href="#whats-inside">What's Inside</a> ·
-  <a href="#subagent-model">Subagent Model</a> ·
-  <a href="#formal-task-graph-orchestration">Task Graphs</a> ·
-  <a href="#task-local-worktree-lifecycle">Worktrees</a> ·
-  <a href="#coordinating-parallel-codex-threads">Parallel Threads</a> ·
-  <a href="#repository-structure">Structure</a>
+  <a href="#repository-structure">Repository Structure</a>
 </p>
 
 <p align="center">
   <img src="https://img.shields.io/badge/Codex-Edition-6E7BFF" alt="Codex Edition" />
   <img src="https://img.shields.io/badge/Subagents-Orchestrated-00C2FF" alt="Subagents Orchestrated" />
-  <img src="https://img.shields.io/badge/Threads-Coordinated-4ECDC4" alt="Threads Coordinated" />
-  <img src="https://img.shields.io/badge/Instructions-Tool--Agnostic-8A5CFF" alt="Instructions Tool Agnostic" />
+  <img src="https://img.shields.io/badge/Skills-Progressive%20Disclosure-4ECDC4" alt="Skills use progressive disclosure" />
   <a href="https://github.com/ArcanEdge-AI/coding-agent-playbook-claude-code"><img src="https://img.shields.io/badge/Claude%20Code-Edition-D97706" alt="Claude Code Edition" /></a>
   <img src="https://img.shields.io/badge/License-MIT-2ECC71" alt="MIT License" />
-  <img src="https://img.shields.io/badge/Status-Active-2ECC71" alt="Status Active" />
-</p>
-
-<p align="center">
-  <strong>Using Claude Code instead?</strong>
-  <a href="https://github.com/ArcanEdge-AI/coding-agent-playbook-claude-code">Open the Claude Code edition</a>.
 </p>
 
 ---
 
-## Install with One Prompt
+## Install
 
-The easiest install path is to give this repo URL to your coding agent:
-
-```text
-Install this globally: https://github.com/ArcanEdge-AI/coding-agent-playbook-codex
-
-Follow the repository's INSTALL.md exactly. Use full mode even when an older installation exists; do not infer support-only mode unless I explicitly request it. Preserve my existing instructions, back up anything you change, install the global instructions, references, skills, and custom subagents where supported, then report the installed files and validation results.
-```
-
-That is the intended public experience: users should not need to understand the file layout before installation. The agent should read `INSTALL.md`, clone or fetch the repo, install into user-level Codex/agent configuration locations, validate the result, and report what changed.
-
-Support-only is an explicit pointer-only configuration, not an update mode. Use it only when the user confirms the global instructions already live in Codex Personalization:
+The primary installation path is the Codex plugin marketplace:
 
 ```text
-Install this in support-only mode: https://github.com/ArcanEdge-AI/coding-agent-playbook-codex
-
-I already added the global custom instructions manually. Follow INSTALL.md, but do not duplicate the full instructions into AGENTS.md. Install references, skills, and custom subagents only.
+codex plugin marketplace add ArcanEdge-AI/coding-agent-playbook-codex
 ```
 
----
+Then open the Codex app's Plugins UI and install **Coding Agent Playbook — Codex Edition**. The plugin provides the skills and their supporting references as one native package.
+
+After installation, use the skills explicitly by name when useful, for example:
+
+```text
+$subagent-orchestration
+$task-graph-orchestration
+$worktree-lifecycle
+$multi-session-coordination
+$reference-doc-routing
+$senior-code-review
+```
+
+Codex can also select a skill from its description when the request matches.
+
+### Optional companion configuration
+
+The current plugin schema documents skills, but it does not document bundling personal custom-agent TOMLs or modifying the user's global `AGENTS.md`. Those remain an optional companion installation.
+
+Invoke:
+
+```text
+$install-coding-agent-playbook
+```
+
+The skill previews the requested mode first, then uses the repository's Bash or PowerShell companion script. Full mode manages a lean marked section in the global `AGENTS.md` plus personal custom agents. Support-only mode installs custom agents and removes this playbook's marked global section if present.
+
+Full mode stops before changing files when a non-empty global `AGENTS.override.md` would cause Codex to ignore the managed `AGENTS.md` section.
+
+See [INSTALL.md](./INSTALL.md) for exact commands, migration behavior, validation, and safe removal.
 
 ## The Operating Model
 
-This is more than one large `AGENTS.md` or a generic set of custom instructions. It is a reusable delivery model for real repositories, where local conventions, concurrent work, and incomplete evidence make a single giant context window a weak engineering process: the root agent acts as the senior engineer, while bounded supporting work is routed to an appropriate role and model when the task and available evidence justify it.
-
-The root owns understanding, architecture, decomposition, routing, coordination, integration, acceptance, and final validation. Supporting roles can handle bounded planning, engineering, testing, documentation, and independent review; they do not replace human authority or root accountability. Smaller models are used for clearly scoped work when their capability, the root ceiling, and the evidence required make that appropriate—not as a promise of universal savings.
+The root agent acts as the senior engineer. It owns understanding, architecture, decomposition, routing, integration, validation, final acceptance, and the user-facing report. Supporting roles handle bounded planning, engineering, testing, documentation, and independent review; they do not replace root judgment or human authority.
 
 <p align="center">
   <img src="./assets/codex-engineering-team.svg" alt="Operating model: a user works through a root senior engineer, bounded supporting roles, root integration, validation, correction, and final result." width="100%" />
 </p>
 
-It installs global instructions, reference docs, reusable skills, and custom subagent profiles where Codex supports them. Try it with the one prompt above, then adapt the repository-level guidance to the codebase in front of you. You may fork, modify, redistribute, and test the approach under the [MIT License](./LICENSE).
-
----
-
-## Quick Start
-
-### Agent install
-
-Ask your coding agent to install the repo URL and follow `INSTALL.md`. Normal installs and updates use full mode.
-
-### Manual install: macOS / Linux / WSL
-
-```bash
-git clone https://github.com/ArcanEdge-AI/coding-agent-playbook-codex.git
-cd coding-agent-playbook-codex
-bash install/install.sh --full
-```
-
-Support-only mode:
-
-```bash
-bash install/install.sh --support-only
-```
-
-Dry run:
-
-```bash
-bash install/install.sh --full --dry-run
-```
-
-### Manual install: Windows PowerShell
-
-```powershell
-git clone https://github.com/ArcanEdge-AI/coding-agent-playbook-codex.git
-cd coding-agent-playbook-codex
-pwsh -ExecutionPolicy Bypass -File install/install.ps1 -Full
-```
-
-Support-only mode:
-
-```powershell
-pwsh -ExecutionPolicy Bypass -File install/install.ps1 -SupportOnly
-```
-
-Dry run:
-
-```powershell
-pwsh -ExecutionPolicy Bypass -File install/install.ps1 -Full -DryRun
-```
-
-### Repo-specific guidance
-
-Copy this template into individual projects as a starting point:
-
-```text
-references/templates/repository-AGENTS.md
-```
-
-Then fill in the actual build commands, test commands, architecture rules, generated-file rules, and release expectations for that repository.
-
----
-
-## Harness Editions
-
-Coding Agent Playbook ships as separate harness-native editions. This repository is the Codex edition.
-
-| Edition | Repository | Use when |
-| --- | --- | --- |
-| Codex | `ArcanEdge-AI/coding-agent-playbook-codex` | You want global Codex custom instructions, reference docs, skills, and subagent definitions. |
-| Claude Code | [`ArcanEdge-AI/coding-agent-playbook-claude-code`](https://github.com/ArcanEdge-AI/coding-agent-playbook-claude-code) | You want the harness-native edition tuned for Claude Code. |
-
-The philosophy is shared across both: the main agent acts as the senior engineer/orchestrator, subagents perform bounded evidence-backed execution, independent project threads are coordinated explicitly, and final decisions stay with the main agent.
-
----
-
-## Why This Exists
-
-AI coding agents are powerful, but they often fail in predictable ways:
-
-- They start coding before understanding the codebase.
-- They over-engineer simple requests.
-- They refactor unrelated code.
-- They trust editor diagnostics over real builds.
-- They claim tests passed when they did not run them.
-- They delegate poorly or blindly accept subagent output.
-- They allow parallel features to develop incompatible contracts or ownership.
-- They turn every task into a context dump instead of a focused engineering loop.
-
-This playbook gives Codex a durable operating model:
+The default engineering loop remains:
 
 ```text
 Understand → Plan → Implement → Verify → Review → Report
 ```
 
-The intent is not to make the agent slower for its own sake. The intent is to make it **less wrong**, especially on real repositories with existing conventions, local changes, and concurrent work.
+The playbook favors the smallest clear change that fits the codebase, preserves unrelated work, and can be proved with primary evidence.
 
----
+## Codex-Native Structure
 
-## Developed Through Real-World Use
+This edition uses Codex's own loading and packaging mechanisms:
 
-The Coding Agent Playbook grew out of ArcanEdge's day-to-day use of coding agents on real software engineering work, not synthetic prompting exercises. ArcanEdge uses these patterns while developing production systems, including work supporting [United Tradesmen](https://www.arcanedge.ai/work/united-tradesmen), a live construction workforce and operations platform, as well as unreleased internal products.
+- `.codex-plugin/plugin.json` declares a skills-only plugin.
+- `.agents/plugins/marketplace.json` makes the repository installable as a Codex marketplace source.
+- top-level `skills/` is the plugin payload; each workflow keeps detailed procedures in its own `references/` directory and output templates in `assets/`.
+- `custom-instructions/global-coding-agent-instructions.md` contains only durable always-on behavior and routes situational procedures to skills.
+- `agents/*.toml` remains an optional set of personal custom-agent profiles installed by the companion scripts.
 
-Client and unreleased-product repositories remain private. [ArcanEdge](https://www.arcanedge.ai/) and [United Tradesmen](https://unitedtradesmen.org/) provide the public context; this repository does not publish private source, implementation details, or internal engineering records. The playbook is one part of ArcanEdge's engineering practice, not a claim that AI or this playbook alone built a product.
+The repository intentionally does not duplicate `skills/` under `.agents/skills`. Installing the same skill through both plugin and repository discovery could produce duplicate selectors and two independently updated copies.
 
----
+Codex discovers `AGENTS.md` files through its directory walk; it does not provide an import directive between instruction files. The optional global installer therefore maintains one small, clearly marked section in the user's global file while the plugin carries procedural material on demand.
 
-## Public Evidence
+Current Codex documentation gives the discovered project instruction chain a default 32 KiB `project_doc_max_bytes` ceiling. This package keeps its optional global contribution small, but maintainers should still account for repository and directory-level instructions that Codex layers for a task.
 
-Real-world use establishes provenance, but private field evidence is not the public reproducibility layer. [`docs/evidence/`](./docs/evidence/README.md) defines a compact benchmark and run-record format so outside developers can inspect prompts, routing, delegation, review, corrections, validation, and outcomes without needing access to private repositories.
-
-[Benchmark 001](./docs/evidence/BENCHMARK-001.md) has one published measured record: [Benchmark 001 Run 001](./docs/evidence/BENCHMARK-001-RUN-001.md). Its fixture baseline is frozen at [`benchmark-001-baseline-v1`](https://github.com/ArcanEdge-AI/coding-agent-playbook-benchmarks/tree/benchmark-001-baseline-v1) and [exact commit](https://github.com/ArcanEdge-AI/coding-agent-playbook-benchmarks/commit/2a7244f0106cf7f4e106a832b737028144d28389); the documented implementation remains in public, open and unmerged [Benchmark PR #1](https://github.com/ArcanEdge-AI/coding-agent-playbook-benchmarks/pull/1). The evidence framework is designed to make results inspectable; it does not claim universal cost, token, speed, or quality advantages.
-
----
+No lifecycle hooks are included. The current companion setup is a user-invoked install/update operation, so a hook would add enforcement and side effects without replacing a real lifecycle requirement.
 
 ## What's Inside
 
 | Area | Path | Purpose |
 | --- | --- | --- |
-| Install guide | `INSTALL.md` | Agent-readable install contract for one-prompt installation. |
-| Install scripts | `install/` | Manual installers for Unix-like shells and PowerShell. |
-| Global instructions | `custom-instructions/` | Tool-agnostic behavior rules for elegant, maintainable code. |
-| Prompts | `codex-prompts/` | Setup and active-project coordination prompts. |
-| Reference docs | `references/` | Model routing, subagent delegation, multi-session coordination, document routing, and reusable project-doc templates. |
-| Skills | `skills/` | Reusable workflows for task-graph and subagent orchestration, multi-session coordination, doc routing, and senior review. |
-| Custom agents | `agents/` | Terra and Luna Codex subagent definitions for planning, engineering, review, testing, and documentation. |
-| Repo guidance | `AGENTS.md` | Instructions for maintaining this public playbook repository. |
+| Plugin manifest | `.codex-plugin/plugin.json` | Declares the Codex skills package. |
+| Repository marketplace | `.agents/plugins/marketplace.json` | Makes this repository addable as a Codex marketplace source. |
+| Skills | `skills/` | Native invocable workflows with progressively disclosed references and assets. |
+| Optional global guidance | `custom-instructions/` | Lean durable behavior installed only when requested. |
+| Optional custom agents | `agents/` | Terra and Luna profiles for planning, engineering, review, testing, and documentation. |
+| Companion installers | `install/` | Manage only the optional global section and personal custom agents. |
+| Public evidence | `docs/evidence/` | Reproducible benchmark and run-record format. |
+| Repository guidance | `AGENTS.md` | Instructions for maintaining this public playbook. |
 
----
+## Skill Map
 
-## Install Modes
-
-### Full install
-
-Use this for normal installs and updates. Full mode is the default and safely replaces the playbook-owned marked section and current managed files.
-
-Full install writes the global instructions into the user's Codex home `AGENTS.md`, installs references, skills, and custom subagents, and records their paths and hashes in a managed-file manifest. Later updates can back up and retire unchanged files removed upstream while preserving customized or unrelated files.
-
-### Support-only install
-
-Use this only when the user explicitly says the global instructions already live in Codex Personalization → Custom instructions.
-
-Support-only mode avoids duplicating the full instruction file and installs only the supporting reference docs, skills, and custom subagents.
-
----
-
-## Core Philosophy
-
-The main agent is the senior engineer and orchestrator.
-
-It owns:
-
-- task understanding
-- the working plan
-- architecture and design judgment
-- routing, decomposition, and delegation decisions
-- parallel-work coordination
-- integration and final acceptance
-- final diff
-- validation strategy
-- final response
-
-For every repository task, subagents perform the bounded execution work when they are available. The main agent remains accountable for the outcome. Independent project threads may own separate workstreams, but the main coordinating agent still owns compatibility and integration decisions.
-
-> At the root, delegate actual execution to at least one bounded subagent for every repository task when subagents are available. Root direct main-agent execution is limited to unavailable subagents, an explicit user prohibition, or an authority-bound action that cannot be delegated; record the exact exception.
-
-For work with multiple delegable parts, the main agent maps bounded work nodes, real blocking dependencies, write ownership or read scope, and verification gates before fan-out. Dispatch a child only when it is already a finite-manifest member, fits the remaining total node budget, holds its required root permit, and fits runtime, safety, and ownership capacity. Expand the manifest or budget only for a newly discovered dependency, invalidated gate, or changed user scope; a material expansion also needs immediate user approval. Real dependencies, verified isolation, and user instructions also constrain concurrency; serialize only real conflicts. Small or linear tasks may skip formal graph mode but still require bounded subagent execution.
-
-Subagents share the current workspace by default. Worktrees have a separate finite budget that starts at zero; they are created only by the root for a verified isolation need, not per agent. The root may authorize one active auxiliary without additional approval; two or more require user approval for the exact count and reasons. Every task-created auxiliary worktree is integrated and safely removed inside the task or preserved with an exact blocker. No scheduled cleanup task is required for this lifecycle.
-
----
-
-## Subagent Model
-
-This playbook uses five Codex subagent roles that mirror a practical software delivery loop.
-
-| Subagent | Default mode | Best for |
+| Skill | Use it for | Detailed content |
 | --- | --- | --- |
-| `planner` | Read-only | Decomposing non-trivial tasks, identifying risks, sequencing work, and defining validation. |
-| `engineer` | Bounded write | Implementing small, well-scoped changes after the plan and constraints are clear. |
-| `reviewer` | Read-only | Reviewing diffs, designs, and implementations for correctness, risk, maintainability, and scope discipline. |
-| `tester` | Read-mostly | Reproducing failures, analyzing test output, finding validation gaps, and recommending targeted checks. |
-| `docs` | Read-only | Finding, interpreting, and summarizing relevant repo docs, reference docs, and authoritative external documentation. |
+| `$subagent-orchestration` | Bounded delegation, routing, ownership, and acceptance | `skills/subagent-orchestration/references/` |
+| `$task-graph-orchestration` | Genuine dependencies, fan-out, fan-in, and approval gates | `skills/task-graph-orchestration/references/` |
+| `$worktree-lifecycle` | Justified auxiliary worktrees and safe disposition | `skills/worktree-lifecycle/references/` |
+| `$multi-session-coordination` | Related work across independent Codex tasks | `skills/multi-session-coordination/references/` |
+| `$reference-doc-routing` | Selecting authoritative context and reusable repo-doc templates | `skills/reference-doc-routing/references/` and `assets/templates/` |
+| `$senior-code-review` | Independent final review | `skills/senior-code-review/SKILL.md` |
+| `$install-coding-agent-playbook` | Optional global guidance and personal custom agents | `skills/install-coding-agent-playbook/SKILL.md` |
 
-Each role ships with explicit Terra and Luna variants. They pin a task-sized supporting model and role-appropriate reasoning effort instead of inheriting the main session model.
+### Repo-specific guidance
 
-The canonical Codex routing order is:
-
-```text
-gpt-5.6-sol (rank 3) > gpt-5.6-terra (rank 2) > gpt-5.6-luna (rank 1)
-```
-
-The model selected for the main session establishes the root ceiling; never assume it is Sol. A child may use the same or a lower-ranked model than its parent, never a higher-ranked one. Reasoning effort has a separate parent ceiling. Depth controls authority and spawning, not model tier, so a deeper child is not automatically forced down one model tier.
-
-With a Sol root, Terra is the default for normal bounded work and Luna is preferred for cheap work with objective acceptance evidence. With a Terra root, descendants may use Terra or Luna. With a Luna root, descendants must remain on Luna. Consult `references/model-routing.md` for the complete selection, fallback, replacement, and acceptance rules.
-
-The bundle does not duplicate every role as a Sol profile. Sol normally remains the root orchestrator; an exceptional bounded Sol child requires an explicit host-supported model route and a recorded justification.
-
-The delegation rule is simple:
+Copy and adapt the repository instruction template when starting a project:
 
 ```text
-Precise assignment → Evidence-backed output → Main-agent verification → Accept or reject
+skills/reference-doc-routing/assets/templates/repository-AGENTS.md
 ```
 
-A good subagent prompt includes role, goal, context, selected profile or model, reasoning effort, scope, non-goals, permissions, required evidence, escalation conditions, output format, and stop conditions.
+Fill in the real build commands, test commands, architecture rules, generated-file rules, and release expectations for that repository.
 
-For multi-node work, it also identifies the node, its inputs and accepted output, blocking dependencies, ownership or read scope, and verification gate. The orchestration skill explains fan-out, handoff validation, selective retries, and final combined validation.
+## Custom Agent Model
 
-### Recursive delegation and token economy
+The optional `agents/` bundle provides Terra and Luna variants of five roles:
 
-The root owns a finite manifest, total spawned-node budget, and child-specific permits. Every dispatched child must already be a finite-manifest member, fit the remaining total node budget, hold its required root permit, and fit runtime, safety, and ownership capacity. Expand the manifest or budget only for a newly discovered dependency, invalidated gate, or changed user scope; a material expansion also needs immediate user approval. Profiles are callable only when the host supports custom-agent invocation, including an `@tag` interface if offered, and are depth 1. A root-permitted depth-1 local orchestrator may create declared depth-2 leaves. Depth 2 executes directly and cannot spawn. Record the actual root model and require each child's canonical model rank and reasoning effort to be at or below its parent's separate ceilings; same-tier children are valid. Descendants cannot upgrade and must stop and report if insufficient. When capacity is full, do not queue speculative descendants. This is instruction-only, not a scheduler.
+| Role | Responsibility |
+| --- | --- |
+| Planner | Bounded decomposition, risks, sequencing, and validation strategy |
+| Engineer | Small, well-specified implementation |
+| Reviewer | Evidence-backed correctness and scope review |
+| Tester | Reproduction, test execution, failure analysis, and gap finding |
+| Docs | Focused repository and authoritative documentation lookup |
 
----
+Every TOML profile pins an explicit Codex model and `model_reasoning_effort`. The complete task-level routing policy lives only in [the subagent-orchestration references](./skills/subagent-orchestration/references/model-routing.md), where it is loaded when delegation is relevant.
 
-## Formal Task-Graph Orchestration
+## Task Graphs, Worktrees, and Parallel Tasks
 
-Use `task-graph-orchestration` for complex work with substantial fan-out, genuine dependencies, broad scope, layered consolidation, or separate implementation and verification paths. Prompt engineering defines each node; task-graph orchestration defines how the nodes connect, become ready, merge, fail, and require approval. Small or linear work may skip the formal graph, but not default subagent execution.
+Use `$task-graph-orchestration` for complex work with real dependency edges or substantial fan-out. Its workflow and reusable graph template live together under `skills/task-graph-orchestration/references/`.
 
-The graph is an instruction and Markdown artifact. It does not add a graph database, scheduler, runner, dependency, or orchestration framework. Medium tasks can keep the graph in the working plan. Long-running, multi-phase, or multi-session implementation may use `.codex/task-graphs/<task-slug>.md` when repository policy permits it.
+Use `$worktree-lifecycle` before acting on an auxiliary worktree. Worktrees are isolation tools, not delegation units; the detailed creation, integration, preservation, and removal gates live under `skills/worktree-lifecycle/references/`.
 
-Supporting files:
+Use `$multi-session-coordination` when independent Codex tasks may be changing shared contracts, files, schemas, dependencies, or user flows. The skill owns discovery coverage, change maps, conflict detection, ownership, sequencing, and integration verification. The former copy-paste coordination prompt is no longer needed.
 
-```text
-skills/task-graph-orchestration/SKILL.md
-references/templates/task-graph.md
-```
+## Why This Exists
 
-Run multi-session coordination first when active threads, branches, worktrees, or pull requests may create external ownership or hidden dependency edges. Keep simple or genuinely linear tasks on the normal engineering loop.
+AI coding agents often fail in predictable ways:
 
----
+- coding before understanding the codebase
+- over-engineering simple requests
+- refactoring unrelated code
+- trusting summaries instead of primary evidence
+- claiming validation that did not run
+- delegating vague work or blindly accepting delegated output
+- allowing parallel changes to develop incompatible contracts
+- loading every procedure into every task, whether relevant or not
 
-## Task-Local Worktree Lifecycle
+This playbook makes the durable behavior small and routes situational mechanics through Codex skills.
 
-The worktree policy prevents swarm fan-out from becoming checkout fan-out:
+## Developed Through Real-World Use
 
-```text
-Current workspace + auxiliary budget 0
-    ↓
-Concrete isolation need verified
-    ↓
-Root issues one finite worktree permit
-    ↓
-Assigned nodes reuse that exact workspace
-    ↓
-Root integrates and validates the result
-    ↓
-Remove safely, or preserve with an exact blocker
-```
+The Coding Agent Playbook grew out of ArcanEdge's day-to-day use of coding agents on real software engineering work, not synthetic prompting exercises. ArcanEdge uses these patterns while developing production systems, including work supporting [United Tradesmen](https://www.arcanedge.ai/work/united-tradesmen), a live construction workforce and operations platform, as well as unreleased internal products.
 
-Only the root may create, adopt, repurpose, move, or remove an auxiliary worktree. It may authorize one active auxiliary without additional approval; two or more require approval for the exact count and reasons. Descendants receive an exact workspace assignment and report any additional isolation need upward. Retries reuse compatible worktrees. Overlapping writers normally serialize because separate checkouts do not remove design or merge conflicts.
+Client and unreleased-product repositories remain private. [ArcanEdge](https://www.arcanedge.ai/) and [United Tradesmen](https://unitedtradesmen.org/) provide the public context; this repository does not publish private source, implementation details, or internal engineering records.
 
-Before the final response, the root reconciles every task-created auxiliary worktree. It either verifies safe non-force removal inside the task or reports the exact path, owner, branch or HEAD, blocker, and next action. The workflow does not defer task-owned cleanup to scheduled automation and does not treat host-managed or pre-existing user worktrees as disposable.
+## Public Evidence
 
-Supporting files:
+[`docs/evidence/`](./docs/evidence/README.md) defines a compact benchmark and run-record format so outside developers can inspect prompts, routing, delegation, review, corrections, validation, and outcomes without private repository access.
 
-```text
-references/worktrees.md
-references/templates/worktree-manifest.md
-skills/worktree-lifecycle/SKILL.md
-```
+[Benchmark 001](./docs/evidence/BENCHMARK-001.md) has one published measured record: [Benchmark 001 Run 001](./docs/evidence/BENCHMARK-001-RUN-001.md). Its fixture baseline is frozen at [`benchmark-001-baseline-v1`](https://github.com/ArcanEdge-AI/coding-agent-playbook-benchmarks/tree/benchmark-001-baseline-v1) and [exact commit](https://github.com/ArcanEdge-AI/coding-agent-playbook-benchmarks/commit/2a7244f0106cf7f4e106a832b737028144d28389). The evidence framework makes results inspectable; it does not claim universal cost, token, speed, or quality advantages.
 
----
+## Harness Editions
 
-## Coordinating Parallel Codex Threads
-
-Subagents are delegated from one main thread. Independent Codex threads may already have separate plans, branches, worktrees, assumptions, and implementation ownership.
-
-Use the multi-session coordination workflow when related project work is happening in parallel:
-
-```text
-Current project
-    ↓
-Threads active within the previous 72 hours
-    ↓
-Branches, worktrees, pull requests, and unmerged changes
-    ↓
-Shared change map and conflict detection
-    ↓
-Ownership, sequencing, and integration verification
-```
-
-Repository state takes precedence over recency. Older work still matters when it remains unmerged, incomplete, blocked, contract-relevant, or otherwise active.
-
-New project threads should use this naming format:
-
-```text
-Project - Three-to-Four-Word Description
-```
-
-Examples:
-
-```text
-ArcLedger - Validate Billing Evidence
-LoreBound - Implement Campaign Imports
-```
-
-The project name should be detected automatically, and the description should be derived from the primary objective. The square brackets used when explaining the format are not part of the actual title.
-
-Start the workflow with:
-
-```text
-codex-prompts/coordinate-active-project-work.md
-```
-
-Supporting files:
-
-```text
-references/multi-session-coordination.md
-references/templates/active-work-record.md
-skills/multi-session-coordination/SKILL.md
-```
-
-The optional active-work record gives repositories a local fallback when direct sibling-thread discovery is unavailable. It is advisory and must be verified against current repository evidence.
-
----
-
-## Reference Docs Without Context Soup
-
-Large documents are useful only when routed correctly.
-
-The main agent should:
-
-1. Identify which docs matter for the task.
-2. Read only relevant sections when possible.
-3. Classify docs as authoritative, advisory, or historical.
-4. Pass only relevant context to subagents or active project threads.
-5. Resolve conflicts using primary evidence.
-
-Primary evidence includes current code, tests, schemas, configuration, logs, build output, typecheck output, runtime behavior, and authoritative external documentation.
-
-See:
-
-```text
-references/model-routing.md
-references/reference-doc-routing.md
-references/subagents.md
-references/multi-session-coordination.md
-references/worktrees.md
-```
-
----
+Coding Agent Playbook ships as separate harness-native editions. This repository is the Codex edition. The companion [Claude Code edition](https://github.com/ArcanEdge-AI/coding-agent-playbook-claude-code) carries the same engineering principles through that harness's documented mechanisms.
 
 ## Repository Structure
 
 ```text
 .
-├── .gitattributes
+├── .agents/plugins/marketplace.json
+├── .codex-plugin/plugin.json
 ├── AGENTS.md
 ├── CONTRIBUTING.md
 ├── INSTALL.md
 ├── LICENSE
 ├── README.md
-├── assets/
-│   ├── codex-engineering-team.svg
-│   └── coding-agent-playbook-codex-hero.png
 ├── agents/
 │   ├── docs.toml
 │   ├── docs-luna.toml
@@ -442,128 +213,37 @@ references/worktrees.md
 │   ├── reviewer-luna.toml
 │   ├── tester.toml
 │   └── tester-luna.toml
-├── codex-prompts/
-│   ├── coordinate-active-project-work.md
-│   └── setup-global-codex-support-system.md
+├── assets/
 ├── custom-instructions/
 │   └── global-coding-agent-instructions.md
-├── docs/
-│   └── evidence/
-│       ├── BENCHMARK-001-RUN-001.md
-│       ├── BENCHMARK-001.md
-│       ├── METHODOLOGY.md
-│       ├── README.md
-│       └── RUN-TEMPLATE.md
+├── docs/evidence/
 ├── install/
 │   ├── install.ps1
 │   └── install.sh
-├── references/
-│   ├── README.md
-│   ├── model-routing.md
-│   ├── multi-session-coordination.md
-│   ├── reference-doc-routing.md
-│   ├── subagents.md
-│   ├── worktrees.md
-│   └── templates/
-│       ├── active-work-record.md
-│       ├── api-contracts.md
-│       ├── architecture.md
-│       ├── data-model.md
-│       ├── design-system.md
-│       ├── release.md
-│       ├── repository-AGENTS.md
-│       ├── security.md
-│       ├── task-graph.md
-│       ├── worktree-manifest.md
-│       └── testing.md
 └── skills/
+    ├── install-coding-agent-playbook/
     ├── multi-session-coordination/
-    │   └── SKILL.md
     ├── reference-doc-routing/
-    │   └── SKILL.md
     ├── senior-code-review/
-    │   └── SKILL.md
     ├── subagent-orchestration/
-    │   └── SKILL.md
     ├── task-graph-orchestration/
-    │   └── SKILL.md
     └── worktree-lifecycle/
-        ├── agents/
-        │   └── openai.yaml
-        └── SKILL.md
 ```
 
----
+Each skill owns its detailed references and assets. There is no separate top-level reference tree or copy-paste prompt directory.
 
-## Example: Better Delegation
+## Contributing
 
-Bad delegation:
-
-```text
-Look into this and fix it.
-```
-
-Better delegation:
-
-```text
-Role:
-You are the Planner subagent for this task.
-
-Goal:
-Identify the smallest safe implementation plan for adding a customer exemption flag to checkout tax calculation.
-
-Scope:
-Inspect checkout, cart, customer, and tax calculation code paths only.
-
-Non-goals:
-Do not edit files. Do not refactor. Do not propose a new tax engine.
-
-Evidence required:
-Return file paths, function names, likely insertion points, relevant tests, and existing exemption concepts.
-```
-
-The main agent still decides the design, applies or rejects recommendations, and verifies the final diff.
-
----
-
-## Recommended Workflow
-
-```text
-1. Ask your coding agent to install this repository URL.
-2. Let the installer configure global instructions, references, skills, and subagents.
-3. Add repo-specific AGENTS.md guidance to each project.
-4. Let the main agent frame, route, and coordinate each repository task.
-5. At the root, record the actual main-session model, its canonical rank, the separate reasoning-effort ceiling, finite manifest, total node budget, and child-specific permits. Normally select host-callable depth-1 Terra or Luna role variants, including an `@tag` interface only if offered, whose model rank and effort are at or below the parent's separate ceilings. An exceptional bounded Sol child may instead use an explicit host-supported model route within the root ceilings when the root records the justification. A permitted depth-1 node may create declared depth-2 leaves, which cannot spawn.
-6. For multi-node work, identify real blocking dependencies, parallel-safe nodes, ownership, and verification gates, then dispatch only finite-manifest members that fit the remaining total node budget, hold required root permits, and fit runtime, safety, and ownership capacity. Expand the manifest or budget only for a newly discovered dependency, invalidated gate, or changed user scope; get immediate user approval for a material expansion.
-7. Keep the auxiliary-worktree budget at zero unless root verifies a real isolation need. Before completion, remove each task-created auxiliary worktree safely or preserve it with an exact blocker.
-8. When independent project threads run in parallel, use the multi-session coordination skill.
-9. Verify the final combined diff and integrated behavior before accepting completion.
-```
-
----
-
-## Public Repo Notes
-
-This repository is public so others can star it, fork it, adapt it, and propose improvements.
-
-Please keep contributions generic, reusable, and safe for public use. Do not add private project details, internal URLs, sensitive access material, local machine quirks, or one-off incident logs.
-
-See `CONTRIBUTING.md` for contribution guidance.
-
----
+Keep contributions generic, reusable, safe for public use, and aligned with current Codex documentation. Do not add private project details, internal URLs, sensitive access material, local machine quirks, or one-off incident logs. See [CONTRIBUTING.md](./CONTRIBUTING.md).
 
 ## License
 
-MIT © 2026 ArcanEdge AI. See [`LICENSE`](./LICENSE).
-
----
+MIT © 2026 ArcanEdge AI. See [LICENSE](./LICENSE).
 
 ## Status
 
-This is a living playbook. Treat it as a strong baseline, not a universal law.
-
-The best setup is:
+This is a living playbook. Treat it as a strong baseline, not a universal law:
 
 ```text
-Global behavior + local repository truth + evidence-backed validation
+Lean global behavior + on-demand skills + local repository truth + evidence-backed validation
 ```

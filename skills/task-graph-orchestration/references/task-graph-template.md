@@ -113,7 +113,7 @@ If no approval-gated action exists, write `None` and remove the placeholder row.
 - Let local parents orchestrate only their declared child subtree; no child may change root topology or root-ready work.
 - At the root, assign actual execution to at least one bounded subagent when available. Root direct main-agent execution is allowed only when subagents are unavailable, the user forbids delegation, or the action must remain with the main agent because of required authority; record the exact exception. A depth-1 local owner executes directly when no valid permitted strict-subset split exists; depth 2 cannot spawn.
 - Record the actual root model and its canonical rank; never assume Sol. Require each child to be equal to or narrower than its parent in inherited constraints, with explicitly selected profile, model rank, and effort at or below its parent's separate ceilings; record the proof and never silently inherit or escalate.
-- Give each child an exact workspace. Keep the auxiliary-worktree budget separate from the node budget, default it to zero, and let only root create or remove a worktree under `references/worktrees.md`.
+- Give each child an exact workspace. Keep the auxiliary-worktree budget separate from the node budget, default it to zero, and let only root create or remove a worktree under `$worktree-lifecycle`.
 - Treat a dependency as real only when the downstream node consumes an accepted upstream artifact or decision.
 - Keep completed outputs unless their inputs become invalid.
 - Update the ready set after every accepted, failed, blocked, or superseded node.

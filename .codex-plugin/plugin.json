@@ -1,0 +1,38 @@
+{
+  "name": "coding-agent-playbook-codex",
+  "version": "1.0.0",
+  "description": "Codex-native engineering workflows for bounded delegation, task graphs, worktrees, multi-session coordination, reference routing, review, and optional companion setup.",
+  "author": {
+    "name": "ArcanEdge AI",
+    "url": "https://github.com/ArcanEdge-AI"
+  },
+  "homepage": "https://github.com/ArcanEdge-AI/coding-agent-playbook-codex",
+  "repository": "https://github.com/ArcanEdge-AI/coding-agent-playbook-codex",
+  "license": "MIT",
+  "keywords": [
+    "codex",
+    "engineering",
+    "delegation",
+    "review",
+    "worktrees"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Coding Agent Playbook — Codex Edition",
+    "shortDescription": "Codex-native engineering workflows and guidance.",
+    "longDescription": "Install progressive-disclosure skills for bounded delegation, task graphs, safe worktree lifecycle, multi-session coordination, reference routing, senior review, and optional global instructions and custom-agent setup.",
+    "developerName": "ArcanEdge AI",
+    "category": "Productivity",
+    "capabilities": [
+      "Read",
+      "Write"
+    ],
+    "websiteURL": "https://github.com/ArcanEdge-AI/coding-agent-playbook-codex",
+    "defaultPrompt": [
+      "Coordinate this repository task with bounded delegation.",
+      "Review this change using the playbook's senior review workflow.",
+      "Install the optional global instructions and custom agents."
+    ],
+    "brandColor": "#6E7BFF"
+  }
+}

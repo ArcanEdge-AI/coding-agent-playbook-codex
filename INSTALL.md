@@ -1,37 +1,29 @@
 # Install Coding Agent Playbook — Codex Edition
 
-This file is written for both humans and AI coding agents.
+Install the Codex plugin first. The plugin is the canonical package for skills, detailed references, and reusable templates.
 
-The intended experience is:
+## 1. Add the Marketplace and Install the Plugin
+
+Register this repository as a Codex marketplace source:
 
 ```text
-Install this repo into my Codex setup:
-https://github.com/ArcanEdge-AI/coding-agent-playbook-codex
-
-Follow INSTALL.md. Use full install unless I explicitly ask for support-only mode.
-Preserve my existing files with backups and report exactly what changed.
+codex plugin marketplace add ArcanEdge-AI/coding-agent-playbook-codex
 ```
 
-## What Gets Installed
+Then open the Codex app's Plugins UI and install **Coding Agent Playbook — Codex Edition**.
 
-A full install creates or updates this user-level structure:
+The repository marketplace points at the repository root, whose `.codex-plugin/plugin.json` declares `skills/` as the plugin payload. Do not copy that tree into `.agents/skills` or another user skill directory; parallel discovery of the same skills can create duplicate selectors and independently updated copies.
+
+After installation, start a new Codex task if the skills do not appear immediately. Invoke a skill with `$skill-name` or browse `/skills`.
+
+## 2. Optional Companion Configuration
+
+The plugin schema does not currently document bundling personal custom-agent TOMLs or modifying a user's global `AGENTS.md`. This repository therefore retains small companion installers for only those optional targets:
 
 ```text
 $CODEX_HOME/
-  AGENTS.md
+  AGENTS.md                                      # full mode only; one marked section
   .coding-agent-playbook-codex-managed-files.tsv
-  references/
-    README.md
-    model-routing.md
-    subagents.md
-    worktrees.md
-    multi-session-coordination.md
-    reference-doc-routing.md
-    templates/
-      active-work-record.md
-      task-graph.md
-      worktree-manifest.md
-      *.md
   agents/
     planner.toml
     planner-luna.toml
@@ -43,67 +35,57 @@ $CODEX_HOME/
     tester-luna.toml
     docs.toml
     docs-luna.toml
-
-$HOME/.agents/skills/
-  subagent-orchestration/SKILL.md
-  task-graph-orchestration/SKILL.md
-  worktree-lifecycle/SKILL.md
-  multi-session-coordination/SKILL.md
-  reference-doc-routing/SKILL.md
-  senior-code-review/SKILL.md
 ```
 
 Path resolution:
 
-- `CODEX_HOME`: use `$CODEX_HOME` if set, otherwise `~/.codex`.
-- `USER_SKILLS_HOME`: use `$HOME/.agents/skills`.
-- On Windows, resolve equivalent user-home paths safely.
+- `CODEX_HOME`: use `$CODEX_HOME` when set, otherwise the user's `.codex` directory.
+- `USER_SKILLS_HOME`: recognized only to locate legacy playbook-managed skill files during a manifest-backed migration; no skills are installed there now.
 
-## Install Modes
+Invoke `$install-coding-agent-playbook` after installing the plugin, or run the scripts directly as described below.
 
-### Full install
+### Full mode
 
-Use this for normal installs and every normal update. It is the default when no mode flag is provided.
+Full mode is the default. It installs or updates:
 
-Full install:
+- the lean global behavior from `custom-instructions/global-coding-agent-instructions.md` inside one marked section of `$CODEX_HOME/AGENTS.md`
+- the ten personal custom-agent TOMLs under `$CODEX_HOME/agents/`
+- the managed-file manifest, which now contains only the custom-agent files
 
-- installs the global coding-agent instructions into `$CODEX_HOME/AGENTS.md`
-- copies reference docs into `$CODEX_HOME/references/`
-- copies custom agent definitions into `$CODEX_HOME/agents/`
-- copies skills into `$HOME/.agents/skills/`
+Existing content outside the marked section is preserved. Re-running full mode replaces that section instead of appending a duplicate.
 
-The global instruction body is always installed inside one clearly marked Coding Agent Playbook — Codex Edition section. Existing content outside that section is preserved. Re-running a full install replaces the existing marked section instead of appending a duplicate.
+Codex loads a non-empty `$CODEX_HOME/AGENTS.override.md` instead of the sibling `AGENTS.md`. When that override is present, full mode stops before making changes rather than reporting inactive global guidance as installed. Reconcile or remove the override first, or use support-only mode when only the custom agents are wanted.
 
-After a successful run, the installer writes `$CODEX_HOME/.coding-agent-playbook-codex-managed-files.tsv` with every managed support-file path and source SHA-256. On later runs, files removed from the repository are backed up and retired only when they still match the previously installed hash. Customized formerly managed files are preserved and reported. Files that were never recorded as playbook-managed are never removed. An existing `.codex-agent-playbook-managed-files.tsv` is migrated automatically after a successful update.
+### Support-only mode
 
-The first manifest-aware update has no previous ownership record, so it safely preserves existing unlisted files. Subsequent updates can distinguish unchanged retired files from user customizations.
+Use support-only mode only when the user explicitly wants the custom agents without this playbook's global instruction section.
 
-### Support-only install
+Support-only mode:
 
-Use this only when the user explicitly requests support-only mode and confirms that the full global instructions already live in Codex Personalization > Custom instructions. Do not infer support-only mode merely because an older installation or an existing `AGENTS.md` is present.
+- installs or updates the custom-agent TOMLs
+- removes an existing current or legacy playbook-owned section from `$CODEX_HOME/AGENTS.md`
+- preserves all unrelated global content
+- fails closed when markers are duplicated, incomplete, reversed, or otherwise malformed
 
-Support-only install:
+Support-only mode does not add a pointer section. The plugin already exposes the situational workflows natively.
 
-- does not duplicate the full global instructions into `$CODEX_HOME/AGENTS.md`
-- adds only a short reference-map pointer if useful
-- still copies reference docs, skills, and custom agent definitions
-- still updates the managed-file manifest and safely retires unchanged files removed from later playbook releases
+## Preview, Then Install
 
-## Human Install
+Inspect the dry-run output before allowing the companion installer to write.
 
-Clone the repository and run the installer for your shell.
-
-### macOS / Linux / WSL
+### macOS, Linux, or WSL
 
 ```bash
 git clone https://github.com/ArcanEdge-AI/coding-agent-playbook-codex.git
 cd coding-agent-playbook-codex
+bash install/install.sh --full --dry-run
 bash install/install.sh --full
 ```
 
-Support-only mode:
+Explicit support-only mode:
 
 ```bash
+bash install/install.sh --support-only --dry-run
 bash install/install.sh --support-only
 ```
 
@@ -112,91 +94,65 @@ bash install/install.sh --support-only
 ```powershell
 git clone https://github.com/ArcanEdge-AI/coding-agent-playbook-codex.git
 cd coding-agent-playbook-codex
+pwsh -ExecutionPolicy Bypass -File install/install.ps1 -Full -DryRun
 pwsh -ExecutionPolicy Bypass -File install/install.ps1 -Full
 ```
 
-Support-only mode:
+Explicit support-only mode:
 
 ```powershell
+pwsh -ExecutionPolicy Bypass -File install/install.ps1 -SupportOnly -DryRun
 pwsh -ExecutionPolicy Bypass -File install/install.ps1 -SupportOnly
 ```
 
-## Agent Install Instructions
+## Backups, Ownership, and Legacy Retirement
 
-When an AI coding agent is asked to install this repo, it should:
+The companion installers back up an existing target before changing it. Backups use a timestamped `.bak.<timestamp>` suffix beside the original file.
 
-1. Clone or fetch the repository from the provided URL.
-2. Read this `INSTALL.md` file first.
-3. Resolve `CODEX_HOME` and `USER_SKILLS_HOME`.
-4. Inspect existing target files before writing.
-5. Back up any existing file before changing it.
-6. Use full install for both installation and update unless the user explicitly asks for support-only mode. Existing global instructions, markers, or support files are not permission to change modes.
-7. Copy reference docs, skills, and custom agent definitions to the expected user-level locations.
-8. Validate the installed files.
-9. Report exactly what changed, what was skipped, and where backups were written.
+The managed-file manifest records each current custom-agent file and its repository SHA-256. During later updates:
 
-Do not modify arbitrary repositories during installation. Only use a temporary clone of this repository and user-level Codex configuration locations.
+- current files are replaced with backups when content changes
+- files removed from the current bundle are retired only when they still match the previously recorded hash
+- customized formerly managed files are preserved with a warning
+- files never recorded as playbook-managed are not removed
+
+Previous releases managed `references`, `skills`, and `agents` roots. The installers continue to recognize all three roots while reading an existing current or legacy manifest. This allows unchanged obsolete reference and skill copies to be backed up and retired during the transition to plugin ownership. Customized legacy copies remain in place for manual reconciliation.
+
+If no previous manifest establishes ownership, existing unlisted files are preserved. An older `.codex-agent-playbook-managed-files.tsv` is migrated after a successful update.
 
 ## Validation Checklist
 
-After installation, verify:
+After plugin installation, verify in the Codex app that:
 
-- `$CODEX_HOME/AGENTS.md` exists or was intentionally left as a pointer-only file.
-- `$CODEX_HOME/.coding-agent-playbook-codex-managed-files.tsv` exists and lists every current managed support file once.
-- `$CODEX_HOME/references/model-routing.md` exists.
-- `$CODEX_HOME/references/subagents.md` exists.
-- `$CODEX_HOME/references/worktrees.md` exists.
-- `$CODEX_HOME/references/multi-session-coordination.md` exists.
-- `$CODEX_HOME/references/reference-doc-routing.md` exists.
-- `$CODEX_HOME/references/templates/active-work-record.md` exists.
-- `$CODEX_HOME/references/templates/task-graph.md` exists.
-- `$CODEX_HOME/references/templates/worktree-manifest.md` exists.
-- `$CODEX_HOME/agents/planner.toml` exists.
-- `$CODEX_HOME/agents/planner-luna.toml` exists.
-- `$CODEX_HOME/agents/engineer.toml` exists.
-- `$CODEX_HOME/agents/engineer-luna.toml` exists.
-- `$CODEX_HOME/agents/reviewer.toml` exists.
-- `$CODEX_HOME/agents/reviewer-luna.toml` exists.
-- `$CODEX_HOME/agents/tester.toml` exists.
-- `$CODEX_HOME/agents/tester-luna.toml` exists.
-- `$CODEX_HOME/agents/docs.toml` exists.
-- `$CODEX_HOME/agents/docs-luna.toml` exists.
-- Every installed `agents/*.toml` file explicitly defines `model` and `model_reasoning_effort`.
-- Every bundled role has one Terra profile and one Luna profile, and each profile's model field matches its tier.
-- `$HOME/.agents/skills/subagent-orchestration/SKILL.md` exists.
-- `$HOME/.agents/skills/task-graph-orchestration/SKILL.md` exists.
-- `$HOME/.agents/skills/worktree-lifecycle/SKILL.md` exists.
-- `$HOME/.agents/skills/multi-session-coordination/SKILL.md` exists.
-- Each `SKILL.md` has `name` and `description` frontmatter.
-- TOML agent files are parseable if a TOML parser is available.
-- Every current manifest entry matches its repository source SHA-256.
-- Every formerly managed path was either absent, backed up and retired unchanged, or preserved with an explicit customization warning.
+- the plugin is installed from the registered marketplace
+- `$install-coding-agent-playbook` and the six engineering workflow skills are available
+- invoking `/skills` does not show a second manually copied set from this playbook
 
-## Uninstall
+After a companion install, verify:
 
-This project does not currently ship an automatic uninstall command.
+- full mode has exactly one current marker pair in `$CODEX_HOME/AGENTS.md`
+- full mode stopped without changes if a non-empty `$CODEX_HOME/AGENTS.override.md` would take precedence
+- support-only mode has neither current nor legacy playbook markers
+- `$CODEX_HOME/.coding-agent-playbook-codex-managed-files.tsv` exists and lists each current `agents` file once
+- all ten expected `$CODEX_HOME/agents/*.toml` files exist
+- every installed agent TOML parses and defines `model` plus `model_reasoning_effort`
+- every manifest entry matches its repository source SHA-256
+- every formerly managed path is absent, retired unchanged with a backup, or preserved with an explicit customization warning
 
-To remove it manually, delete:
+Restart Codex or open a new task when updated instructions, skills, or custom agents are not visible in the current task.
 
-```text
-$CODEX_HOME/references/
-$CODEX_HOME/.coding-agent-playbook-codex-managed-files.tsv
-$CODEX_HOME/agents/planner.toml
-$CODEX_HOME/agents/planner-luna.toml
-$CODEX_HOME/agents/engineer.toml
-$CODEX_HOME/agents/engineer-luna.toml
-$CODEX_HOME/agents/reviewer.toml
-$CODEX_HOME/agents/reviewer-luna.toml
-$CODEX_HOME/agents/tester.toml
-$CODEX_HOME/agents/tester-luna.toml
-$CODEX_HOME/agents/docs.toml
-$CODEX_HOME/agents/docs-luna.toml
-$HOME/.agents/skills/subagent-orchestration/
-$HOME/.agents/skills/task-graph-orchestration/
-$HOME/.agents/skills/worktree-lifecycle/
-$HOME/.agents/skills/multi-session-coordination/
-$HOME/.agents/skills/reference-doc-routing/
-$HOME/.agents/skills/senior-code-review/
-```
+## Removal
 
-If you used full install and want to remove the global instructions, edit `$CODEX_HOME/AGENTS.md` and remove the section between the Coding Agent Playbook — Codex Edition start/end markers.
+Remove the plugin through the Codex app's Plugins UI. That removes the plugin-provided skills and references as one package.
+
+For companion configuration, remove only the playbook-owned targets:
+
+1. Edit `$CODEX_HOME/AGENTS.md` and remove the section between the `coding-agent-playbook-codex` start and end markers, if present.
+2. Delete the ten named playbook agent TOMLs listed in this guide, after confirming they are still playbook-owned rather than customized replacements.
+3. Delete `$CODEX_HOME/.coding-agent-playbook-codex-managed-files.tsv` after the managed files have been reconciled.
+
+Do not delete the entire `$CODEX_HOME/agents`, `$CODEX_HOME/references`, or user skill directory; those locations may contain unrelated or customized files.
+
+## Lifecycle Hooks
+
+This package intentionally installs no hooks. Plugin installation and companion configuration are explicit user-invoked operations, and the current scripts do not implement a background lifecycle behavior that warrants a hook.

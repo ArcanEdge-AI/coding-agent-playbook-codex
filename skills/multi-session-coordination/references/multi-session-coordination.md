@@ -145,7 +145,7 @@ For every relevant work item, record:
 
 The map should distinguish confirmed facts from inference.
 
-When a task proposes or owns an auxiliary worktree, consult `references/worktrees.md`. Keep its worktree permit separate from subagent or graph-node permits. The coordinating root may clean only auxiliary worktrees that its own task created or explicitly adopted; existing user-managed or other-thread worktrees remain preserved unless ownership is transferred through primary evidence.
+When a task proposes or owns an auxiliary worktree, use `$worktree-lifecycle`. Keep its worktree permit separate from subagent or graph-node permits. The coordinating root may clean only auxiliary worktrees that its own task created or explicitly adopted; existing user-managed or other-task worktrees remain preserved unless ownership is transferred through primary evidence.
 
 ## Conflict Categories
 
@@ -271,7 +271,7 @@ A repository may maintain optional active-work records under:
 .codex/coordination/active-work/
 ```
 
-Use `references/templates/active-work-record.md` as the starting point.
+Use `active-work-record.md` as the starting point.
 
 In that record, `dependencies` names required upstream work artifacts or decisions, `blocked_by` lists dependencies that are not yet satisfied, `owned_paths` records write ownership, and `validation_required` defines the gates that must pass before integration-ready status. Do not introduce synonymous fields unless a concrete consumer requires them.
 
