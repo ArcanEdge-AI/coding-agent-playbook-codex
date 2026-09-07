@@ -496,7 +496,8 @@ else
 Supporting global reference documents live under the Codex home references directory:
 
 - `references/README.md` — map of available global reference docs
-- `references/model-routing.md` — mandatory subagent model-selection, escalation, and acceptance rules
+- `references/engineering-design.md` — selective design questions and examples for complete solutions and justified complexity
+- `references/model-routing.md` — mandatory explicit Luna/max subagent routing, escalation, and acceptance rules
 - `references/subagents.md` — subagent delegation rules, assignment template, and acceptance checklist
 - `references/worktrees.md` — root-owned task-local worktree budgeting, permits, integration, cleanup, and preservation rules
 - `references/multi-session-coordination.md` — discovery, thread naming, ownership, sequencing, conflict detection, and integration guidance for independent project threads
@@ -523,7 +524,7 @@ Custom Codex subagents live under the Codex home agents directory:
 
 Reference documents are supporting context, not automatic truth. For every repository task when subagents are available, the main agent delegates actual execution to at least one bounded subagent; it remains accountable for orchestration, final diff, validation, acceptance, and final response. Direct main-agent execution is limited to unavailable subagents, an explicit user prohibition, or a specific authority-bound action that cannot be delegated; record the exact exception.
 
-The root records the actual user-selected main model, canonical rank, separate reasoning-effort ceiling, finite manifest, total spawned-node budget, and child-specific permits; never assume the root is Sol. Use `gpt-5.6-sol` rank 3 > `gpt-5.6-terra` rank 2 > `gpt-5.6-luna` rank 1. Every dispatched child must already be a finite-manifest member, fit the remaining total node budget, hold its required root permit, and fit runtime, safety, and ownership capacity. Its model rank and effort must be at or below the separate ceilings of its parent; equal-tier children are valid, and depth does not force a tier drop. Expand the manifest or budget only for a newly discovered dependency, invalidated gate, or changed user scope; a material expansion also needs immediate user approval. Profiles are callable only when the host supports custom-agent invocation, including an `@tag` interface if offered, and are depth 1. A root-permitted depth-1 local orchestrator may create declared depth-2 leaves. Depth 2 executes directly and cannot spawn. Descendants cannot upgrade and must stop and report if their ceilings are insufficient. When capacity is full, do not queue speculative descendants.
+The root records the actual user-selected main model when provenance requires it, finite manifest, total spawned-node budget, and child-specific permits. Every dispatched child must already be a finite-manifest member, fit the remaining total node budget, hold its required root permit, and fit runtime, safety, and ownership capacity. Every call must explicitly select a verified profile pinned to `gpt-5.6-luna` with `max` reasoning, or pass those values through a generic route, independently of the root model or effort. Expand the manifest or budget only for a newly discovered dependency, invalidated gate, or changed user scope; a material expansion also needs immediate user approval. Profiles are callable only when the host supports custom-agent invocation, including an `@tag` interface if offered, and are depth 1. A root-permitted depth-1 local orchestrator may create declared depth-2 leaves. Depth 2 executes directly and cannot spawn. Descendants cannot change the explicit route and must stop and report if it is unavailable. When capacity is full, do not queue speculative descendants.
 
 The auxiliary-worktree budget starts at zero and is separate from the node budget. Worktrees are not created per agent. Only root may issue a worktree permit or create, adopt, repurpose, move, or remove an auxiliary worktree. Root may authorize one active auxiliary without additional approval; two or more require user approval for the exact count and reasons. Descendants use their exact assigned workspace and report isolation needs upward. Before the final response, root removes each task-created auxiliary under verified safety gates or preserves it with an exact owner, path, branch or HEAD, blocker, and next action. Do not defer task-owned cleanup to scheduled automation. A host-managed active workspace follows the supported host lifecycle.'
   add_or_replace_playbook_section "$TARGET_AGENTS_MD" "Global Reference Documents and Subagent Support" "$POINTER_BODY"
@@ -543,6 +544,7 @@ say "Validation:"
 
 for path in \
   "$TARGET_AGENTS_MD" \
+  "$CODEX_HOME/references/engineering-design.md" \
   "$CODEX_HOME/references/model-routing.md" \
   "$CODEX_HOME/references/subagents.md" \
   "$CODEX_HOME/references/worktrees.md" \

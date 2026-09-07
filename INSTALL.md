@@ -22,6 +22,7 @@ $CODEX_HOME/
   .coding-agent-playbook-codex-managed-files.tsv
   references/
     README.md
+    engineering-design.md
     model-routing.md
     subagents.md
     worktrees.md
@@ -143,6 +144,7 @@ After installation, verify:
 
 - `$CODEX_HOME/AGENTS.md` exists or was intentionally left as a pointer-only file.
 - `$CODEX_HOME/.coding-agent-playbook-codex-managed-files.tsv` exists and lists every current managed support file once.
+- `$CODEX_HOME/references/engineering-design.md` exists.
 - `$CODEX_HOME/references/model-routing.md` exists.
 - `$CODEX_HOME/references/subagents.md` exists.
 - `$CODEX_HOME/references/worktrees.md` exists.
@@ -162,7 +164,7 @@ After installation, verify:
 - `$CODEX_HOME/agents/docs.toml` exists.
 - `$CODEX_HOME/agents/docs-luna.toml` exists.
 - Every installed `agents/*.toml` file explicitly defines `model` and `model_reasoning_effort`.
-- Every bundled role has one Terra profile and one Luna profile, and each profile's model field matches its tier.
+- Every bundled role retains its base and `-luna` profiles, and all profiles set `model = "gpt-5.6-luna"` and `model_reasoning_effort = "max"`.
 - `$HOME/.agents/skills/subagent-orchestration/SKILL.md` exists.
 - `$HOME/.agents/skills/task-graph-orchestration/SKILL.md` exists.
 - `$HOME/.agents/skills/worktree-lifecycle/SKILL.md` exists.

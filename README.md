@@ -9,7 +9,7 @@
 </p>
 
 <p align="center">
-  An open-source engineering operating model for Codex: installable instructions, model-aware subagents, bounded delegation, independent review, and validation.
+  An open-source engineering operating model for Codex: installable instructions, Luna/max subagents, bounded delegation, independent review, and validation.
 </p>
 
 <p align="center">
@@ -69,9 +69,9 @@ I already added the global custom instructions manually. Follow INSTALL.md, but 
 
 ## The Operating Model
 
-This is more than one large `AGENTS.md` or a generic set of custom instructions. It is a reusable delivery model for real repositories, where local conventions, concurrent work, and incomplete evidence make a single giant context window a weak engineering process: the root agent acts as the senior engineer, while bounded supporting work is routed to an appropriate role and model when the task and available evidence justify it.
+This is more than one large `AGENTS.md` or a generic set of custom instructions. It is a reusable delivery model for real repositories, where local conventions, concurrent work, and incomplete evidence make a single giant context window a weak engineering process: the root agent acts as the senior engineer, while bounded supporting work is routed to an appropriate role using Luna/max when the task and available evidence justify it.
 
-The root owns understanding, architecture, decomposition, routing, coordination, integration, acceptance, and final validation. Supporting roles can handle bounded planning, engineering, testing, documentation, and independent review; they do not replace human authority or root accountability. Smaller models are used for clearly scoped work when their capability, the root ceiling, and the evidence required make that appropriate—not as a promise of universal savings.
+The root owns understanding, architecture, decomposition, routing, coordination, integration, acceptance, and final validation. Supporting roles can handle bounded planning, engineering, testing, documentation, and independent review; they do not replace human authority or root accountability. Every supporting role uses Luna with max reasoning, with bounded assignments and independently checked evidence.
 
 <p align="center">
   <img src="./assets/codex-engineering-team.svg" alt="Operating model: a user works through a root senior engineer, bounded supporting roles, root integration, validation, correction, and final result." width="100%" />
@@ -201,7 +201,7 @@ Real-world use establishes provenance, but private field evidence is not the pub
 | Prompts | `codex-prompts/` | Setup and active-project coordination prompts. |
 | Reference docs | `references/` | Model routing, subagent delegation, multi-session coordination, document routing, and reusable project-doc templates. |
 | Skills | `skills/` | Reusable workflows for task-graph and subagent orchestration, multi-session coordination, doc routing, and senior review. |
-| Custom agents | `agents/` | Terra and Luna Codex subagent definitions for planning, engineering, review, testing, and documentation. |
+| Custom agents | `agents/` | Luna/max Codex subagent definitions for planning, engineering, review, testing, and documentation. |
 | Repo guidance | `AGENTS.md` | Instructions for maintaining this public playbook repository. |
 
 ---
@@ -260,19 +260,9 @@ This playbook uses five Codex subagent roles that mirror a practical software de
 | `tester` | Read-mostly | Reproducing failures, analyzing test output, finding validation gaps, and recommending targeted checks. |
 | `docs` | Read-only | Finding, interpreting, and summarizing relevant repo docs, reference docs, and authoritative external documentation. |
 
-Each role ships with explicit Terra and Luna variants. They pin a task-sized supporting model and role-appropriate reasoning effort instead of inheriting the main session model.
+Every subagent uses `gpt-5.6-luna` with `max` reasoning. This applies to all roles, direct calls, nested calls, retries, and replacements, independently of the main session's model or reasoning effort.
 
-The canonical Codex routing order is:
-
-```text
-gpt-5.6-sol (rank 3) > gpt-5.6-terra (rank 2) > gpt-5.6-luna (rank 1)
-```
-
-The model selected for the main session establishes the root ceiling; never assume it is Sol. A child may use the same or a lower-ranked model than its parent, never a higher-ranked one. Reasoning effort has a separate parent ceiling. Depth controls authority and spawning, not model tier, so a deeper child is not automatically forced down one model tier.
-
-With a Sol root, Terra is the default for normal bounded work and Luna is preferred for cheap work with objective acceptance evidence. With a Terra root, descendants may use Terra or Luna. With a Luna root, descendants must remain on Luna. Consult `references/model-routing.md` for the complete selection, fallback, replacement, and acceptance rules.
-
-The bundle does not duplicate every role as a Sol profile. Sol normally remains the root orchestrator; an exceptional bounded Sol child requires an explicit host-supported model route and a recorded justification.
+The base role names and `-luna` profile files remain available as compatible names; all ten profiles pin the same Luna/max settings. Select a compliant profile or pass the model and reasoning effort explicitly. If the host cannot honor both settings, report the limitation rather than silently substituting or inheriting defaults. Consult `references/model-routing.md` for dispatch and acceptance rules.
 
 The delegation rule is simple:
 
@@ -286,7 +276,7 @@ For multi-node work, it also identifies the node, its inputs and accepted output
 
 ### Recursive delegation and token economy
 
-The root owns a finite manifest, total spawned-node budget, and child-specific permits. Every dispatched child must already be a finite-manifest member, fit the remaining total node budget, hold its required root permit, and fit runtime, safety, and ownership capacity. Expand the manifest or budget only for a newly discovered dependency, invalidated gate, or changed user scope; a material expansion also needs immediate user approval. Profiles are callable only when the host supports custom-agent invocation, including an `@tag` interface if offered, and are depth 1. A root-permitted depth-1 local orchestrator may create declared depth-2 leaves. Depth 2 executes directly and cannot spawn. Record the actual root model and require each child's canonical model rank and reasoning effort to be at or below its parent's separate ceilings; same-tier children are valid. Descendants cannot upgrade and must stop and report if insufficient. When capacity is full, do not queue speculative descendants. This is instruction-only, not a scheduler.
+The root owns a finite manifest, total spawned-node budget, and child-specific permits. Every dispatched child must already be a finite-manifest member, fit the remaining total node budget, hold its required root permit, and fit runtime, safety, and ownership capacity. Expand the manifest or budget only for a newly discovered dependency, invalidated gate, or changed user scope; a material expansion also needs immediate user approval. Profiles are callable only when the host supports custom-agent invocation, including an `@tag` interface if offered, and are depth 1. A root-permitted depth-1 local orchestrator may create declared depth-2 leaves. Depth 2 executes directly and cannot spawn. Record the actual root model and verify every child uses `gpt-5.6-luna` with `max` reasoning. Descendants must stop and report capability gaps without changing that route. When capacity is full, do not queue speculative descendants. This is instruction-only, not a scheduler.
 
 ---
 
@@ -409,6 +399,7 @@ Primary evidence includes current code, tests, schemas, configuration, logs, bui
 See:
 
 ```text
+references/engineering-design.md
 references/model-routing.md
 references/reference-doc-routing.md
 references/subagents.md
@@ -459,6 +450,7 @@ references/worktrees.md
 │   └── install.sh
 ├── references/
 │   ├── README.md
+│   ├── engineering-design.md
 │   ├── model-routing.md
 │   ├── multi-session-coordination.md
 │   ├── reference-doc-routing.md
@@ -533,7 +525,7 @@ The main agent still decides the design, applies or rejects recommendations, and
 2. Let the installer configure global instructions, references, skills, and subagents.
 3. Add repo-specific AGENTS.md guidance to each project.
 4. Let the main agent frame, route, and coordinate each repository task.
-5. At the root, record the actual main-session model, its canonical rank, the separate reasoning-effort ceiling, finite manifest, total node budget, and child-specific permits. Normally select host-callable depth-1 Terra or Luna role variants, including an `@tag` interface only if offered, whose model rank and effort are at or below the parent's separate ceilings. An exceptional bounded Sol child may instead use an explicit host-supported model route within the root ceilings when the root records the justification. A permitted depth-1 node may create declared depth-2 leaves, which cannot spawn.
+5. At the root, record the actual main-session model, finite manifest, total node budget, and child-specific permits. Select each depth-1 role with `gpt-5.6-luna` and `max` reasoning through a compliant profile or explicit programmatic route. Every permitted depth-2 leaf uses the same Luna/max settings and cannot spawn.
 6. For multi-node work, identify real blocking dependencies, parallel-safe nodes, ownership, and verification gates, then dispatch only finite-manifest members that fit the remaining total node budget, hold required root permits, and fit runtime, safety, and ownership capacity. Expand the manifest or budget only for a newly discovered dependency, invalidated gate, or changed user scope; get immediate user approval for a material expansion.
 7. Keep the auxiliary-worktree budget at zero unless root verifies a real isolation need. Before completion, remove each task-created auxiliary worktree safely or preserve it with an exact blocker.
 8. When independent project threads run in parallel, use the multi-session coordination skill.

@@ -29,7 +29,8 @@ Primary evidence includes:
 
 ## Available References
 
-- `model-routing.md` — mandatory Sol/Terra/Luna model-tier ceilings, selection, fallback, replacement, and escalation rules for subagents.
+- `engineering-design.md` — selective design questions for complete solutions, justified abstractions, change amplification, and material technical-debt tradeoffs.
+- `model-routing.md` — mandatory Luna/max routing, profile verification, replacement, and escalation rules for subagents.
 - `subagents.md` — dependency-aware default-execution rules for delegating to subagents, verifying handoffs, and combining results.
 - `worktrees.md` — root-owned task-local worktree budgeting, permits, integration, cleanup, and preservation rules.
 - `multi-session-coordination.md` — discovery, ownership, sequencing, thread naming, conflict detection, and integration guidance for independent Codex project threads.

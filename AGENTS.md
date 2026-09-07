@@ -12,9 +12,9 @@ Repository-specific guidance overrides the global instructions where it is more 
 - Prefer concise, practical guidance over long theory.
 - Make the main agent accountable for planning, delegation, validation, and final reporting.
 - Keep the Codex subagent model aligned around `planner`, `engineer`, `reviewer`, `tester`, and `docs`.
-- Keep every custom subagent pinned to an explicit task-appropriate model and reasoning effort so it does not inherit the main session model unintentionally.
-- Keep the canonical Codex model order explicit: `gpt-5.6-sol` rank 3, `gpt-5.6-terra` rank 2, and `gpt-5.6-luna` rank 1. Treat the selected main-session model as the root ceiling rather than assuming Sol.
-- Keep role and tier separate: every bundled role has a Terra variant and a Luna variant; equal-tier delegation is allowed, and no child may exceed its parent's model rank or reasoning-effort ceiling.
+- Keep every custom subagent pinned to an explicit `gpt-5.6-luna` model and `max` reasoning effort so it does not inherit the main session model unintentionally.
+- Require every subagent call, nested call, retry, and replacement to use `gpt-5.6-luna` with `max` reasoning, independently of the root model or effort.
+- Preserve base and `-luna` role names as compatible profiles; every bundled profile uses Luna/max.
 
 ## Content Rules
 
@@ -34,8 +34,8 @@ This repo is mostly Markdown and TOML. Before finalizing meaningful changes:
 - Review Markdown headings and fenced code blocks for correctness.
 - Confirm TOML files are syntactically valid when a TOML parser is available.
 - Confirm every `agents/*.toml` file explicitly defines `model` and `model_reasoning_effort`.
-- Confirm every bundled role has exactly one Terra profile and one Luna profile and that no profile exceeds the canonical tier declared by its filename and model field.
-- Confirm smaller-model profiles include clear stop and escalation conditions.
+- Confirm every bundled role retains its base and `-luna` profiles and all profiles explicitly set `model = "gpt-5.6-luna"` and `model_reasoning_effort = "max"`.
+- Confirm profiles include clear stop and escalation conditions without model substitution.
 - Confirm each `SKILL.md` has YAML frontmatter with `name` and `description`.
 - Confirm links and paths in `README.md` match the repository tree.
 - Confirm install docs and scripts reference the current Codex agent files.
