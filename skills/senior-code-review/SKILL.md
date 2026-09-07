@@ -16,7 +16,10 @@ Review the final diff for:
 - unused imports, variables, types, functions, or files caused by the change
 - naming clarity
 - consistency with existing patterns
-- over-abstraction
+- incomplete fixes that minimize the diff while leaving required behavior unresolved
+- abstractions without a demonstrated boundary, invariant, meaningful duplication, or variability
+- unnecessary change amplification across unrelated components
+- material technical debt without its scope, rationale, and follow-up condition
 - speculative configurability
 - behavior changes beyond the request
 - API compatibility
@@ -26,7 +29,7 @@ Review the final diff for:
 - accessibility regressions
 - subagent claims that were not independently verified
 - finite-manifest nodes, root permits, or total-budget use that were not reconciled
-- child model, reasoning effort, permissions, scope, authority, or workspace expansion beyond the parent ceiling
+- child call that did not select a verified Luna/max profile or explicit `gpt-5.6-luna`/`max` route, or permissions, scope, authority, or workspace expansion beyond the parent assignment
 - task-created auxiliary worktrees without integration evidence and a verified `removed` or exact-blocker `preserved` disposition
 
 Ask:

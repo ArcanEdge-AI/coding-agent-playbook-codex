@@ -7,7 +7,7 @@ Use this template only for work that benefits from a formal instruction-only tas
 - Goal: [One concrete outcome]
 - Owner: [Main orchestrator or coordinating thread]
 - Root owner: [Root main session that exclusively owns root topology and ready set]
-- Actual root model / canonical rank / reasoning-effort ceiling: [Record; never assume Sol]
+- Actual root model / effort: [Record when task provenance requires it; child routing is independent]
 - Repository and worktree: [Current verified context]
 - Applicable instructions: [Paths or sources]
 - Status: [Proposed / Active / Blocked / Complete]
@@ -24,13 +24,13 @@ Use this template only for work that benefits from a formal instruction-only tas
 ## Nodes
 
 - Root manifest and total spawned-node budget: [Finite node IDs/count, including depth-1 and depth-2]
-- Permit ledger: [Required root-issued permit; parent/child IDs; strict non-empty subset; disjoint ownership; profile/model rank/effort; parent model-rank and effort ceilings; child-at-or-below-parent proof; acceptance]
+- Permit ledger: [Required root-issued permit; parent/child IDs; strict non-empty subset; disjoint ownership; explicit gpt-5.6-luna/max call route; acceptance]
 - Auxiliary-worktree budget: [Finite count; default 0 and separate from node budget; user approval required for 2 or more active auxiliaries]
 - Worktree permit ledger: [None, or root-issued permit IDs linked to exact workspace, owner, isolation reason, integration target, and cleanup condition]
 
-| ID | Parent / lineage | Work | Executor | Inputs | Output and acceptance condition | Depends on | Reads | Writes or mutable state | Model / rank / effort | Parent model-rank and effort ceilings / child-at-or-below-parent proof | Verification gate | Status |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| N0 | [Root or parent node] | [Bounded work] | [Subagent role by default] | [Authoritative inputs] | [Artifact plus acceptance rule] | None | [Scope] | None | [Explicit model / rank / effort] | [Explicit parent ceilings and proof, or N/A for root] | [Evidence] | Ready |
+| ID | Parent / lineage | Work | Executor | Inputs | Output and acceptance condition | Depends on | Reads | Writes or mutable state | Explicit model / effort | Verification gate | Status |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| N0 | [Root or parent node] | [Bounded work] | [Subagent role by default] | [Authoritative inputs] | [Artifact plus acceptance rule] | None | [Scope] | None | [Verified Luna/max profile or explicit `gpt-5.6-luna` / `max`] | [Evidence] | Ready |
 
 Use node states consistently: `Proposed`, `Ready`, `Running`, `Complete`, `Failed`, `Blocked`, or `Superseded`.
 
@@ -58,11 +58,11 @@ Ready-node dispatch: [Only nodes in the finite root manifest whose dependencies 
 
 ## Local Child Subtrees
 
-| Parent node | Local child ownership and sibling non-overlap | Inherited constraints | Parent model-rank / effort ceilings | Child-at-or-below-parent proof | Compact return bundle |
-| --- | --- | --- | --- | --- | --- |
-| [N0] | [Paths/state; no overlap] | [Goal, inputs, data access, permissions, scope, non-goals, ownership/isolation, authority, approval boundary] | [Explicit ceilings] | [Selected child model rank and effort compared with both ceilings] | [Lineage, accepted artifact paths, evidence, blockers] |
+| Parent node | Local child ownership and sibling non-overlap | Inherited constraints | Explicit child route | Compact return bundle |
+| --- | --- | --- | --- | --- |
+| [N0] | [Paths/state; no overlap] | [Goal, inputs, data access, permissions, scope, non-goals, ownership/isolation, authority, approval boundary] | [Verified Luna/max profile or explicit `gpt-5.6-luna` / `max`] | [Lineage, accepted artifact paths, evidence, blockers] |
 
-Use the Codex order `gpt-5.6-sol` rank 3, `gpt-5.6-terra` rank 2, and `gpt-5.6-luna` rank 1. Record the actual user-selected root model; never assume Sol. A child's model rank and reasoning effort must be at or below its parent's separate ceilings. Equal-tier children are valid, and depth does not force a tier drop. Only root issues permits and expands budget. Depth 1 executes directly and stops local splitting when no valid permitted strict-subset split exists; depth 2 is a leaf and cannot spawn. Runtime-full is backpressure, not speculative queuing. Retry reuses ID/permit. Every expansion records a documented root reason limited to a newly discovered dependency, an invalidated gate, or changed user scope; a material-cost expansion additionally requires immediate user approval. A replacement is a new root-routed depth-1 node at any model rank and effort at or below the root task ceilings and requires a new root permit/budget. Descendants that cannot complete within their ceilings stop and report rather than escalating themselves.
+Every delegated call selects a verified profile pinned to `gpt-5.6-luna` with `max` reasoning, or explicitly passes those values through a generic route, independent of the root model or effort. Only root issues permits and expands budget. Depth 1 executes directly and stops local splitting when no valid permitted strict-subset split exists; depth 2 is a leaf and cannot spawn. Runtime-full is backpressure, not speculative queuing. Retry reuses ID/permit. Every expansion records a documented root reason limited to a newly discovered dependency, an invalidated gate, or changed user scope; a material-cost expansion additionally requires immediate user approval. A replacement uses a new root permit and budget entry but the same verified Luna/max route. Descendants cannot change the route or request escalation.
 
 ## Worktree Lifecycle
 
@@ -112,7 +112,7 @@ If no approval-gated action exists, write `None` and remove the placeholder row.
 - Let the main orchestrator own graph topology, state transitions, integration, authority-bound actions, and final acceptance.
 - Let local parents orchestrate only their declared child subtree; no child may change root topology or root-ready work.
 - At the root, assign actual execution to at least one bounded subagent when available. Root direct main-agent execution is allowed only when subagents are unavailable, the user forbids delegation, or the action must remain with the main agent because of required authority; record the exact exception. A depth-1 local owner executes directly when no valid permitted strict-subset split exists; depth 2 cannot spawn.
-- Record the actual root model and its canonical rank; never assume Sol. Require each child to be equal to or narrower than its parent in inherited constraints, with explicitly selected profile, model rank, and effort at or below its parent's separate ceilings; record the proof and never silently inherit or escalate.
+- Record the actual root model when provenance requires it; it does not constrain the child route. Require each child to be equal to or narrower than its parent in inherited constraints and to select a verified Luna/max profile or use explicit Luna/max arguments; never silently inherit or change the route.
 - Give each child an exact workspace. Keep the auxiliary-worktree budget separate from the node budget, default it to zero, and let only root create or remove a worktree under `references/worktrees.md`.
 - Treat a dependency as real only when the downstream node consumes an accepted upstream artifact or decision.
 - Keep completed outputs unless their inputs become invalid.

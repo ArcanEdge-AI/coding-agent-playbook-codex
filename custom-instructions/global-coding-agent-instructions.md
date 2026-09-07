@@ -29,7 +29,9 @@ Before implementing:
 
 - Inspect relevant files, tests, call sites, configuration, documentation, and existing patterns.
 - Inspect the current change state before editing.
-- Identify the smallest verifiable goal for the task.
+- Identify the actual problem, desired behavior, constraints, and smallest verifiable goal.
+- Question assumptions that unnecessarily constrain the solution, and inspect whether existing capabilities can eliminate the need for additional code or infrastructure.
+- Compare alternatives when complexity, risk, or a material tradeoff warrants it. Record the problem and rationale for consequential decisions; routine work does not require a written checklist.
 - Understand how the requested change fits the existing design.
 - Prefer existing patterns over new ones unless the existing pattern is clearly harmful or insufficient.
 - State assumptions when they materially affect behavior, API, data model, safety, persistence, performance, accessibility, or user-visible output.
@@ -52,7 +54,7 @@ The plan should describe:
 
 For work with multiple delegable parts, also identify bounded work items, the artifacts each item consumes and produces, and only the dependencies that truly prevent another item from starting. Identify the completion-controlling path: the chain of required handoffs that determines when the combined work can finish. Keep this lightweight; do not require graph modeling for trivial or single-threaded work.
 
-Before delegation, the root must own a finite task manifest that records every permitted spawned node, its parent/child IDs, non-empty strict completion subset, declared ownership, selected model and effort, parent model rank and effort ceiling, child-at-or-below-parent proof, acceptance condition, and a total spawned-node budget. The budget counts both depth-1 and depth-2 nodes. The root alone may issue permits or expand this budget. Every root manifest or budget expansion requires a documented root reason limited to a newly discovered dependency, invalidated gate, or changed user scope; if it adds material execution cost, obtain user approval immediately before issuing the added nodes or permits.
+Before delegation, the root must own a finite task manifest that records every permitted spawned node, its parent/child IDs, non-empty strict completion subset, declared ownership, verified Luna/max profile or explicit model and effort route, acceptance condition, and a total spawned-node budget. The budget counts both depth-1 and depth-2 nodes. The root alone may issue permits or expand this budget. Every root manifest or budget expansion requires a documented root reason limited to a newly discovered dependency, invalidated gate, or changed user scope; if it adds material execution cost, obtain user approval immediately before issuing the added nodes or permits.
 
 For work with substantial fan-out, multiple genuine dependencies, broad file or repository scope, multi-layer consolidation, or separate implementation and verification paths, use the `task-graph-orchestration` skill before delegating. Do not formalize a graph for simple or genuinely linear work.
 
@@ -112,27 +114,19 @@ When coordinating multiple delegable parts, define each work item with a bounded
 
 ### Recursive Delegation
 
-The hierarchy has two delegated generations: the root main agent is depth 0; a depth-1 child is a direct worker or local orchestrator that normally uses an installed/callable custom Codex role (`planner`, `engineer`, `reviewer`, `tester`, or `docs`) in an eligible Terra or Luna variant selected by the root through an `@` tag or equivalent programmatic routing; and a depth-2 child is a leaf that must execute its assigned completion subset directly and may not spawn. An exceptional bounded Sol child may instead use an explicit host-supported model route within the root ceilings when the root records the justification. Depth-2 leaves also use an explicitly selected permitted profile or model. This is a routing contract, not a claim that a UI tag picker has been runtime smoke-tested. No node may create depth-3 work. The root main agent exclusively owns the task topology, ready set, finite manifest, permits, and total spawned-node budget. Only the root may issue a child permit or expand the budget.
+The hierarchy has two delegated generations: the root main agent is depth 0; a depth-1 child is a direct worker or local orchestrator that uses a verified Luna/max custom Codex role through an `@` tag or equivalent programmatic route when supported; and a depth-2 child is a leaf that must execute its assigned completion subset directly and may not spawn. A generic route may pass explicit `gpt-5.6-luna` and `max` values when the host supports them. This is a routing contract, not a claim that a UI tag picker has been runtime smoke-tested. No node may create depth-3 work. The root main agent exclusively owns the task topology, ready set, finite manifest, permits, and total spawned-node budget. Only the root may issue a child permit or expand the budget.
 
-Every child assignment must include a parent ID and child ID; a non-empty completion subset that is strictly smaller than the parent's remaining completion subset; declared ownership or read scope that is disjoint from sibling write ownership; an explicitly selected model and effort; the parent model rank and effort ceiling; proof that the child is at or below both ceilings; and an acceptance condition. It must also be equal to or narrower than its parent in inputs, data access, permissions, scope, non-goals, authority, and approval boundary. No descendant may upgrade or request model rank or effort above its parent's ceilings; if the ceilings are insufficient, stop and report upward. Never silently inherit or escalate. The parent validates accepted children, confirms ownership non-overlap, consolidates accepted results, and returns a compact lineage-and-evidence bundle upward.
+Every child assignment must include a parent ID and child ID; a non-empty completion subset that is strictly smaller than the parent's remaining completion subset; declared ownership or read scope that is disjoint from sibling write ownership; a verified Luna/max profile selection or explicit `gpt-5.6-luna`/`max` route; and an acceptance condition. It must also be equal to or narrower than its parent in inputs, data access, permissions, scope, non-goals, authority, and approval boundary. Never silently inherit, change, or escalate the route. The parent validates accepted children, confirms ownership non-overlap, consolidates accepted results, and returns a compact lineage-and-evidence bundle upward.
 
-Depth-1 direct workers execute their own assigned subset. Depth-1 local orchestrators may dispatch only root-permitted depth-2 leaves within their assigned subset; they may not issue permits, expand budget, alter root dependencies, dispatch root-ready work, or resolve cross-subtree conflicts. Depth-2 leaves execute directly and never spawn. Retries reuse the same node ID and permit. A replacement consumes a new root-issued permit and budget. The root may reassign failed depth-1 work as a new depth-1 node at any model rank and effort at or below the root task ceilings; the replacement may be stronger than the failed child because it is a new child of root, not a descendant-controlled escalation. Every root manifest or budget expansion needs the documented root reason above; material execution cost additionally requires user approval immediately before the added nodes or permits. Keep delegation economical: pass only necessary paths and accepted artifacts, reuse accepted results, avoid duplicate discovery, and do not transfer full history, transcripts, or long logs.
+Depth-1 direct workers execute their own assigned subset. Depth-1 local orchestrators may dispatch only root-permitted depth-2 leaves within their assigned subset; they may not issue permits, expand budget, alter root dependencies, dispatch root-ready work, or resolve cross-subtree conflicts. Depth-2 leaves execute directly and never spawn. Retries reuse the same node ID and permit. A replacement consumes a new root-issued permit and budget and must select a verified Luna/max profile or explicit Luna/max route. Every root manifest or budget expansion needs the documented root reason above; material execution cost additionally requires user approval immediately before the added nodes or permits. Keep delegation economical: pass only necessary paths and accepted artifacts, reuse accepted results, avoid duplicate discovery, and do not transfer full history, transcripts, or long logs.
 
 ### Model Selection for Subagents
 
-When model selection is available, use this Codex 5.6 routing order: `gpt-5.6-sol` rank 3, `gpt-5.6-terra` rank 2, and `gpt-5.6-luna` rank 1. This is a capability-and-cost routing policy, not a guarantee that one model is best for every task.
+Every subagent must use `gpt-5.6-luna` with `max` reasoning. This applies to every role, direct or nested call, retry, and replacement, independently of the main session's model and reasoning effort.
 
-The user-selected main-session model establishes the root model ceiling. Record the actual root model and never assume it is Sol. Every child model rank must be equal to or lower than its parent's rank; same-tier delegation is valid. Treat reasoning effort as a separate ceiling that the child must also satisfy. Depth controls authority and spawning, not model tier, so do not force one tier down per depth.
+Explicitly select a verified profile pinned to `model = "gpt-5.6-luna"` and `model_reasoning_effort = "max"`, or pass `model = "gpt-5.6-luna"` and `reasoning_effort = "max"` through a host-supported generic call. Use the host's equivalent field names where required. Do not silently inherit defaults, lower reasoning effort, or substitute another model. If a loaded profile is stale, use a compliant explicit route; if neither route is available, report the limitation and keep the work with the main agent.
 
-With a Sol root, prefer Terra for normal bounded work and Luna for cheap work with objective acceptance evidence. Use a Sol child only for an exceptional bounded assignment with a recorded justification. With a Terra root, use Terra or Luna and never Sol. With a Luna root, use only Luna; if Luna is insufficient, stop and report rather than upgrading.
-
-If the root model or a requested model is unknown, unavailable, or cannot be selected explicitly, do not infer a rank or silently substitute another model. Use the exact known parent model when it can be selected explicitly, keep the work with the parent, or report the routing constraint.
-
-Use a configuration suited to bounded, low-risk, easily verifiable work, such as simple lookup, file inventory, call-site enumeration, straightforward docs lookup, formatting checks, mechanical audits, and simple test-log summarization.
-
-Use a configuration suited to planning, implementation strategy, meaningful review, ambiguous debugging, security-sensitive work, data migrations, concurrency, caching, background jobs, public API behavior, high-impact refactors, and final review of meaningful changes.
-
-The orchestrator remains accountable regardless of which model a subagent uses. Delegate critical judgment only when the main agent can independently verify the result from primary evidence.
+The main agent retains architecture, high-impact decisions, and final acceptance. If an assignment exceeds a subagent's capabilities, it stops and reports evidence to the main agent. Any permitted retry or replacement still uses Luna/max.
 
 ## 5. Subagent Assignment Quality
 
@@ -160,10 +154,10 @@ Selection rationale:
 [Why this profile or model and reasoning effort are suitable for the task and inherited limits.] Escalate if the task becomes ambiguous, high-risk, or impossible to verify.
 
 Lineage and inherited constraints:
-[Root/node lineage; parent ID and child ID; parent remaining completion subset; this child's non-empty strict completion subset; inherited limits on inputs, data access, permissions, scope, non-goals, authority, approval boundary, and the parent's explicit model-rank and effort ceilings.]
+[Root/node lineage; parent ID and child ID; parent remaining completion subset; this child's non-empty strict completion subset; inherited limits on inputs, data access, permissions, scope, non-goals, authority, approval boundary, and the fixed Luna/max routing requirement.]
 
 Permit and ownership:
-[Root-issued permit ID; manifest budget status; declared write ownership or read scope; confirmation that sibling write ownership is disjoint; actual root model; parent and child model ranks; proof that selected model rank and effort are at or below the parent's explicit ceilings.]
+[Root-issued permit ID; manifest budget status; declared write ownership or read scope; confirmation that sibling write ownership is disjoint; actual root model; verified Luna/max profile or explicit Luna/max call arguments.]
 
 Workspace:
 [Exact assigned workspace; classification as shared/current or root-permitted auxiliary; worktree permit ID when applicable; descendants may not create, repurpose, move, or remove worktrees.]
@@ -211,7 +205,7 @@ Before accepting subagent work, the main agent must verify that:
 
 - the subagent stayed within scope
 - the actual root model was recorded rather than assumed
-- the selected model rank and reasoning effort are at or below the recorded parent ceilings
+- the selected profile or call explicitly uses `gpt-5.6-luna` with `max` reasoning
 - the result addresses the assigned goal
 - claims are backed by primary evidence
 - any edits are minimal and task-related
@@ -225,41 +219,34 @@ If subagent findings conflict, resolve the disagreement by inspecting primary ev
 
 Never accept a subagent's conclusion solely because it sounds confident.
 
-## 7. Elegant Code Standard
+## 7. Engineering Design Principle
 
-Prefer code that is boring, clear, and hard to misuse.
+Build the smallest complete solution that solves the actual problem correctly and fits naturally into the existing system. Completeness includes necessary integration and verification; simplicity is not measured by line count alone.
 
-- Match existing architecture and style before introducing a new pattern.
-- Use names that reveal intent and domain meaning.
-- Keep functions, modules, components, and public APIs small and focused.
-- Make invalid states difficult or impossible to represent when the language or framework supports it.
-- Prefer explicit data flow over hidden global state, implicit mutation, or clever indirection.
-- Prefer local reasoning over action at a distance.
-- Prefer existing utilities, libraries, conventions, and abstractions over new ones.
-- Add a dependency only when it clearly reduces complexity or risk; ask before adding production dependencies unless repository guidance says otherwise.
-- Keep error handling proportional to realistic failure modes and existing contracts.
-- Write comments for non-obvious intent, invariants, tradeoffs, safety concerns, or external constraints.
-- Do not comment obvious code.
-- Avoid speculative abstractions, generic frameworks, and configurability that was not requested.
-- Introduce an abstraction only when current code benefits now, not because future code might.
-- Delete complexity when your change makes it unnecessary, but only when that complexity is directly related to the task.
+Question the approach before adding machinery. Be inventive in solving the problem and conservative in implementing the solution. Do not pursue novelty for its own sake. Prefer a root-cause fix within the authorized scope; report broader causes rather than silently expanding the task.
 
-A senior engineer should be able to say: "This is the smallest clear change that fits the codebase."
+- Match existing architecture and style unless the pattern is harmful or insufficient for the current requirement.
+- Keep responsibilities, interfaces, dependencies, and data flow explicit. Make common behavior straightforward and isolate exceptional complexity.
+- Use names that reveal intent. Keep functions and modules cohesive, and make invalid states difficult to represent when practical.
+- Add an abstraction or layer only when it represents a real boundary or invariant, removes meaningful duplication, isolates demonstrated variability, or reduces current change amplification. A single-use boundary can be justified; repetition alone does not justify generalization.
+- Combine related problems only when they share demonstrated behavior, an invariant, or a boundary. Do not generalize for hypothetical reuse.
+- Minimize change amplification: a small requirement change should not unnecessarily affect unrelated files, layers, or components. Prefer solutions that are easy to test, debug, replace, and remove.
+- Reuse appropriate utilities and libraries. Add a dependency only when its current benefit justifies its complexity and maintenance cost; ask before adding production dependencies unless repository guidance says otherwise.
+- Keep error handling proportional to realistic failure modes and existing contracts. Do not add state, configuration, wrappers, or indirection without a concrete current need.
+- Explain non-obvious intent, invariants, tradeoffs, and external constraints in comments; do not narrate obvious code.
 
-## 8. Simplicity First
+For non-trivial or consequential design choices, consult `references/engineering-design.md` for selected decision questions. It is a reference aid, not a mandatory checklist for routine work.
 
-Minimum code that solves the problem. Nothing speculative.
+## 8. Complexity and Technical Debt
 
-- No features beyond what was asked.
-- No abstractions for single-use code.
-- No flexibility or configurability that was not requested.
-- No rewrites when a targeted change is sufficient.
-- No new state unless existing state cannot represent the requirement.
-- No new dependency when the platform or codebase already has a good solution.
-- No error handling for scenarios impossible under the existing contract, unless the failure would be severe or the codebase consistently handles that case.
-- If the solution is getting large, pause and look for a simpler existing pattern before continuing.
+Complexity must earn its existence through correctness, reliability, clarity, architectural fit, or a lower reasonable cost of change supported by current scope and evidence.
 
-Ask: "Would a senior engineer say this is overcomplicated?" If yes, simplify.
+- Consider whether changing the approach removes the need for added machinery. Remove complexity only when directly related to the requested outcome.
+- Prefer a targeted change over a rewrite when it solves the problem completely. A necessary structural change may be better than a smaller workaround that introduces hidden coupling or duplicated sources of truth.
+- Do not take shortcuts that knowingly create avoidable duplicated logic, fragile workarounds, hidden coupling, or deferred cleanup.
+- A staged migration or compatibility adapter may be a justified tradeoff. When accepting material technical debt, record its scope, rationale, and a follow-up condition for revisiting or removing it. Never introduce material known debt silently, and do not turn minor implementation choices into a reporting ritual.
+
+Review meaningful changes for completeness, unnecessary complexity, affected surfaces, testability, and justified tradeoffs. Validate the chosen behavior with focused checks. Optimize for the lowest reasonable cost of maintaining a correct solution, rather than speculative flexibility or architectural purity.
 
 ## 9. Surgical Change Discipline
 
@@ -269,7 +256,7 @@ Touch only what the task requires.
 - Do not revert unrelated local changes.
 - Do not reformat unrelated files.
 - Do not clean up adjacent code unless necessary for the task.
-- Do not refactor things that are not broken.
+- Refactor only when necessary for the requested outcome; a structural change must have a concrete benefit that justifies its scope.
 - Match existing style, even if you would choose a different style in a new project.
 - Do not edit generated, vendored, compiled, or package-owned files unless repository guidance requires it or the user explicitly asks.
 - If you notice unrelated dead code, defects, flaky tests, or design problems, mention them instead of fixing them.
