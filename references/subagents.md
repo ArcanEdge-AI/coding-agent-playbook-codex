@@ -114,12 +114,14 @@ Detect the project name and derive the concise description from the task instead
 
 Consult `references/model-routing.md` before spawning a subagent when it is available.
 
-- Every subagent call must explicitly select a verified bundled profile pinned to `gpt-5.6-luna` with `max` reasoning, or pass those values explicitly through a generic route, regardless of the root model or effort.
+- Every delegated subagent execution must explicitly select a verified bundled profile pinned to `gpt-5.6-luna` with `max` reasoning, or pass those values as explicit child-execution settings, regardless of the root model or effort. This applies to child launches, retries, and replacements, not to ordinary tool calls, progress or task-reporting messages, or follow-up communication.
 - Do not rely on an unverified profile or parent-model inheritance for routine supporting work.
-- If the host cannot accept explicit per-call values, use a verified bundled Luna/max profile. If it is stale or unavailable, stop and report the limitation rather than silently inheriting a profile or parent setting.
+- If the host cannot accept explicit child-execution values, use a verified bundled Luna/max profile. If it is stale or unavailable, stop and report the limitation rather than silently inheriting a profile or parent setting.
 - Define stop and escalation conditions before delegation.
 - A subagent must stop and report when the task becomes ambiguous, exceeds scope, conflicts with primary evidence, or requires high-impact judgment.
-- The subagent must not silently change models or effort, fall back to the main orchestrator's model, or request a model escalation.
+- The subagent must not silently change its execution model or effort, fall back to the main orchestrator's model, or request a model escalation.
+
+Subagents must not alter a parent or peer task's model or reasoning settings. Use team `collaboration.send_message` or the normal final return for progress and task reporting. If separately authorized task reporting uses `send_message_to_thread`, omit `model`, `thinking`, and analogous destination-setting overrides entirely; do not echo the sender's model, guess or reassert the parent's model, or change settings as a workaround. A follow-up message to an existing worker need not repeat its verified execution route.
 
 Keep final ownership with the main agent for:
 
@@ -134,15 +136,15 @@ Keep final ownership with the main agent for:
 - large or high-impact refactors
 - final acceptance of meaningful changes
 
-A supporting subagent may gather evidence for these areas, but the main agent must make and verify the decision. A root-authorized replacement requires a new root-issued permit and budget entry and must still select a verified Luna/max profile or use explicit Luna/max arguments.
+A supporting subagent may gather evidence for these areas, but the main agent must make and verify the decision. A root-authorized replacement requires a new root-issued permit and budget entry and must still select a verified Luna/max profile or use explicit Luna/max child-execution settings.
 
 ## Two-Generation Delegation and Leaves
 
-The root is depth 0. A depth-1 child is either a direct worker or a local orchestrator that uses an installed/callable custom Codex role (`planner`, `engineer`, `reviewer`, `tester`, or `docs`) through an `@` tag or equivalent programmatic route when supported. A depth-2 child is a leaf that executes its assigned completion subset directly, must not spawn, and uses a verified Luna/max profile or explicit Luna/max call arguments. This routing contract does not claim that a UI tag picker has been runtime smoke-tested. Depth 3 and deeper are prohibited. Before delegation, the root owns a finite task manifest and total spawned-node budget counting every depth-1 and depth-2 node. Only the root may issue child permits or expand that budget. Every root manifest or budget expansion requires a documented root reason limited to a newly discovered dependency, invalidated gate, or changed user scope; if it adds material execution cost, obtain user approval immediately before issuing the added nodes or permits.
+The root is depth 0. A depth-1 child is either a direct worker or a local orchestrator that uses an installed/callable custom Codex role (`planner`, `engineer`, `reviewer`, `tester`, or `docs`) through an `@` tag or equivalent programmatic route when supported. A depth-2 child is a leaf that executes its assigned completion subset directly, must not spawn, and uses a verified Luna/max profile or explicit Luna/max child-execution settings. This routing contract does not claim that a UI tag picker has been runtime smoke-tested. Depth 3 and deeper are prohibited. Before delegation, the root owns a finite task manifest and total spawned-node budget counting every depth-1 and depth-2 node. Only the root may issue child permits or expand that budget. Every root manifest or budget expansion requires a documented root reason limited to a newly discovered dependency, invalidated gate, or changed user scope; if it adds material execution cost, obtain user approval immediately before issuing the added nodes or permits.
 
-Every child requires a root-issued permit and must declare its parent ID, child ID, non-empty strict completion subset, ownership or read scope, verified Luna/max profile selection or explicit Luna/max call arguments, and acceptance condition. Its completion subset must be strictly smaller than the parent's remaining completion subset, and sibling write ownership must be disjoint. The assignment must otherwise remain equal to or narrower than its parent in inputs, data access, permissions, scope, non-goals, authority, and approval boundary.
+Every child requires a root-issued permit and must declare its parent ID, child ID, non-empty strict completion subset, ownership or read scope, verified Luna/max profile selection or explicit Luna/max child-execution settings, and acceptance condition. Its completion subset must be strictly smaller than the parent's remaining completion subset, and sibling write ownership must be disjoint. The assignment must otherwise remain equal to or narrower than its parent in inputs, data access, permissions, scope, non-goals, authority, and approval boundary.
 
-A depth-1 direct worker executes its own subset. A depth-1 local orchestrator may dispatch only root-permitted depth-2 leaves within its assigned subset; it cannot issue permits, expand budget, alter root dependencies, dispatch root-ready work, or resolve cross-subtree conflicts. The parent validates each accepted child, consolidates accepted outputs, and returns a compact lineage-and-evidence bundle upward. Retry a failed node with its original node ID and permit while its inputs remain valid. A replacement node needs a new root-issued permit, consumes budget, and still selects a verified Luna/max profile or uses explicit Luna/max arguments. Every root manifest or budget expansion needs the documented root reason above; material execution cost additionally requires user approval immediately before the added nodes or permits.
+A depth-1 direct worker executes its own subset. A depth-1 local orchestrator may dispatch only root-permitted depth-2 leaves within its assigned subset; it cannot issue permits, expand budget, alter root dependencies, dispatch root-ready work, or resolve cross-subtree conflicts. The parent validates each accepted child, consolidates accepted outputs, and returns a compact lineage-and-evidence bundle upward. Retry a failed node with its original node ID and permit while its inputs remain valid. A replacement node needs a new root-issued permit, consumes budget, and still selects a verified Luna/max profile or uses explicit Luna/max child-execution settings. Every root manifest or budget expansion needs the documented root reason above; material execution cost additionally requires user approval immediately before the added nodes or permits.
 
 Keep local delegation economical: send only the minimum relevant paths and accepted artifacts; reuse accepted results; avoid duplicate discovery; and omit full history, transcripts, and long logs.
 
@@ -154,12 +156,12 @@ Use this structure when delegating:
 Role:
 You are the [planner/engineer/reviewer/tester/docs] subagent for this task.
 
-Selected profile or model: [Verified bundled Luna/max profile alias or explicit gpt-5.6-luna route]
+Selected child-execution profile or model: [Verified bundled Luna/max profile alias or explicit gpt-5.6-luna settings]
 
-Reasoning effort: max
+Child-execution reasoning effort: max
 
 Why this selection is suitable:
-[The fixed Luna/max route is required for every delegated call and is independently verifiable for this bounded assignment.]
+[The fixed Luna/max route is required for this delegated child execution and is independently verifiable for this bounded assignment.]
 
 Goal:
 [One concrete outcome.]
@@ -171,7 +173,7 @@ Lineage and inherited constraints:
 [Root/node lineage; parent ID and child ID; parent remaining completion subset; this child's non-empty strict completion subset; inherited limits on inputs, data access, permissions, scope, non-goals, authority, approval boundary, ownership, and workspace.]
 
 Permit and ownership:
-[Root-issued permit ID; manifest budget status; declared write ownership or read scope; confirmation that sibling write ownership is disjoint; actual root model when provenance is needed; verified Luna/max profile or explicit Luna/max call arguments.]
+[Root-issued permit ID; manifest budget status; declared write ownership or read scope; confirmation that sibling write ownership is disjoint; actual root model when provenance is needed; verified Luna/max profile or explicit Luna/max child-execution settings.]
 
 Workspace:
 [Exact shared/current workspace or root-permitted auxiliary worktree; worktree permit ID when applicable; descendants may not create, repurpose, move, or remove worktrees.]
@@ -231,12 +233,13 @@ Root-issued permit ID:
 
 Before accepting subagent work, the main agent must verify:
 
-- the call selected a verified profile pinned to `gpt-5.6-luna`/`max`, or explicitly passed those values
-- parent-model and parent-effort inheritance were not used unintentionally
+- the child execution selected a verified profile pinned to `gpt-5.6-luna`/`max`, or explicitly passed those values as child-execution settings
+- parent-model and parent-effort inheritance were not used unintentionally for child execution
+- progress and task-reporting messages omitted model, reasoning, thinking, and analogous destination-setting overrides and did not alter a parent or peer task
 - the actual root model was recorded when task provenance requires it
 - each local child stayed within inherited constraints, had a bounded output, and did not overlap a sibling
 - the returned lineage and evidence bundle is compact and sufficient for the parent to accept or reject the result
-- any root-authorized replacement used a new permit and budget entry, a verified Luna/max profile or explicit Luna/max arguments, and documented reason and verification evidence
+- any root-authorized replacement used a new permit and budget entry, a verified Luna/max profile or explicit Luna/max child-execution settings, and documented reason and verification evidence
 - the subagent stayed within scope
 - the result addresses the assigned goal
 - claims are backed by code, tests, logs, docs, runtime behavior, or other primary evidence

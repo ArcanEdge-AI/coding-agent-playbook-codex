@@ -13,7 +13,8 @@ Repository-specific guidance overrides the global instructions where it is more 
 - Make the main agent accountable for planning, delegation, validation, and final reporting.
 - Keep the Codex subagent model aligned around `planner`, `engineer`, `reviewer`, `tester`, and `docs`.
 - Keep every custom subagent pinned to an explicit `gpt-5.6-luna` model and `max` reasoning effort so it does not inherit the main session model unintentionally.
-- Require every subagent call, nested call, retry, and replacement to use `gpt-5.6-luna` with `max` reasoning, independently of the root model or effort.
+- Require every subagent execution, including nested execution, retries, and replacements, to use `gpt-5.6-luna` with `max` reasoning, independently of the root model or effort.
+- Subagent progress and result messages must preserve parent and peer settings; never attach worker model or reasoning overrides to reports.
 - Preserve base and `-luna` role names as compatible profiles; every bundled profile uses Luna/max.
 
 ## Content Rules
@@ -36,6 +37,7 @@ This repo is mostly Markdown and TOML. Before finalizing meaningful changes:
 - Confirm every `agents/*.toml` file explicitly defines `model` and `model_reasoning_effort`.
 - Confirm every bundled role retains its base and `-luna` profiles and all profiles explicitly set `model = "gpt-5.6-luna"` and `model_reasoning_effort = "max"`.
 - Confirm profiles include clear stop and escalation conditions without model substitution.
+- Confirm reporting guidance uses team messages or normal returns and omits destination-setting overrides from any separately authorized task report.
 - Confirm each `SKILL.md` has YAML frontmatter with `name` and `description`.
 - Confirm links and paths in `README.md` match the repository tree.
 - Confirm install docs and scripts reference the current Codex agent files.

@@ -24,13 +24,13 @@ Use this template only for work that benefits from a formal instruction-only tas
 ## Nodes
 
 - Root manifest and total spawned-node budget: [Finite node IDs/count, including depth-1 and depth-2]
-- Permit ledger: [Required root-issued permit; parent/child IDs; strict non-empty subset; disjoint ownership; explicit gpt-5.6-luna/max call route; acceptance]
+- Permit ledger: [Required root-issued permit; parent/child IDs; strict non-empty subset; disjoint ownership; explicit gpt-5.6-luna/max child-execution route; acceptance]
 - Auxiliary-worktree budget: [Finite count; default 0 and separate from node budget; user approval required for 2 or more active auxiliaries]
 - Worktree permit ledger: [None, or root-issued permit IDs linked to exact workspace, owner, isolation reason, integration target, and cleanup condition]
 
-| ID | Parent / lineage | Work | Executor | Inputs | Output and acceptance condition | Depends on | Reads | Writes or mutable state | Explicit model / effort | Verification gate | Status |
+| ID | Parent / lineage | Work | Executor | Inputs | Output and acceptance condition | Depends on | Reads | Writes or mutable state | Child-execution model / effort | Verification gate | Status |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| N0 | [Root or parent node] | [Bounded work] | [Subagent role by default] | [Authoritative inputs] | [Artifact plus acceptance rule] | None | [Scope] | None | [Verified Luna/max profile or explicit `gpt-5.6-luna` / `max`] | [Evidence] | Ready |
+| N0 | [Root or parent node] | [Bounded work] | [Subagent role by default] | [Authoritative inputs] | [Artifact plus acceptance rule] | None | [Scope] | None | [Verified Luna/max profile or explicit `gpt-5.6-luna` / `max` child-execution settings] | [Evidence] | Ready |
 
 Use node states consistently: `Proposed`, `Ready`, `Running`, `Complete`, `Failed`, `Blocked`, or `Superseded`.
 
@@ -60,9 +60,9 @@ Ready-node dispatch: [Only nodes in the finite root manifest whose dependencies 
 
 | Parent node | Local child ownership and sibling non-overlap | Inherited constraints | Explicit child route | Compact return bundle |
 | --- | --- | --- | --- | --- |
-| [N0] | [Paths/state; no overlap] | [Goal, inputs, data access, permissions, scope, non-goals, ownership/isolation, authority, approval boundary] | [Verified Luna/max profile or explicit `gpt-5.6-luna` / `max`] | [Lineage, accepted artifact paths, evidence, blockers] |
+| [N0] | [Paths/state; no overlap] | [Goal, inputs, data access, permissions, scope, non-goals, ownership/isolation, authority, approval boundary] | [Verified Luna/max profile or explicit `gpt-5.6-luna` / `max` child-execution settings] | [Lineage, accepted artifact paths, evidence, blockers] |
 
-Every delegated call selects a verified profile pinned to `gpt-5.6-luna` with `max` reasoning, or explicitly passes those values through a generic route, independent of the root model or effort. Only root issues permits and expands budget. Depth 1 executes directly and stops local splitting when no valid permitted strict-subset split exists; depth 2 is a leaf and cannot spawn. Runtime-full is backpressure, not speculative queuing. Retry reuses ID/permit. Every expansion records a documented root reason limited to a newly discovered dependency, an invalidated gate, or changed user scope; a material-cost expansion additionally requires immediate user approval. A replacement uses a new root permit and budget entry but the same verified Luna/max route. Descendants cannot change the route or request escalation.
+Every delegated child execution selects a verified profile pinned to `gpt-5.6-luna` with `max` reasoning, or explicitly passes those values as child-execution settings, independent of the root model or effort. Only root issues permits and expands budget. Depth 1 executes directly and stops local splitting when no valid permitted strict-subset split exists; depth 2 is a leaf and cannot spawn. Runtime-full is backpressure, not speculative queuing. Retry reuses ID/permit. Every expansion records a documented root reason limited to a newly discovered dependency, an invalidated gate, or changed user scope; a material-cost expansion additionally requires immediate user approval. A replacement uses a new root permit and budget entry but the same verified Luna/max child-execution route. Descendants cannot change the execution route or request escalation. Progress and task-reporting messages omit model, reasoning, thinking, and analogous destination-setting overrides; use the team collaboration channel or normal final return.
 
 ## Worktree Lifecycle
 
@@ -112,7 +112,7 @@ If no approval-gated action exists, write `None` and remove the placeholder row.
 - Let the main orchestrator own graph topology, state transitions, integration, authority-bound actions, and final acceptance.
 - Let local parents orchestrate only their declared child subtree; no child may change root topology or root-ready work.
 - At the root, assign actual execution to at least one bounded subagent when available. Root direct main-agent execution is allowed only when subagents are unavailable, the user forbids delegation, or the action must remain with the main agent because of required authority; record the exact exception. A depth-1 local owner executes directly when no valid permitted strict-subset split exists; depth 2 cannot spawn.
-- Record the actual root model when provenance requires it; it does not constrain the child route. Require each child to be equal to or narrower than its parent in inherited constraints and to select a verified Luna/max profile or use explicit Luna/max arguments; never silently inherit or change the route.
+- Record the actual root model when provenance requires it; it does not constrain the child execution route. Require each child to be equal to or narrower than its parent in inherited constraints and to select a verified Luna/max profile or use explicit Luna/max child-execution settings; never silently inherit or change the execution route.
 - Give each child an exact workspace. Keep the auxiliary-worktree budget separate from the node budget, default it to zero, and let only root create or remove a worktree under `references/worktrees.md`.
 - Treat a dependency as real only when the downstream node consumes an accepted upstream artifact or decision.
 - Keep completed outputs unless their inputs become invalid.

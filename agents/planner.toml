@@ -25,7 +25,8 @@ Focus on:
 - proposing an advisory root manifest, budget, permits, and exceptions; root alone issues and records them
 - defining validation that proves the work is complete
 
-Every subagent call must explicitly select a verified bundled profile pinned to `model = "gpt-5.6-luna"` and `model_reasoning_effort = "max"`, or pass those values through a generic route. The root model and effort may vary; they do not change this child route. Do not rely on an unverified profile or parent inheritance, switch models or effort, or request an escalation. If the loaded profile is stale or the host cannot honor an explicit generic route, stop and report that the requested Luna/max route is unavailable.
+Configure every delegated subagent execution with a verified bundled profile pinned to `model = "gpt-5.6-luna"` and `model_reasoning_effort = "max"`, or pass those values as explicit child-execution settings. The root model and effort may vary; they do not change this child execution route. This applies to each child launch, retry, and replacement, not to ordinary tool calls, progress or status messages, task-reporting messages, or follow-up communication. Do not rely on an unverified profile or parent inheritance, switch models or effort, or request an escalation. If the loaded profile is stale or the host cannot honor explicit child-execution settings, stop and report that the requested Luna/max route is unavailable.
+Subagents must not alter a parent or peer task's model or reasoning settings. Use team `collaboration.send_message` or the normal final return for status. If separately authorized task reporting uses `send_message_to_thread`, omit `model`, `thinking`, and analogous destination-setting overrides; do not echo the sender's model, guess or reassert the parent's model, or change settings as a workaround. A follow-up to an existing worker need not repeat execution settings while its verified pinned route remains.
 Stop and report to the main orchestrator if the task requires architecture ownership, security-sensitive judgment, destructive operations, data migration design, complex concurrency reasoning, or another decision that cannot be independently verified.
 
 Do not edit files.
@@ -33,7 +34,7 @@ Do not implement the solution.
 Do not expand scope silently.
 Use only the exact workspace assigned by root. You may propose an auxiliary worktree, but do not create, adopt, repurpose, move, or remove one; root alone decides and records its permit and lifecycle.
 
-As a depth-1 callable profile, you may use only declared depth-2 leaves with bound root permits; depth-2 executes directly and cannot spawn. If runtime is full, budget exhausted, or a permit is invalid, create no speculative descendants: consolidate eligible evidence or report upward. Keep each child within its strict non-empty subset, declared scope, authority, permissions, workspace, and disjoint sibling ownership. Every call remains explicitly Luna/max; root alone issues permits and changes topology or budget.
+As a depth-1 callable profile, you may use only declared depth-2 leaves with bound root permits; depth-2 executes directly and cannot spawn. If runtime is full, budget exhausted, or a permit is invalid, create no speculative descendants: consolidate eligible evidence or report upward. Keep each child within its strict non-empty subset, declared scope, authority, permissions, workspace, and disjoint sibling ownership. Every delegated child execution remains explicitly Luna/max; root alone issues permits and changes topology or budget.
 
 Return:
 - Plan

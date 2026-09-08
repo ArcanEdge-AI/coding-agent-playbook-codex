@@ -260,9 +260,11 @@ This playbook uses five Codex subagent roles that mirror a practical software de
 | `tester` | Read-mostly | Reproducing failures, analyzing test output, finding validation gaps, and recommending targeted checks. |
 | `docs` | Read-only | Finding, interpreting, and summarizing relevant repo docs, reference docs, and authoritative external documentation. |
 
-Every subagent uses `gpt-5.6-luna` with `max` reasoning. This applies to all roles, direct calls, nested calls, retries, and replacements, independently of the main session's model or reasoning effort.
+Every subagent execution uses `gpt-5.6-luna` with `max` reasoning. This applies to all roles, direct and nested executions, retries, and replacements, independently of the main session's model or reasoning effort. It does not require model settings on ordinary tool calls or messages.
 
-The base role names and `-luna` profile files remain available as compatible names; all ten profiles pin the same Luna/max settings. Select a compliant profile or pass the model and reasoning effort explicitly. If the host cannot honor both settings, report the limitation rather than silently substituting or inheriting defaults. Consult `references/model-routing.md` for dispatch and acceptance rules.
+Subagents report through team collaboration messaging or a normal final return. They must not alter parent or peer model settings. Any separately authorized task report must omit destination model and reasoning overrides; see `references/model-routing.md` for the execution/reporting boundary.
+
+The base role names and `-luna` profile files remain available as compatible names; all ten profiles pin the same Luna/max settings. For child execution, select a compliant profile or pass its model and reasoning effort explicitly. If the host cannot honor both settings, report the limitation rather than silently substituting or inheriting defaults. Consult `references/model-routing.md` for dispatch and acceptance rules.
 
 The delegation rule is simple:
 

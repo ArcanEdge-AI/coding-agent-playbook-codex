@@ -164,6 +164,7 @@ After installation, verify:
 - `$CODEX_HOME/agents/docs.toml` exists.
 - `$CODEX_HOME/agents/docs-luna.toml` exists.
 - Every installed `agents/*.toml` file explicitly defines `model` and `model_reasoning_effort`.
+- Installed reporting guidance preserves parent and peer task settings and omits destination-setting overrides from reports.
 - Every bundled role retains its base and `-luna` profiles, and all profiles set `model = "gpt-5.6-luna"` and `model_reasoning_effort = "max"`.
 - `$HOME/.agents/skills/subagent-orchestration/SKILL.md` exists.
 - `$HOME/.agents/skills/task-graph-orchestration/SKILL.md` exists.

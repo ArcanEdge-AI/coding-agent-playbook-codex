@@ -29,7 +29,8 @@ Review the final diff for:
 - accessibility regressions
 - subagent claims that were not independently verified
 - finite-manifest nodes, root permits, or total-budget use that were not reconciled
-- child call that did not select a verified Luna/max profile or explicit `gpt-5.6-luna`/`max` route, or permissions, scope, authority, or workspace expansion beyond the parent assignment
+- child execution that did not select a verified Luna/max profile or explicit `gpt-5.6-luna`/`max` child-execution settings, or permissions, scope, authority, or workspace expansion beyond the parent assignment
+- progress or task-reporting messages that set `model`, `reasoning_effort`, `thinking`, or analogous destination-setting overrides, or altered a parent or peer task
 - task-created auxiliary worktrees without integration evidence and a verified `removed` or exact-blocker `preserved` disposition
 
 Ask:

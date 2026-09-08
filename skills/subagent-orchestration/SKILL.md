@@ -35,21 +35,23 @@ When a formal task graph exists, each delegated assignment must identify its gra
 
 ## Recursive Delegation
 
-Subagents may locally orchestrate only inside their assigned node. A local child must be equal to or narrower than its parent in goal, inputs, data access, permissions, scope, non-goals, write ownership or isolation, authority, and approval boundary. Explicitly select a verified Luna/max profile or pass `gpt-5.6-luna` with `max` reasoning for every child call; never silently inherit, change, or escalate the route. A descendant that cannot complete within its declared scope or authority stops and reports the gap.
+Subagents may locally orchestrate only inside their assigned node. A local child must be equal to or narrower than its parent in goal, inputs, data access, permissions, scope, non-goals, write ownership or isolation, authority, and approval boundary. Explicitly select a verified Luna/max profile or pass `gpt-5.6-luna` with `max` reasoning as child-execution settings for every child launch; never silently inherit, change, or escalate the execution route. A descendant that cannot complete within its declared scope or authority stops and reports the gap.
 
-The root alone issues child-specific permits and expands budget. Depth-1 delegation needs a permit and budget; depth-2 is leaf-only. Retry reuses its node ID and permit. A replacement is a new root-authorized node with a new permit and budget entry, and still selects a verified Luna/max profile or uses explicit Luna/max arguments. Every expansion must record a root reason limited to a newly discovered dependency, an invalidated gate, or changed user scope; a material expansion also requires immediate user approval. Keep payloads to minimum paths and accepted artifacts; reuse accepted outputs and avoid full history, transcripts, and long logs.
+The root alone issues child-specific permits and expands budget. Depth-1 delegation needs a permit and budget; depth-2 is leaf-only. Retry reuses its node ID and permit. A replacement is a new root-authorized node with a new permit and budget entry, and still selects a verified Luna/max profile or uses explicit Luna/max child-execution settings. Every expansion must record a root reason limited to a newly discovered dependency, an invalidated gate, or changed user scope; a material expansion also requires immediate user approval. Keep payloads to minimum paths and accepted artifacts; reuse accepted outputs and avoid full history, transcripts, and long logs.
 
 ## Mandatory Model Routing
 
 Before spawning a subagent, consult `references/model-routing.md` when available.
 
-- Explicitly select a verified bundled profile pinned to `gpt-5.6-luna`/`max`, or pass those values through a generic route, for every delegated task.
-- Do not rely on an unverified profile or parent inheritance for model or effort.
-- If the host cannot accept explicit per-call values, use a verified bundled Luna/max profile. If it is stale or unavailable, stop and report the limitation.
-- Record the actual root model when task provenance needs it; root model and effort do not alter the child route.
+- Explicitly select a verified bundled profile pinned to `gpt-5.6-luna`/`max`, or pass those values as child-execution settings, for every delegated task execution.
+- Do not rely on an unverified profile or parent inheritance for child-execution model or effort.
+- If the host cannot accept explicit child-execution values, use a verified bundled Luna/max profile. If it is stale or unavailable, stop and report the limitation.
+- Record the actual root model when task provenance needs it; root model and effort do not alter the child execution route.
 - Keep architecture, security-sensitive judgment, destructive operations, migrations, complex concurrency, and other high-impact decisions with the main orchestrator. Delegate only bounded evidence gathering for those areas within the declared scope and authority.
-- A subagent must stop and report a capability gap; it must not silently change models or effort, fall back to the main model, or request escalation.
-- Only root may authorize a replacement or reroute, and it must use a new permit and a verified Luna/max profile or explicit Luna/max arguments.
+- A subagent must stop and report a capability gap; it must not silently change its execution model or effort, fall back to the main model, or request escalation.
+- Only root may authorize a replacement or reroute, and it must use a new permit and a verified Luna/max profile or explicit Luna/max child-execution settings.
+
+Subagents must not alter a parent or peer task's model or reasoning settings. Use team `collaboration.send_message` or the normal final return for progress and task reporting. If separately authorized task reporting uses `send_message_to_thread`, omit `model`, `thinking`, and analogous destination-setting overrides entirely; do not echo the sender's model, guess or reassert the parent's model, or change settings as a workaround. A follow-up message to an existing worker need not repeat its verified execution route.
 
 ## Workflow
 
@@ -57,14 +59,14 @@ Before spawning a subagent, consult `references/model-routing.md` when available
 2. For multi-node work, map bounded nodes, real blocking dependencies, parallel-safe nodes, the completion-controlling path, and required handoff gates.
 3. At the root, assign actual execution to at least one bounded subagent when available; record any root direct-execution exception and its exact reason. A depth-1 worker executes directly when no valid, permitted strict-subset split exists. Depth 2 is a leaf and cannot spawn.
 4. Choose from the Codex roles: Planner, Engineer, Reviewer, Tester, and Docs.
-5. Select a verified Luna/max profile alias or explicitly pass `gpt-5.6-luna` with `max` reasoning.
+5. Select a verified Luna/max profile alias or explicitly pass `gpt-5.6-luna` with `max` reasoning as child-execution settings.
 6. Give each subagent a precise assignment:
    - role
    - goal
    - context
    - lineage and inherited constraints
    - selected profile or model
-   - why the fixed Luna/max route is suitable
+   - why the fixed Luna/max child-execution route is suitable
    - escalation conditions
    - scope
    - non-goals
@@ -79,7 +81,7 @@ Before spawning a subagent, consult `references/model-routing.md` when available
 8. Verify subagent claims against primary evidence. For meaningful implementation, use a separate verification task with only the necessary artifact, criteria, and evidence requirements when the runtime supports it; the main agent still decides acceptance.
 9. If a gate fails, revise or rerun the failed node and any downstream nodes whose inputs became invalid. Do not restart unrelated nodes by default.
 10. Before combining results, confirm every required input passed its designated gate, then inspect the combined diff and run validation for the integrated behavior.
-11. Accept, reject, or revise against the declared scope and acceptance condition. Only root may create a replacement with a new permit and budget; it must still select a verified Luna/max profile or use explicit Luna/max arguments.
+11. Accept, reject, or revise against the declared scope and acceptance condition. Only root may create a replacement with a new permit and budget; it must still select a verified Luna/max profile or use explicit Luna/max child-execution settings.
 12. Before the final response, remove each task-created auxiliary worktree under the verified cleanup gates or preserve it with its exact owner, path, branch or HEAD, blocker, and next action. Do not defer task-owned cleanup to scheduled automation.
 13. Report relevant subagent usage, concurrency decisions, workspace dispositions, and any escalation in the final response.
 
