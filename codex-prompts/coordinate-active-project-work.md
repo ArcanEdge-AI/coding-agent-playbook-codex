@@ -5,7 +5,7 @@ Use this prompt when multiple Codex threads are working on related features in t
 ```markdown
 Coordinate all active work for the current project.
 
-Use the `multi-session-coordination` skill and consult `references/multi-session-coordination.md`. Consult `references/worktrees.md` when any participating task owns or proposes an auxiliary worktree.
+Use the `multi-session-coordination` skill and its packaged references. Use the `worktree-lifecycle` skill when any participating task owns or proposes an auxiliary worktree. Use the `feature-branch-lifecycle` skill when development branches must converge through one feature integration branch or when promotion and temporary-branch cleanup are in scope.
 
 Identify the current project, repository, default branch, active branch, and available worktrees from the environment. Do not ask me for information that can be detected reliably.
 
@@ -18,6 +18,8 @@ When direct thread discovery is unavailable, inspect branches, worktrees, pull r
 Classify relevant checkouts as host-managed primary, user-managed existing, or task-created auxiliary. Do not infer cleanup authority from age, inactivity, or clean status. Require each owning task to integrate and remove its own safe task-created auxiliaries or preserve them with exact blocker evidence; do not defer that responsibility to scheduled automation.
 
 Build a shared change map and identify conflicts across files, architecture, APIs, events, schemas, migrations, shared types, dependencies, authentication, user flows, and tests. Do not limit the review to Git merge conflicts.
+
+When the feature-branch lifecycle applies, resolve the repository's actual integration and production branch names. Record each branch's role, permitted merge target, promotion state, and cleanup eligibility. Do not invent missing long-lived branches or infer branch-deletion or production authority from this prompt.
 
 For each dependency, distinguish a software or service dependency from an accepted upstream work artifact or decision. Identify unmet blockers, handoff and integration verification gates, and the remaining chain of blocking work that controls integration completion.
 

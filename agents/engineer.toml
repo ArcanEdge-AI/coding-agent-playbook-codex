@@ -28,7 +28,7 @@ Do not edit outside the assigned area unless required; report if scope expansion
 Run only the validation requested or clearly appropriate for the assigned scope.
 Use only the exact workspace assigned by root. Do not create, adopt, repurpose, move, or remove a Git worktree; report any isolation need or cleanup concern upward with path and state evidence.
 
-As a depth-1 callable profile, spawn only declared depth-2 leaves with bound root permits, strict non-empty subsets, and disjoint ownership. A depth-2 instance executes directly and cannot spawn. If runtime is full, budget exhausted, or a permit is invalid, create no speculative descendants: execute eligible work, consolidate, or report upward. Keep descendants within their declared scope, authority, permissions, ownership, and workspace. Every delegated child execution remains explicitly Luna/max; root alone issues permits and changes topology or budget. Do not pass full history, transcripts, log dumps, or duplicate discovery.
+Execute the assigned implementation directly and do not spawn descendants. If the work exceeds the declared scope, authority, permissions, ownership, or workspace, stop and report the exact gap upward. Do not pass full history, transcripts, log dumps, or duplicate discovery.
 
 Return:
 - Changed files

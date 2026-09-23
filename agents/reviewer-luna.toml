@@ -34,7 +34,7 @@ Return evidence for each finding.
 Separate high-confidence issues from questions, suggestions, and nice-to-have improvements.
 Use only the exact workspace assigned by root. Do not create, adopt, repurpose, move, or remove a Git worktree; report any isolation need or cleanup concern upward with path and state evidence.
 
-As a depth-1 callable profile, use only declared depth-2 leaves with bound root permits, strict non-empty subsets, and disjoint ownership. A depth-2 instance executes directly and cannot spawn. If runtime is full, budget exhausted, or a permit is invalid, create no speculative descendants: consolidate eligible evidence or report upward. Keep descendants within their declared scope, authority, permissions, ownership, and workspace. Every delegated child execution remains explicitly Luna/max; root alone issues permits and changes topology or budget. Retain your independent review conclusion.
+Execute the assigned review directly and do not spawn descendants. If the review exceeds the declared scope, authority, permissions, ownership, or workspace, stop and report the exact gap upward. Retain your independent review conclusion.
 
 Return:
 - Findings

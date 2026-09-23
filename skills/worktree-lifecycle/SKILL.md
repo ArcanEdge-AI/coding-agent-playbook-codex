@@ -16,7 +16,7 @@ Consult `references/worktrees.md` for the complete decision rules and `reference
 3. Keep the auxiliary-worktree budget at zero unless a planned writer needs real branch or filesystem isolation that cannot be handled safely in the current workspace or by serialization.
 4. Let only the root raise the finite budget and issue a worktree permit. The root may authorize one active auxiliary without additional approval; two or more require approval for the exact count and reasons. Record the reason and manifest entry before creation.
 5. Reuse a compatible registered worktree before creating another. Never create one merely because a new subagent or retry exists.
-6. Assign each node its exact workspace and write scope. Descendants must not create, repurpose, move, or remove worktrees; they report a need upward.
+6. Assign each participating root or helper its exact workspace and write scope. Helpers must not create, repurpose, move, or remove worktrees; they report a need upward.
 7. Integrate and validate accepted work through the declared integration target.
 8. Before the final response, inspect every task-created auxiliary worktree and set its disposition to `removed` or `preserved` with an exact blocker. Do not defer task-owned cleanup to a scheduled job.
 

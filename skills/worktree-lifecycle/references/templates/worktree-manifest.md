@@ -38,7 +38,7 @@ Only the root issues permits or changes the budget. A subagent may report an iso
 ## Completion Check
 
 - Every task-created auxiliary permit has a final disposition: [Yes / No]
-- No descendant created or removed a worktree: [Confirmed / Exception]
+- No helper created or removed a worktree: [Confirmed / Exception]
 - Retries reused their compatible workspace: [Yes / N/A]
 - Integrated behavior was validated from the integration workspace: [Yes / No]
 - Preserved worktrees name exact owner, path, branch or HEAD, blocker, and next action: [Yes / N/A]

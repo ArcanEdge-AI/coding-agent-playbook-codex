@@ -145,7 +145,7 @@ For every relevant work item, record:
 
 The map should distinguish confirmed facts from inference.
 
-When a task proposes or owns an auxiliary worktree, consult `references/worktrees.md`. Keep its worktree permit separate from subagent or graph-node permits. The coordinating root may clean only auxiliary worktrees that its own task created or explicitly adopted; existing user-managed or other-thread worktrees remain preserved unless ownership is transferred through primary evidence.
+When a task proposes or owns an auxiliary worktree, use the `worktree-lifecycle` skill. Keep its worktree permit separate from graph nodes and any helper-launch allowance. The coordinating root may clean only auxiliary worktrees that its own task created or explicitly adopted; existing user-managed or other-thread worktrees remain preserved unless ownership is transferred through primary evidence.
 
 ## Conflict Categories
 

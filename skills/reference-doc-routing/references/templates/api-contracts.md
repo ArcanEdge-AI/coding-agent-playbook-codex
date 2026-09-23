@@ -6,7 +6,7 @@ List public APIs and where they are defined.
 
 ## Compatibility Rules
 
-Document backward compatibility expectations.
+Document supported consumers, demonstrated compatibility dependencies, and explicit retention commitments. State when no older contract needs support, and define migration or retirement conditions for transitional adapters. Do not assume every historical contract remains required.
 
 ## Request/Response Shapes
 

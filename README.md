@@ -5,11 +5,11 @@
 <h1 align="center">Coding Agent Playbook — Codex Edition</h1>
 
 <p align="center">
-  <strong>Run Codex like an engineering team, not one giant agent.</strong>
+  <strong>Give Codex a disciplined, direct-first engineering operating model.</strong>
 </p>
 
 <p align="center">
-  An open-source engineering operating model for Codex: installable instructions, Luna/max subagents, bounded delegation, independent review, and validation.
+  An open-source Codex playbook for installable instructions, self-contained skills, optional Luna/max assistance, independent review, and validation.
 </p>
 
 <p align="center">
@@ -24,6 +24,8 @@
   <a href="#subagent-model">Subagent Model</a> ·
   <a href="#formal-task-graph-orchestration">Task Graphs</a> ·
   <a href="#task-local-worktree-lifecycle">Worktrees</a> ·
+  <a href="#feature-integration-and-promotion-branches">Branch Lifecycle</a> ·
+  <a href="#evidence-based-legacy-path-retirement">Legacy Paths</a> ·
   <a href="#coordinating-parallel-codex-threads">Parallel Threads</a> ·
   <a href="#repository-structure">Structure</a>
 </p>
@@ -52,7 +54,7 @@ The easiest install path is to give this repo URL to your coding agent:
 ```text
 Install this globally: https://github.com/ArcanEdge-AI/coding-agent-playbook-codex
 
-Follow the repository's INSTALL.md exactly. Use full mode even when an older installation exists; do not infer support-only mode unless I explicitly request it. Preserve my existing instructions, back up anything you change, install the global instructions, references, skills, and custom subagents where supported, then report the installed files and validation results.
+Follow the repository's INSTALL.md exactly. Use full mode even when an older installation exists; do not infer support-only mode unless I explicitly request it. Preserve my existing instructions, back up anything you change, install the global instructions, self-contained skills, and custom subagents where supported, then report the installed files and validation results.
 ```
 
 That is the intended public experience: users should not need to understand the file layout before installation. The agent should read `INSTALL.md`, clone or fetch the repo, install into user-level Codex/agent configuration locations, validate the result, and report what changed.
@@ -62,7 +64,7 @@ Support-only is an explicit pointer-only configuration, not an update mode. Use 
 ```text
 Install this in support-only mode: https://github.com/ArcanEdge-AI/coding-agent-playbook-codex
 
-I already added the global custom instructions manually. Follow INSTALL.md, but do not duplicate the full instructions into AGENTS.md. Install references, skills, and custom subagents only.
+I already added the global custom instructions manually. Follow INSTALL.md, but do not duplicate the full instructions into AGENTS.md. Install self-contained skills and custom subagents only.
 ```
 
 ---
@@ -77,7 +79,7 @@ The root owns understanding, architecture, decomposition, routing, coordination,
   <img src="./assets/codex-engineering-team.svg" alt="Operating model: a user works through a root senior engineer, bounded supporting roles, root integration, validation, correction, and final result." width="100%" />
 </p>
 
-It installs global instructions, reference docs, reusable skills, and custom subagent profiles where Codex supports them. Try it with the one prompt above, then adapt the repository-level guidance to the codebase in front of you. You may fork, modify, redistribute, and test the approach under the [MIT License](./LICENSE).
+It installs global instructions, self-contained reusable skills, and custom subagent profiles where Codex supports them. Each skill carries its own supporting references and templates. Try it with the one prompt above, then adapt the repository-level guidance to the codebase in front of you. You may fork, modify, redistribute, and test the approach under the [MIT License](./LICENSE).
 
 ---
 
@@ -92,39 +94,39 @@ Ask your coding agent to install the repo URL and follow `INSTALL.md`. Normal in
 ```bash
 git clone https://github.com/ArcanEdge-AI/coding-agent-playbook-codex.git
 cd coding-agent-playbook-codex
-bash install/install.sh --full
+python3 install/install.py --full
 ```
 
 Support-only mode:
 
 ```bash
-bash install/install.sh --support-only
+python3 install/install.py --support-only
 ```
 
 Dry run:
 
 ```bash
-bash install/install.sh --full --dry-run
+python3 install/install.py --full --dry-run
 ```
 
-### Manual install: Windows PowerShell
+### Manual install: Windows
 
 ```powershell
 git clone https://github.com/ArcanEdge-AI/coding-agent-playbook-codex.git
 cd coding-agent-playbook-codex
-pwsh -ExecutionPolicy Bypass -File install/install.ps1 -Full
+py -3 install/install.py --full
 ```
 
 Support-only mode:
 
 ```powershell
-pwsh -ExecutionPolicy Bypass -File install/install.ps1 -SupportOnly
+py -3 install/install.py --support-only
 ```
 
 Dry run:
 
 ```powershell
-pwsh -ExecutionPolicy Bypass -File install/install.ps1 -Full -DryRun
+py -3 install/install.py --full --dry-run
 ```
 
 ### Repo-specific guidance
@@ -132,7 +134,7 @@ pwsh -ExecutionPolicy Bypass -File install/install.ps1 -Full -DryRun
 Copy this template into individual projects as a starting point:
 
 ```text
-references/templates/repository-AGENTS.md
+skills/reference-doc-routing/references/templates/repository-AGENTS.md
 ```
 
 Then fill in the actual build commands, test commands, architecture rules, generated-file rules, and release expectations for that repository.
@@ -148,7 +150,7 @@ Coding Agent Playbook ships as separate harness-native editions. This repository
 | Codex | `ArcanEdge-AI/coding-agent-playbook-codex` | You want global Codex custom instructions, reference docs, skills, and subagent definitions. |
 | Claude Code | [`ArcanEdge-AI/coding-agent-playbook-claude-code`](https://github.com/ArcanEdge-AI/coding-agent-playbook-claude-code) | You want the harness-native edition tuned for Claude Code. |
 
-The philosophy is shared across both: the main agent acts as the senior engineer/orchestrator, subagents perform bounded evidence-backed execution, independent project threads are coordinated explicitly, and final decisions stay with the main agent.
+The editions are maintained independently for their respective harnesses. This repository governs only the Codex edition; use the Claude Code repository for Claude-specific behavior and installation.
 
 ---
 
@@ -196,11 +198,11 @@ Real-world use establishes provenance, but private field evidence is not the pub
 | Area | Path | Purpose |
 | --- | --- | --- |
 | Install guide | `INSTALL.md` | Agent-readable install contract for one-prompt installation. |
-| Install scripts | `install/` | Manual installers for Unix-like shells and PowerShell. |
+| Installer | `install/install.py` | Canonical standard-library Python 3.8+ installer; thin PowerShell and Bash launchers remain available. |
 | Global instructions | `custom-instructions/` | Tool-agnostic behavior rules for elegant, maintainable code. |
 | Prompts | `codex-prompts/` | Setup and active-project coordination prompts. |
-| Reference docs | `references/` | Model routing, subagent delegation, multi-session coordination, document routing, and reusable project-doc templates. |
-| Skills | `skills/` | Reusable workflows for task-graph and subagent orchestration, multi-session coordination, doc routing, and senior review. |
+| Skill resources | `skills/*/references/` | Supporting guidance and templates packaged with the workflow that owns them. |
+| Skills | `skills/` | Self-contained workflows for task graphs, subagents, worktrees, feature-branch promotion, legacy-path retirement, multi-session coordination, handoffs, session cleanup, doc routing, and senior review. |
 | Custom agents | `agents/` | Luna/max Codex subagent definitions for planning, engineering, review, testing, and documentation. |
 | Repo guidance | `AGENTS.md` | Instructions for maintaining this public playbook repository. |
 
@@ -212,13 +214,13 @@ Real-world use establishes provenance, but private field evidence is not the pub
 
 Use this for normal installs and updates. Full mode is the default and safely replaces the playbook-owned marked section and current managed files.
 
-Full install writes the global instructions into the user's Codex home `AGENTS.md`, installs references, skills, and custom subagents, and records their paths and hashes in a managed-file manifest. Later updates can back up and retire unchanged files removed upstream while preserving customized or unrelated files.
+Full install writes the global instructions into the user's Codex home `AGENTS.md`, installs self-contained skills and custom subagents, and records their paths and hashes in a managed-file manifest. Later updates can back up and retire unchanged files removed upstream while preserving customized or unrelated files.
 
 ### Support-only install
 
 Use this only when the user explicitly says the global instructions already live in Codex Personalization → Custom instructions.
 
-Support-only mode avoids duplicating the full instruction file and installs only the supporting reference docs, skills, and custom subagents.
+Support-only mode avoids duplicating the full instruction file and installs only the self-contained skills, their packaged references, and custom subagents.
 
 ---
 
@@ -238,11 +240,11 @@ It owns:
 - validation strategy
 - final response
 
-For every repository task, subagents perform the bounded execution work when they are available. The main agent remains accountable for the outcome. Independent project threads may own separate workstreams, but the main coordinating agent still owns compatibility and integration decisions.
+The main agent completes coherent work directly by default, including substantial or multi-file work. It delegates only when a bounded helper would provide useful independent evidence, genuinely parallel progress, or worthwhile context reduction. Independent project threads may own separate workstreams, but the main coordinating agent still owns compatibility and integration decisions.
 
-> At the root, delegate actual execution to at least one bounded subagent for every repository task when subagents are available. Root direct main-agent execution is limited to unavailable subagents, an explicit user prohibition, or an authority-bound action that cannot be delegated; record the exact exception.
+> Delegation is optional assistance, not a completion requirement. No direct-execution exception report is needed when no helper is used.
 
-For work with multiple delegable parts, the main agent maps bounded work nodes, real blocking dependencies, write ownership or read scope, and verification gates before fan-out. Dispatch a child only when it is already a finite-manifest member, fits the remaining total node budget, holds its required root permit, and fits runtime, safety, and ownership capacity. Expand the manifest or budget only for a newly discovered dependency, invalidated gate, or changed user scope; a material expansion also needs immediate user approval. Real dependencies, verified isolation, and user instructions also constrain concurrency; serialize only real conflicts. Small or linear tasks may skip formal graph mode but still require bounded subagent execution.
+For broad work, the main agent maps bounded work nodes, real blocking dependencies, write ownership or read scope, and verification gates. A graph node is not automatically a helper assignment. When delegation is useful, root sets a finite helper-launch and retry allowance, dispatches only ready work that fits runtime, safety, and ownership capacity, and expands execution cost only for an identified new dependency, invalidated gate, or changed user scope. Real dependencies, verified isolation, and user instructions constrain concurrency; serialize genuine conflicts.
 
 Subagents share the current workspace by default. Worktrees have a separate finite budget that starts at zero; they are created only by the root for a verified isolation need, not per agent. The root may authorize one active auxiliary without additional approval; two or more require user approval for the exact count and reasons. Every task-created auxiliary worktree is integrated and safely removed inside the task or preserved with an exact blocker. No scheduled cleanup task is required for this lifecycle.
 
@@ -260,11 +262,11 @@ This playbook uses five Codex subagent roles that mirror a practical software de
 | `tester` | Read-mostly | Reproducing failures, analyzing test output, finding validation gaps, and recommending targeted checks. |
 | `docs` | Read-only | Finding, interpreting, and summarizing relevant repo docs, reference docs, and authoritative external documentation. |
 
-Every subagent execution uses `gpt-5.6-luna` with `max` reasoning. This applies to all roles, direct and nested executions, retries, and replacements, independently of the main session's model or reasoning effort. It does not require model settings on ordinary tool calls or messages.
+Every delegated subagent execution uses `gpt-5.6-luna` with `max` reasoning. This applies to all roles, retries, and replacements, independently of the main session's model or reasoning effort. It does not require model settings on ordinary tool calls or messages.
 
-Subagents report through team collaboration messaging or a normal final return. They must not alter parent or peer model settings. Any separately authorized task report must omit destination model and reasoning overrides; see `references/model-routing.md` for the execution/reporting boundary.
+Subagents report through team collaboration messaging or a normal final return. They must not alter parent or peer model settings. Any separately authorized task report must omit destination model and reasoning overrides; see `skills/subagent-orchestration/references/model-routing.md` for the execution/reporting boundary.
 
-The base role names and `-luna` profile files remain available as compatible names; all ten profiles pin the same Luna/max settings. For child execution, select a compliant profile or pass its model and reasoning effort explicitly. If the host cannot honor both settings, report the limitation rather than silently substituting or inheriting defaults. Consult `references/model-routing.md` for dispatch and acceptance rules.
+The base role names and `-luna` profile files remain available as compatible names; all ten profiles pin the same Luna/max settings. For child execution, select a compliant profile or pass its model and reasoning effort explicitly. If the host cannot honor both settings, report the limitation rather than silently substituting or inheriting defaults. Consult `skills/subagent-orchestration/references/model-routing.md` for dispatch and acceptance rules.
 
 The delegation rule is simple:
 
@@ -276,15 +278,15 @@ A good subagent prompt includes role, goal, context, selected profile or model, 
 
 For multi-node work, it also identifies the node, its inputs and accepted output, blocking dependencies, ownership or read scope, and verification gate. The orchestration skill explains fan-out, handoff validation, selective retries, and final combined validation.
 
-### Recursive delegation and token economy
+### Flat delegation and token economy
 
-The root owns a finite manifest, total spawned-node budget, and child-specific permits. Every dispatched child must already be a finite-manifest member, fit the remaining total node budget, hold its required root permit, and fit runtime, safety, and ownership capacity. Expand the manifest or budget only for a newly discovered dependency, invalidated gate, or changed user scope; a material expansion also needs immediate user approval. Profiles are callable only when the host supports custom-agent invocation, including an `@tag` interface if offered, and are depth 1. A root-permitted depth-1 local orchestrator may create declared depth-2 leaves. Depth 2 executes directly and cannot spawn. Record the actual root model and verify every child uses `gpt-5.6-luna` with `max` reasoning. Descendants must stop and report capability gaps without changing that route. When capacity is full, do not queue speculative descendants. This is instruction-only, not a scheduler.
+Root assigns work directly to helpers, and bundled helpers execute their assignment without spawning descendants. Before dispatch, root records the bounded result, acceptance check, expected benefit, exact workspace, and finite launch/retry allowance. Record the actual root model only when provenance requires it, and verify each helper uses `gpt-5.6-luna` with `max` reasoning. When capacity is full, continue useful local work or wait; do not queue speculative helpers. Recursive orchestration is outside the default workflow and requires separate explicit authorization and controls.
 
 ---
 
 ## Formal Task-Graph Orchestration
 
-Use `task-graph-orchestration` for complex work with substantial fan-out, genuine dependencies, broad scope, layered consolidation, or separate implementation and verification paths. Prompt engineering defines each node; task-graph orchestration defines how the nodes connect, become ready, merge, fail, and require approval. Small or linear work may skip the formal graph, but not default subagent execution.
+Use `task-graph-orchestration` for complex work with substantial fan-out, genuine dependencies, broad scope, layered consolidation, or separate implementation and verification paths. Prompt engineering defines each node; task-graph orchestration defines how the nodes connect, become ready, merge, fail, and require approval. Small or linear work may skip the formal graph.
 
 The graph is an instruction and Markdown artifact. It does not add a graph database, scheduler, runner, dependency, or orchestration framework. Medium tasks can keep the graph in the working plan. Long-running, multi-phase, or multi-session implementation may use `.codex/task-graphs/<task-slug>.md` when repository policy permits it.
 
@@ -292,7 +294,7 @@ Supporting files:
 
 ```text
 skills/task-graph-orchestration/SKILL.md
-references/templates/task-graph.md
+skills/task-graph-orchestration/references/templates/task-graph.md
 ```
 
 Run multi-session coordination first when active threads, branches, worktrees, or pull requests may create external ownership or hidden dependency edges. Keep simple or genuinely linear tasks on the normal engineering loop.
@@ -317,16 +319,59 @@ Root integrates and validates the result
 Remove safely, or preserve with an exact blocker
 ```
 
-Only the root may create, adopt, repurpose, move, or remove an auxiliary worktree. It may authorize one active auxiliary without additional approval; two or more require approval for the exact count and reasons. Descendants receive an exact workspace assignment and report any additional isolation need upward. Retries reuse compatible worktrees. Overlapping writers normally serialize because separate checkouts do not remove design or merge conflicts.
+Only the root may create, adopt, repurpose, move, or remove an auxiliary worktree. It may authorize one active auxiliary without additional approval; two or more require approval for the exact count and reasons. Helpers receive an exact workspace assignment and report any additional isolation need upward. Retries reuse compatible worktrees. Overlapping writers normally serialize because separate checkouts do not remove design or merge conflicts.
 
 Before the final response, the root reconciles every task-created auxiliary worktree. It either verifies safe non-force removal inside the task or reports the exact path, owner, branch or HEAD, blocker, and next action. The workflow does not defer task-owned cleanup to scheduled automation and does not treat host-managed or pre-existing user worktrees as disposable.
 
 Supporting files:
 
 ```text
-references/worktrees.md
-references/templates/worktree-manifest.md
+skills/worktree-lifecycle/references/worktrees.md
+skills/worktree-lifecycle/references/templates/worktree-manifest.md
 skills/worktree-lifecycle/SKILL.md
+```
+
+---
+
+## Feature Integration and Promotion Branches
+
+Use `feature-branch-lifecycle` when a feature, change, or update may use one or more development branches in a repository with established long-lived integration and production branches:
+
+```text
+development branches
+        ↓
+feature integration branch
+        ↓
+integration branch (for example, staging)
+        ↓
+production branch (for example, main)
+```
+
+The feature integration branch is the complete review and validation unit. Development branches converge there, one pull request promotes the accepted feature to the integration branch, and production promotion originates only from the integration branch. Temporary branches are deleted only after verified incorporation, required checks, unique-work and dependency checks, worktree reconciliation, exact-target resolution, and authority for local or remote deletion.
+
+The skill detects actual branch names and repository instructions. It does not invent a missing `staging` branch, replace a repository's selected workflow, or turn branch sequencing into blanket authority for pull requests, merges, remote deletion, or production release.
+
+Supporting files:
+
+```text
+skills/feature-branch-lifecycle/SKILL.md
+skills/feature-branch-lifecycle/references/branching-rule.md
+```
+
+---
+
+## Evidence-Based Legacy Path Retirement
+
+Use `legacy-path-retirement` when an authorized change raises a decision about superseded code, duplicate writers, old contracts, or compatibility fallbacks.
+
+Prefer one authoritative implementation within the affected scope. Retain compatibility only for a demonstrated current dependency or explicit retention requirement; migrate or remove confirmed obsolete paths rather than automatically adding more guards around them. Incomplete dependency coverage is an evidence gap, not proof of non-use.
+
+Code retirement, data disposition, and correctness guarantees are separate decisions. Useful development data may need preservation or migration, destructive resets require authority, and pre-production status does not weaken stable identifiers, authorization, validation, persistence integrity, or cleanup safeguards.
+
+The skill is self-contained in:
+
+```text
+skills/legacy-path-retirement/SKILL.md
 ```
 
 ---
@@ -375,8 +420,8 @@ codex-prompts/coordinate-active-project-work.md
 Supporting files:
 
 ```text
-references/multi-session-coordination.md
-references/templates/active-work-record.md
+skills/multi-session-coordination/references/multi-session-coordination.md
+skills/multi-session-coordination/references/templates/active-work-record.md
 skills/multi-session-coordination/SKILL.md
 ```
 
@@ -401,12 +446,12 @@ Primary evidence includes current code, tests, schemas, configuration, logs, bui
 See:
 
 ```text
-references/engineering-design.md
-references/model-routing.md
-references/reference-doc-routing.md
-references/subagents.md
-references/multi-session-coordination.md
-references/worktrees.md
+skills/reference-doc-routing/references/engineering-design.md
+skills/subagent-orchestration/references/model-routing.md
+skills/reference-doc-routing/references/reference-doc-routing.md
+skills/subagent-orchestration/references/subagents.md
+skills/multi-session-coordination/references/multi-session-coordination.md
+skills/worktree-lifecycle/references/worktrees.md
 ```
 
 ---
@@ -441,6 +486,7 @@ references/worktrees.md
 ├── custom-instructions/
 │   └── global-coding-agent-instructions.md
 ├── docs/
+│   ├── global-instruction-evaluation.md
 │   └── evidence/
 │       ├── BENCHMARK-001-RUN-001.md
 │       ├── BENCHMARK-001.md
@@ -448,43 +494,61 @@ references/worktrees.md
 │       ├── README.md
 │       └── RUN-TEMPLATE.md
 ├── install/
+│   ├── install.py
 │   ├── install.ps1
-│   └── install.sh
-├── references/
-│   ├── README.md
-│   ├── engineering-design.md
-│   ├── model-routing.md
-│   ├── multi-session-coordination.md
-│   ├── reference-doc-routing.md
-│   ├── subagents.md
-│   ├── worktrees.md
-│   └── templates/
-│       ├── active-work-record.md
-│       ├── api-contracts.md
-│       ├── architecture.md
-│       ├── data-model.md
-│       ├── design-system.md
-│       ├── release.md
-│       ├── repository-AGENTS.md
-│       ├── security.md
-│       ├── task-graph.md
-│       ├── worktree-manifest.md
-│       └── testing.md
+│   ├── install.sh
+│   └── support-only-pointer.md
 └── skills/
+    ├── feature-branch-lifecycle/
+    │   ├── SKILL.md
+    │   └── references/branching-rule.md
+    ├── handoff/
+    │   ├── SKILL.md
+    │   ├── agents/openai.yaml
+    │   └── references/context-contract.md
+    ├── legacy-path-retirement/
+    │   └── SKILL.md
     ├── multi-session-coordination/
-    │   └── SKILL.md
+    │   ├── SKILL.md
+    │   └── references/
+    │       ├── multi-session-coordination.md
+    │       └── templates/active-work-record.md
     ├── reference-doc-routing/
-    │   └── SKILL.md
+    │   ├── SKILL.md
+    │   └── references/
+    │       ├── README.md
+    │       ├── engineering-design.md
+    │       ├── reference-doc-routing.md
+    │       └── templates/
+    │           ├── api-contracts.md
+    │           ├── architecture.md
+    │           ├── data-model.md
+    │           ├── design-system.md
+    │           ├── release.md
+    │           ├── repository-AGENTS.md
+    │           ├── security.md
+    │           └── testing.md
+    ├── session-cleanup/
+    │   ├── SKILL.md
+    │   ├── agents/openai.yaml
+    │   └── references/post-session-cleanup-methodology.md
     ├── senior-code-review/
     │   └── SKILL.md
     ├── subagent-orchestration/
-    │   └── SKILL.md
+    │   ├── SKILL.md
+    │   └── references/
+    │       ├── model-routing.md
+    │       └── subagents.md
     ├── task-graph-orchestration/
-    │   └── SKILL.md
+    │   ├── SKILL.md
+    │   └── references/templates/task-graph.md
     └── worktree-lifecycle/
         ├── agents/
         │   └── openai.yaml
-        └── SKILL.md
+        ├── SKILL.md
+        └── references/
+            ├── worktrees.md
+            └── templates/worktree-manifest.md
 ```
 
 ---
@@ -524,14 +588,15 @@ The main agent still decides the design, applies or rejects recommendations, and
 
 ```text
 1. Ask your coding agent to install this repository URL.
-2. Let the installer configure global instructions, references, skills, and subagents.
+2. Let the installer configure global instructions, self-contained skills with packaged references, and subagents.
 3. Add repo-specific AGENTS.md guidance to each project.
 4. Let the main agent frame, route, and coordinate each repository task.
-5. At the root, record the actual main-session model, finite manifest, total node budget, and child-specific permits. Select each depth-1 role with `gpt-5.6-luna` and `max` reasoning through a compliant profile or explicit programmatic route. Every permitted depth-2 leaf uses the same Luna/max settings and cannot spawn.
-6. For multi-node work, identify real blocking dependencies, parallel-safe nodes, ownership, and verification gates, then dispatch only finite-manifest members that fit the remaining total node budget, hold required root permits, and fit runtime, safety, and ownership capacity. Expand the manifest or budget only for a newly discovered dependency, invalidated gate, or changed user scope; get immediate user approval for a material expansion.
+5. Complete coherent work directly; when a helper has a concrete benefit, give it a bounded root-to-helper assignment and select `gpt-5.6-luna` with `max` reasoning through a compliant profile or explicit programmatic route. Helpers execute directly and do not spawn descendants.
+6. For multi-node work, identify real blocking dependencies, parallel-safe nodes, ownership, and verification gates. If helpers are used, set a finite launch/retry allowance and dispatch only ready assignments that fit runtime, safety, and ownership capacity; get immediate user approval before materially expanding execution cost.
 7. Keep the auxiliary-worktree budget at zero unless root verifies a real isolation need. Before completion, remove each task-created auxiliary worktree safely or preserve it with an exact blocker.
-8. When independent project threads run in parallel, use the multi-session coordination skill.
-9. Verify the final combined diff and integrated behavior before accepting completion.
+8. When a repository uses long-lived integration and production branches, use the feature-branch lifecycle for development-branch convergence, complete-feature validation, promotion, and authorized cleanup.
+9. When independent project threads run in parallel, use the multi-session coordination skill.
+10. Verify the final combined diff and integrated behavior before accepting completion.
 ```
 
 ---

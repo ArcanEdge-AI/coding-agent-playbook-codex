@@ -10,10 +10,11 @@ Repository-specific guidance overrides the global instructions where it is more 
 - Keep global guidance tool-agnostic and durable.
 - Keep repository-specific, machine-specific, and workflow-specific details out of global instructions.
 - Prefer concise, practical guidance over long theory.
-- Make the main agent accountable for planning, delegation, validation, and final reporting.
+- Make the main agent accountable for planning, any delegation it chooses, validation, and final reporting.
 - Keep the Codex subagent model aligned around `planner`, `engineer`, `reviewer`, `tester`, and `docs`.
 - Keep every custom subagent pinned to an explicit `gpt-5.6-luna` model and `max` reasoning effort so it does not inherit the main session model unintentionally.
-- Require every subagent execution, including nested execution, retries, and replacements, to use `gpt-5.6-luna` with `max` reasoning, independently of the root model or effort.
+- Require every authorized subagent execution, including retries and replacements, to use `gpt-5.6-luna` with `max` reasoning, independently of the root model or effort.
+- Keep the default delegation structure flat: root assigns bounded work directly, and bundled helpers do not spawn descendants.
 - Subagent progress and result messages must preserve parent and peer settings; never attach worker model or reasoning overrides to reports.
 - Preserve base and `-luna` role names as compatible profiles; every bundled profile uses Luna/max.
 
@@ -26,7 +27,7 @@ Repository-specific guidance overrides the global instructions where it is more 
 - Do not copy configuration paths, file names, agent formats, model identifiers, or command vocabulary from another coding-agent environment into this repository.
 - Prefer terms like "safety", "access control", and "sensitive access material" when public documentation does not need product-specific terminology.
 - Keep templates reusable and clearly marked as templates.
-- Keep generic behavioral policy aligned with the companion Claude Code playbook. When a difference is intentional, document the concrete harness capability that requires it instead of preserving unexplained drift.
+- Treat the companion Claude Code playbook as independently maintained. Do not edit it from this repository or claim current parity without separately verified evidence.
 
 ## Validation
 
@@ -41,9 +42,11 @@ This repo is mostly Markdown and TOML. Before finalizing meaningful changes:
 - Confirm each `SKILL.md` has YAML frontmatter with `name` and `description`.
 - Confirm links and paths in `README.md` match the repository tree.
 - Confirm install docs and scripts reference the current Codex agent files.
-- Confirm PowerShell and Bash installers default normal installs and updates to full mode, create a marked global section on first install, maintain the managed-file manifest, retire only unchanged formerly managed files, and preserve customized or unrelated files.
-- Confirm installer validation lists include `references/worktrees.md`, `references/templates/worktree-manifest.md`, and `skills/worktree-lifecycle/SKILL.md`.
-- Compare generic policy changes with the companion Claude Code playbook and either align them or record the concrete harness-specific reason for divergence.
+- Confirm the Python installer and thin PowerShell/Bash launchers default normal installs and updates to full mode, create a marked global section on first install, maintain the managed-file manifest, retire only unchanged formerly managed files, and preserve customized or unrelated files.
+- Confirm installer validation covers `skills/worktree-lifecycle/references/worktrees.md`, `skills/worktree-lifecycle/references/templates/worktree-manifest.md`, and every skill-local resource path.
+- Confirm the feature-branch lifecycle remains a self-contained skill, detects repository-specific branch names, preserves approval gates for remote deletion and production promotion, and is not conflated with worktree lifecycle.
+- Confirm legacy-path retirement requires dependency evidence or explicit retention requirements, separates code retirement from data disposal, preserves correctness safeguards, and does not treat uncertain dependency coverage as permission to remove behavior.
+- Keep Codex policy internally consistent and document Codex-specific capability assumptions where they affect behavior.
 - Search the final diff for paths, schemas, model names, and commands that belong to another coding-agent environment; remove any accidental contamination before merging.
 
 ## License

@@ -22,13 +22,15 @@ Review the final diff for:
 - material technical debt without its scope, rationale, and follow-up condition
 - speculative configurability
 - behavior changes beyond the request
-- API compatibility
+- API compatibility required by supported consumers or explicit commitments
+- legacy paths or fallbacks retained without demonstrated dependencies, or removed despite unresolved consumers
+- code retirement that discards useful data without authority or weakens necessary correctness safeguards
 - migration risk
 - safety risk
 - performance risk
 - accessibility regressions
 - subagent claims that were not independently verified
-- finite-manifest nodes, root permits, or total-budget use that were not reconciled
+- helper launches or retries that exceeded the recorded finite allowance or were not reconciled
 - child execution that did not select a verified Luna/max profile or explicit `gpt-5.6-luna`/`max` child-execution settings, or permissions, scope, authority, or workspace expansion beyond the parent assignment
 - progress or task-reporting messages that set `model`, `reasoning_effort`, `thinking`, or analogous destination-setting overrides, or altered a parent or peer task
 - task-created auxiliary worktrees without integration evidence and a verified `removed` or exact-blocker `preserved` disposition

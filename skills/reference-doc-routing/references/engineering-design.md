@@ -44,6 +44,8 @@ Prefer avoiding known debt. When constraints justify a material compromise, reco
 - Rationale: the constraint and why the tradeoff is preferable to the available alternatives.
 - Follow-up condition: the event, requirement, or agreed milestone that should trigger reassessment or removal.
 
-For example, a compatibility adapter may remain while a supported caller uses an older contract; removal can be tied to that caller's migration. A bounded transition is different from silently making a fragile workaround permanent.
+For example, a compatibility adapter may remain while a demonstrated supported caller uses an older contract; removal can be tied to that caller's verified migration. Without a current dependency or explicit retention requirement, prefer retiring the superseded path instead of adding guards around it. Use the `legacy-path-retirement` skill for that dependency decision.
+
+Existing development data is a separate retention or migration decision, not automatic justification for permanent compatibility code. Pre-production status does not make that data disposable or weaken authorization, validation, stable-reference, persistence, or cleanup guarantees.
 
 Use the existing plan, review description, or maintained project documentation for this record. Do not create a new tracking system, deadline, or cleanup commitment without a real need and appropriate authority.

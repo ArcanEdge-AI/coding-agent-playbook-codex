@@ -1,130 +1,89 @@
 ---
 name: task-graph-orchestration
-description: Use for complex coding tasks with substantial fan-out, multiple genuine dependencies, broad file or repository scope, multi-layer consolidation, separate implementation and verification paths, or an approval-gated irreversible action. Compiles an instruction-only task graph, executes only ready nodes, preserves completeness through fan-in, and retries only invalidated work. Skip for small or genuinely linear tasks.
+description: Use for complex coding tasks with substantial fan-out, multiple genuine dependencies, broad file or repository scope, multi-layer consolidation, separate implementation and verification paths, or an approval-gated irreversible action. Compiles an instruction-only task graph, executes only ready work, preserves completeness through fan-in, and retries only invalidated work. Skip for small or genuinely linear tasks.
 ---
 
 # Task Graph Orchestration
 
-Use instructions and Markdown to make complex work topology explicit. Do not introduce a graph database, scheduler, runner, schema package, or orchestration framework. The host executes ordinary inline work and subagent assignments; the root main agent compiles the root graph, exclusively controls root transitions and ready set, accepts evidence, and owns the final result.
+Use instructions and Markdown to make complex work topology explicit. Do not introduce a graph database, scheduler, runner, schema package, or orchestration framework. A work node is a bounded outcome, not automatically a separate agent.
 
 ## Decide Whether to Use a Formal Graph
 
-Consider a formal graph when one or more of these conditions apply:
+Use a formal graph when the task has substantial fan-out, several real dependencies, broad audit or transformation scope, layered consolidation, separate implementation and verification paths, or an approval-gated action.
 
-- multiple independent investigations can run concurrently
-- several subagents will be used
-- many similar items must be audited or transformed without omissions
-- results require layered consolidation
-- implementation branches share contracts, schemas, interfaces, or mutable state
-- a schema or interface change creates downstream consumers
-- the result is difficult for the user to verify manually
-- the task ends with deployment, deletion, publication, outbound communication, or another approval-gated action
-
-Skip formal graph mode when the task is small, genuinely linear, dominated by one coherent design judgment, limited to tightly coupled writes, impossible for the main agent to verify, or cheaper to execute than to maintain as a graph. This does not waive default subagent execution: assign the bounded execution work to at least one subagent when available. Keep ordinary tasks on the normal engineering loop.
+Skip formal graph mode when the task is small, genuinely linear, dominated by one coherent design judgment, limited to tightly coupled writes, or cheaper to execute than to maintain as a graph. Skipping graph mode does not waive relevant skills or verification, and graph mode does not require delegation.
 
 ## Establish the Preflight
 
-1. Inspect the request, repository state, applicable instructions, validation surfaces, and existing ownership before compiling nodes.
-2. Run the `multi-session-coordination` skill first when related Codex threads, branches, worktrees, pull requests, or active-work records may affect ownership or contracts. Treat that work as external nodes or hidden constraints; do not assume the current graph controls it.
+1. Inspect the request, repository state, applicable instructions, validation surfaces, and existing ownership.
+2. Use the multi-session-coordination skill first when related tasks, branches, worktrees, pull requests, or active-work records may affect ownership or contracts.
 3. Define the overall goal and observable success criteria.
-4. Identify actions that require explicit approval because they are audience-facing, destructive, irreversible, sensitive, production-impacting, materially costly, or outside existing authority.
-5. Read `references/templates/task-graph.md` before creating a formal graph artifact.
-6. Read `references/worktrees.md` when any node proposes or already owns an auxiliary worktree. Keep worktree permits separate from node permits.
+4. Identify actions requiring explicit approval because they are audience-facing, destructive, irreversible, sensitive, production-impacting, materially costly, or outside existing authority.
+5. Read references/templates/task-graph.md before creating a formal graph artifact.
+6. Use the worktree-lifecycle skill when any node proposes or owns an auxiliary worktree.
 
-Keep a medium task graph in the working plan or response. For long-running, multi-phase, or multi-session implementation, create `.codex/task-graphs/<task-slug>.md` when repository policy permits a local coordination artifact. Otherwise keep the graph in the available planning mechanism. Do not create or commit a repository artifact for an informational question or when the task does not authorize changes.
+Keep a medium graph in the working plan or response. For long-running, multi-phase, or multi-session implementation, create .codex/task-graphs/<task-slug>.md only when repository policy permits that local coordination artifact. Do not create a repository artifact for an informational question or when the task does not authorize changes.
 
 ## Compile the Graph
 
-Define each node with:
+Define each meaningful node with:
 
-- a stable node identifier
+- a stable identifier
 - one bounded goal
-- an executor: use a subagent role for actual repository execution; root main-agent nodes are limited to root orchestration, topology, integration, verification, approval, final acceptance, or a documented root direct-execution exception
-- authoritative inputs
-- a declared output shape and acceptance condition
-- only the upstream nodes whose accepted outputs it consumes
-- read scope
-- write or mutable-state ownership
-- a verified Luna/max profile or explicit `gpt-5.6-luna` with `max` reasoning as child-execution settings whenever delegated
+- required inputs and authoritative sources
+- the produced artifact or decision
+- an observable acceptance condition
+- only the upstream nodes whose accepted output it consumes
+- read scope and write or mutable-state ownership
+- an executor: root by default, or one directly assigned helper when delegation has a concrete benefit
 - a verification gate proportionate to risk
-- a current status
-- an exact assigned workspace, plus a root-issued worktree permit only when an auxiliary checkout is justified
+- a current state
+- an exact workspace, plus a root-issued worktree permit only when an auxiliary checkout is justified
 
-Nodes may contain local child subtrees, but only their parent may manage local child state. The root main session exclusively owns root topology and the root ready set. A local child must be equal to or narrower than its parent in all inherited constraints and must select a verified Luna/max profile or use explicit `gpt-5.6-luna` with `max` reasoning as child-execution settings; use the assignment contract in `subagent-orchestration` and `references/subagents.md`.
+Use states consistently: Proposed, Ready, Running, Complete, Failed, Blocked, or Superseded.
 
-The root records the actual user-selected root model when provenance requires it, maintains a finite manifest and total spawned-node budget, and owns root topology and the ready set. Where the host supports callable installed profiles, depth 1 is root-selected through an `@tag` or equivalent programmatic route; this is not a claim that a picker or route was tested. A root-issued permit may create a depth-2 leaf with a strict non-empty subset, disjoint sibling ownership, a verified Luna/max profile or explicit `gpt-5.6-luna`/`max` child-execution settings, and acceptance. Depth 1 executes directly when no valid permitted strict-subset split exists; depth 2 executes directly and never spawns. Dispatch only ready nodes in the finite root manifest that have a root permit, remaining total node budget, and runtime, safety, and ownership capacity. Runtime-full is backpressure. Retries reuse ID/permit. A replacement is a new root-authorized node with a new permit and budget entry and the same verified Luna/max child-execution route. Every expansion needs a documented root reason limited to a newly discovered dependency, invalidated gate, or changed user scope; a material expansion also requires immediate user approval. A descendant that cannot finish within its scope or authority stops and reports; it cannot change the execution route or request escalation.
-
-Audit every proposed edge with this question:
+Audit every proposed edge:
 
 > Can the downstream node correctly begin without consuming an accepted output or decision from the upstream node?
 
-If yes, do not add a data-dependency edge merely to preserve narrative order. Check separately for hidden ordering constraints:
+If yes, do not add a dependency merely to preserve narrative order. Track overlapping writes, shared mutable state, schema or interface ordering, external ownership, resource limits, and approval gates as hidden constraints.
 
-- overlapping file or mutable-state writes
-- schemas, migrations, interfaces, or public contracts
-- shared ports, services, environments, locks, credentials, or rate limits
-- cost or resource ceilings
-- active ownership in another thread or worktree
-- auxiliary-worktree budget and lifecycle obligations
-- destructive, irreversible, production, or audience-facing actions
+Add fan-in nodes where several accepted outputs must be combined. Add independent verification nodes when risk or blast radius warrants them. Identify the completion-controlling path and current ready set.
 
-Add explicit fan-in nodes where multiple outputs must be combined. Add independent verification nodes for high-risk claims or changes. Add approval nodes immediately before actions that require user authorization. Identify the completion-controlling path and the initial ready set.
+## Execute Ready Work
 
-## Dispatch Ready Nodes
+Execute only nodes whose dependencies and hidden constraints are satisfied.
 
-Dispatch a node only when all declared dependencies have accepted outputs and all hidden constraints are satisfied.
+The main agent completes coherent work directly by default. If delegation would provide independent evidence, genuinely parallel progress, or worthwhile context reduction:
 
-- Dispatch only ready nodes in the finite root manifest that have a root permit, remaining total node budget, and runtime, safety, and verified ownership or isolation capacity. Do not treat all independent work as automatically dispatchable.
-- Start with the current workspace and an auxiliary-worktree budget of zero. A subagent or graph node does not imply a worktree. Only root may issue a separate worktree permit; it may authorize one active auxiliary without additional approval, while two or more require user approval for the exact count and reasons. Descendants must not create, adopt, repurpose, move, or remove worktrees.
-- If parallel execution is unavailable, process ready nodes sequentially while preserving dependencies and state.
-- Keep architecture, security-sensitive judgment, destructive operations, migrations, concurrency design, public API compatibility, and final acceptance with the main agent. Delegate evidence gathering, bounded authorized work, or independent review for those areas whenever available.
+- use a direct root-to-helper assignment
+- apply the subagent-orchestration skill and its assignment contract
+- set a finite helper-launch and retry allowance
+- assign disjoint ownership or serialize conflicting writes
+- select the required Luna/max route
+- require the helper to execute directly without spawning descendants
+- verify the returned artifact before accepting it
 
-When delegating, use the existing subagent assignment contract and add:
-
-```text
-Graph node:
-Declared inputs:
-Output and acceptance condition:
-Depends on:
-Read scope:
-Write or mutable-state ownership:
-Verification gate:
-```
-
-A subagent must not silently restructure the root graph, expand its scope, consume undeclared inputs, or claim a blocked dependency is complete. It may manage a declared local subtree only within inherited constraints and must return the declared output or report the exact capability gap, hidden dependency, conflict, or missing input to its parent.
-
-## Update State and Consolidate Results
-
-After each node returns:
-
-1. Check its output against the declared acceptance condition and primary evidence.
-2. Record its status, evidence, produced artifacts, and any changed assumptions.
-3. Keep dependent nodes blocked when the output is missing, failed, or rejected.
-4. Recalculate the ready set.
-5. Record expected, received, missing, failed, and blocked node identifiers before fan-in.
-
-For large fan-out, consolidate in layers. Preserve node IDs, paths, evidence references, counts, severity, and confidence. Do not collapse specific findings into vague summaries. Confirm every expected node appears exactly once in the consolidation or is explicitly listed as missing, failed, blocked, or superseded. Local parents return compact lineage, accepted artifact paths, and evidence rather than full child history, transcripts, or long logs.
+Graph planning does not authorize helpers, worktrees, spending, or broader permissions. A graph may contain many nodes and use no helpers. Runtime capacity is a constraint, not a reason to queue speculative work.
 
 ## Verify and Retry Selectively
 
-Use an independent Reviewer or Tester node when risk, blast radius, or unverifiable synthesis warrants it. Give the verifier the source artifacts, acceptance criteria, and primary-evidence requirements—not merely the producer's summary.
+Validate each necessary handoff and the final combined result. When a gate fails:
 
-If a gate fails:
+- preserve accepted outputs whose inputs remain valid
+- revise or rerun the failed work
+- repeat downstream work only when its consumed input changed
+- recompile the affected graph portion when the failure reveals a missing edge
+- stop unchanged retries when evidence shows the approach is not progressing
 
-- preserve accepted outputs from unrelated nodes
-- revise or rerun the failed node
-- rerun downstream nodes only when their consumed inputs became invalid
-- recompile the affected graph portion when the failure reveals a missing edge or invalid decomposition
-- stop blind retries and report the exact blocker when the same failure persists
+Retries and replacements remain within the finite helper allowance when delegated. Expand execution cost only for an identified new dependency, invalidated gate, or changed user scope; obtain user approval immediately before a material expansion.
 
-Before completion, verify the combined behavior and final diff, confirm the completeness counts, and ensure no required node or approval gate remains blocked.
-
-Also reconcile every task-created auxiliary worktree before completion. Integrate and remove it under the verified gates in `references/worktrees.md`, or preserve it with the exact path, owner, branch or HEAD, blocker, and next action. Do not leave task-owned cleanup to scheduled automation.
+Before completion, reconcile node states, required approval gates, helper assignments, and every task-created auxiliary worktree.
 
 ## Enforce Approval Gates
 
-Complete safe inspection, reversible preparation, and validation before the gate when useful. Immediately before the gated action, present the exact target, scope, consequences, material cost, audience, and rollback or recovery path when one exists. Stop until the required authority is explicit. Approval for the plan or an earlier node does not authorize a broader or different irreversible action.
+Complete safe inspection, reversible preparation, and validation before a gate when useful. Immediately before the gated action, present the exact target, scope, consequences, material cost, audience, and recovery path when one exists. Approval for a plan or earlier node does not authorize a broader action.
 
 ## Respect Instruction-Only Limits
 
-This skill provides soft executable semantics, not a deterministic scheduler. The host may not support concurrency, graph state may drift, dependency classification may be wrong, and no automatic caching or transactional state exists. Recheck repository state, ownership, node inputs, and approval status at each consequential transition. Do not describe the result as a graph runtime or mechanically enforced workflow.
+This skill provides planning semantics, not a deterministic runtime. Recheck repository state, ownership, node inputs, and approval status at consequential transitions. Do not describe the graph as mechanically enforced.

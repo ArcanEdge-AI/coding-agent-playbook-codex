@@ -25,7 +25,8 @@ Do not use this skill when:
 - available evidence is too incomplete to compare the work meaningfully
 
 Consult `references/multi-session-coordination.md` for the detailed coordination rules.
-Consult `references/worktrees.md` when any participating task proposes, owns, integrates, or cleans an auxiliary worktree.
+Use the `worktree-lifecycle` skill when any participating task proposes, owns, integrates, or cleans an auxiliary worktree.
+Use the `feature-branch-lifecycle` skill when participating development branches must converge through one feature integration branch or when promotion and temporary-branch cleanup are in scope.
 
 ## Project Thread Naming
 
@@ -105,6 +106,7 @@ For each relevant work item, capture:
 - unmet upstream dependencies and other blockers
 - open decisions
 - integration status
+- branch role, promotion target, and cleanup eligibility when the feature-branch lifecycle applies
 - worktree lifecycle status and final disposition when the worktree is task-created
 
 Separate confirmed facts from inference.

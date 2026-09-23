@@ -18,16 +18,16 @@ Classify every relevant checkout before acting:
 
 - Start with the current workspace and an auxiliary-worktree budget of `0`.
 - The root may authorize at most one active auxiliary worktree without additional user approval. Two or more require approval for the exact count and reasons.
-- Do not allocate one worktree per agent, node, role, retry, or depth level.
+- Do not allocate one worktree per agent, node, role, or retry.
 - Read-only work uses the current workspace.
 - Disjoint bounded writers normally share the current workspace when the runtime and repository permit it.
 - Serialize overlapping or tightly coupled writes. Do not create worktrees merely to hide conflicts that still must be reconciled.
 - Raise the finite worktree budget only for a specific planned writer that needs real branch or filesystem isolation.
 - Only the root may issue a worktree permit, create or adopt an auxiliary worktree, change its purpose, or remove it.
-- Depth-1 and depth-2 agents work only in the exact workspace assigned by the root. They report additional isolation needs upward.
+- Helpers work only in the exact workspace assigned by the root. They report additional isolation needs upward and do not create or remove worktrees.
 - Retries reuse the same compatible worktree. A replacement agent does not receive a new worktree automatically.
 
-The worktree budget is separate from the spawned-node budget. A task may have many bounded agents and zero auxiliary worktrees.
+The worktree budget is separate from any helper-launch allowance. A task may have several bounded helpers and zero auxiliary worktrees.
 
 ## When an Auxiliary Worktree Is Justified
 
@@ -80,7 +80,7 @@ Use `references/templates/worktree-manifest.md` when the ledger needs to persist
 8. Create the worktree through supported Git or host behavior without force.
 9. Verify the new canonical path, registration, branch or HEAD, and clean starting state before assigning work.
 
-Do not create a worktree speculatively. Do not let a descendant choose an unrecorded path or branch.
+Do not create a worktree speculatively. Do not let a helper choose an unrecorded path or branch.
 
 ## Execution and Integration
 

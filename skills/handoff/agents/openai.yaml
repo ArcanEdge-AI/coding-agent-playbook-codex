@@ -1,0 +1,4 @@
+interface:
+  display_name: "Handoff"
+  short_description: "Carry complete work context into a new chat"
+  default_prompt: "Use $handoff to start a new chat with everything we have worked on, researched, explored, validated, or verified."

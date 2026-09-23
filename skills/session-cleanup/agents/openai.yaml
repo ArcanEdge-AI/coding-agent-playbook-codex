@@ -1,0 +1,4 @@
+interface:
+  display_name: "Session Cleanup"
+  short_description: "Clean up and validate completed coding sessions"
+  default_prompt: "Use $session-cleanup to review and clean up this completed coding session."
