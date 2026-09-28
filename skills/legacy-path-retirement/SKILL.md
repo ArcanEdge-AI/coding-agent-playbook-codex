@@ -13,7 +13,11 @@ This skill supports both analysis and authorized implementation. An audit or dia
 
 Identify the requested change, candidate obsolete paths, intended authoritative replacement, repository support commitments, product stage, and authorized actions. Do not infer pre-production status or disposable data from a development environment.
 
-Pre-production usually makes a direct consolidation practical when there are no supported older consumers. It does not eliminate current integrations, useful configuration, release constraints, or correctness requirements. Production may require a bounded migration; that is an evidence-based dependency, not an excuse to keep every legacy path.
+Inspect the whole affected flow and identify which existing parts remain correct. Improve that implementation by default. Replacing a substantial part needs evidence of a significant benefit that justifies implementation, migration, verification, and maintenance costs; preserve suitable existing components. Apply the engineering-design decision aid through `reference-doc-routing` when that choice is consequential.
+
+Pre-production usually makes a direct consolidation practical when there are no supported older consumers. It does not eliminate current integrations, useful configuration, release constraints, or correctness requirements, and it does not justify rebuilding a working flow. Production may require a bounded migration; that is an evidence-based dependency, not an excuse to keep every legacy path.
+
+Hypothetical users, obsolete test accounts, fixtures, and earlier development implementations are not support commitments. Their existence alone does not require adapters, fallback paths, dual flows, or tests preserving the old behavior. For example, an alpha onboarding change should follow the intended current flow. Resolve the retention needs of old seeded accounts separately; their existence does not automatically create a second supported onboarding flow.
 
 ## Separate the Decisions
 
@@ -50,6 +54,8 @@ Question whether a proposed compatibility check or fallback is needed before har
 ## Keep Data Disposition Independent
 
 Existing development records do not justify permanent dual writers or compatibility layers. Decide whether they contain useful data or configuration and choose a deliberate preservation or migration strategy.
+
+Distinguish confirmed disposable test data from useful or required records. Reuse existing reset or seed tools when resetting disposable data is explicitly authorized. Missing reset authority is a question about the exact data operation, not a reason to invent a permanent compatibility system.
 
 A request to simplify code is not permission to reset a database, drop stored files, remove user configuration, or discard unmapped records. Before destructive data work, resolve exact targets, dependencies, consequences, recovery options, and authority. Follow repository migration policy; do not erase historical migrations or durable contract history simply because runtime code is obsolete.
 

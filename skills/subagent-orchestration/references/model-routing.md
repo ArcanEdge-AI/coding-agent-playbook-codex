@@ -1,44 +1,50 @@
-# Codex Subagent Model Routing
+# Codex Task-Based Model Routing
 
-Every delegated subagent execution must explicitly select a verified bundled profile pinned to `gpt-5.6-luna` with `max` reasoning, or pass those values as explicit child-execution settings. This applies to each role, retry, and replacement that launches or reruns a helper. It does not apply to ordinary tool calls, progress or task-reporting messages, or follow-up communication. The root model and effort may vary independently; they do not change the helper route.
+Use subagents sparingly, only when a bounded assignment's concrete benefit outweighs its context, coordination, latency, and review cost, or a governing instruction requires independent assistance. A role perspective can be applied directly by the main agent without launching a helper.
 
-## Why Explicit Routing Is Required
+## Choose by the Actual Task
 
-Codex custom-agent fields such as `model` and `model_reasoning_effort` may inherit from the parent session when omitted. A direct child-execution route must therefore pass the fixed values:
+Optimize for the total cost of an accepted result: input and reasoning tokens, repeated context, retries, corrections, coordination, and verification. A lower token price or a higher reasoning setting does not establish better value. Choose sufficient capability upfront without a mandatory cheap attempt first. Use comparable task evidence when available; do not invent savings or run paid comparisons without authority.
 
-```text
-model = "gpt-5.6-luna"
-reasoning_effort = "max"
-```
+| Task | Model | Reasoning |
+| --- | --- | --- |
+| Narrow lookup, extraction, file mapping, log summaries | `gpt-6-luna` | `high` |
+| Clear implementation, local fixes, bounded planning or straightforward review | `gpt-6-sol` | `medium` |
+| Coupled changes, difficult debugging, substantial review, conflicting evidence | `gpt-6-sol` | `high` |
+| Hard architecture questions, persistent debugging, complex cross-system reasoning | `gpt-6-astra` | `xhigh` only |
 
-Use the host's equivalent argument names when required, but keep both values explicit in the child-execution settings. The bundled profile names remain compatible aliases; selecting a profile whose fields are verified as Luna/max is also an explicit child-execution route.
+**Standard speed only. Do not select Max, Ultra, Fast, or priority processing.** High-impact judgments remain with the main agent even when a helper contributes evidence.
 
-If a host cannot accept explicit child-execution model and effort values, select a verified bundled Luna/max profile. If the loaded profile is stale or cannot be verified, use an explicit child-execution route that can or stop and report the routing limitation rather than silently inheriting a profile or parent setting.
+These are approved policy choices, not a measured performance ranking for every repository. Change them only through an explicit policy decision. Do not substitute a different generation merely because it is newer or available.
 
-## Fixed Profile Route
+## Profile Defaults and Effective Settings
 
-Every bundled profile pins the same route so profile defaults and child executions agree:
+Each role has one profile with an explicit default:
 
-| Profile alias | Model | Reasoning | Intended work |
+| Profile | Default model | Reasoning | Typical delegated scope |
 | --- | --- | --- | --- |
-| `docs`, `docs_luna` | `gpt-5.6-luna` | `max` | Documentation lookup and source extraction. |
-| `planner`, `planner_luna` | `gpt-5.6-luna` | `max` | Bounded planning and validation strategy. |
-| `engineer`, `engineer_luna` | `gpt-5.6-luna` | `max` | Small, isolated implementation. |
-| `tester`, `tester_luna` | `gpt-5.6-luna` | `max` | Targeted reproduction and validation analysis. |
-| `reviewer`, `reviewer_luna` | `gpt-5.6-luna` | `max` | Evidence-backed bounded review. |
+| `docs` | `gpt-6-luna` | `high` | Focused source lookup and extraction. |
+| `planner` | `gpt-6-sol` | `medium` | Bounded planning and real dependencies. |
+| `engineer` | `gpt-6-sol` | `medium` | Clear, isolated implementation. |
+| `tester` | `gpt-6-luna` | `high` | Focused log analysis and known-check reproduction. |
+| `reviewer` | `gpt-6-sol` | `high` | Substantial bounded review. |
 
-The aliases retain their existing filenames and names for compatibility. The fixed route does not remove the role boundaries: the main agent retains architecture, high-impact judgment, integration, and final acceptance.
+The task table controls selection. For example, difficult root-cause analysis assigned to a tester requires a stronger route than its default, while a straightforward review may use Sol/medium. Do not create model-specific copies of the roles.
 
-## Selection Rules
+On hosts using Codex custom-agent files, explicit `model` and `model_reasoning_effort` values in the file can override spawn arguments. Verify precedence before dispatch. Use a matching profile, or a supported explicit launch that carries the relevant role instructions, scope, and safeguards without a conflicting profile override. Never assume passing a different model alongside a fixed profile changes the effective model.
 
-1. Record the actual root model and effort only when the task record needs that provenance. Root routing does not create a model or effort ceiling for helpers.
-2. Before dispatching, define the bounded result, acceptance check, expected benefit, exact scope and workspace, and finite helper-launch and retry allowance.
-3. Use direct root-to-helper assignments. Bundled helpers execute directly and do not spawn descendants.
-4. Keep every assignment equal to or narrower than the root task in inputs, data access, permissions, scope, non-goals, authority, approval boundary, ownership, and workspace.
-5. Dispatch only work whose dependencies are satisfied and that fits the remaining allowance plus runtime, safety, and ownership capacity. When capacity is full, do not queue speculative helpers.
-6. Before retrying, identify what failed and what will change. A replacement remains root-authorized, consumes the finite allowance, and uses the same verified Luna/max route.
+Use the host's actual fields and controls to establish the effective model, effort, and Standard speed. Bundled files declare model and effort; they do not mechanically enforce the live speed setting. An omitted service tier does not prove that Fast is disabled in a parent or session override. Do not invent a Standard-speed configuration value or silently accept Fast when the host cannot establish the requested route. Keep the work with the main agent or report an unmet independent-verification gate.
 
-This is a Codex-specific routing rule. Codex supports explicit model and reasoning-effort arguments on child-execution launches as well as those TOML fields, so this repository fixes every child execution route to Luna/max independently of the root session. A verified pinned profile supplies that route when launch-time overrides are unavailable. Do not use this document to prescribe or describe routing in the independently maintained Claude Code edition.
+Reading a role perspective does not change the main agent's model, reasoning, permissions, or ownership and does not count as independent verification. Preserve the main agent's user-selected settings; recommend a change when useful and let the user select it.
+
+## Selection and Retry Rules
+
+1. Establish that the helper is useful, authorized, and within the finite launch/retry allowance before selecting its route. Task size, available roles, and graph nodes do not require delegation.
+2. Record the bounded result, acceptance check, expected benefit, exact scope and workspace, model, reasoning effort, and Standard speed in the existing assignment.
+3. Use direct root-to-helper assignments. Helpers do not spawn descendants or broaden their inputs, access, scope, permissions, or ownership.
+4. Dispatch only ready work within available capacity. Serialize conflicts and do not queue speculative helpers.
+5. Before retrying or reassigning, identify what failed and what will change. Reuse accepted evidence. Avoid chains of attempts that repeat the same misunderstanding.
+6. Only the main agent may select a different approved helper route, based on the task evidence and within the existing finite allowance. Obtain specific approval before a material cost expansion. Keep parent and peer settings unchanged.
 
 ## Keep With the Main Agent
 
@@ -67,9 +73,9 @@ A subagent must stop and report when:
 - the conclusion cannot be independently verified
 - the work becomes security-sensitive, destructive, or production-impacting
 - the task requires architectural or cross-system judgment
-- the host cannot honor explicit Luna/max child-execution settings
+- the host cannot establish the selected model, reasoning effort, and Standard speed
 
-No helper may silently change its execution model or effort, fall back to a parent setting, or request a model escalation. Any replacement or reroute remains root-owned and must select a verified Luna/max profile or use explicit Luna/max child-execution settings.
+Helpers return evidence and a blocker when a task or route is unsuitable. They may not change their own execution settings or silently fall back to inherited settings. The main agent decides whether to complete directly, correct the assignment, or use another approved route within the existing execution and cost authority.
 
 ## Reporting and Follow-up Messages
 
@@ -78,7 +84,7 @@ Subagents must not alter a parent or peer task's model or reasoning settings. Us
 Correct:
 
 ```text
-Child execution: select a verified Luna/max profile (or pass explicit child-execution settings).
+Child execution: establish the approved task-selected model, reasoning effort, and Standard speed.
 Task report: send_message_to_thread({ threadId: parentId, prompt: "..." })
 ```
 
@@ -87,7 +93,7 @@ The task-reporting call above is allowed only when separately authorized and int
 Incorrect:
 
 ```text
-send_message_to_thread({ threadId: parentId, prompt: "...", model: "gpt-5.6-luna", thinking: "max" })
+send_message_to_thread({ threadId: parentId, prompt: "...", model: "gpt-6-sol", thinking: "high" })
 ```
 
 The incorrect form can override the destination task's model or reasoning settings.
@@ -96,8 +102,9 @@ The incorrect form can override the destination task's model or reasoning settin
 
 ```text
 Role:
-Selected profile or model: [Verified bundled profile alias or explicit gpt-5.6-luna route]
-Reasoning effort: max
+Selected profile or model: [Verified profile or supported explicit task-selected route]
+Reasoning effort: [high, medium, or xhigh as specified by the task table]
+Speed: Standard
 Why this selection is suitable:
 Expected benefit:
 Goal:
@@ -119,7 +126,7 @@ Return format:
 
 Before accepting delegated work, confirm:
 
-- the child execution selected a verified profile pinned to `gpt-5.6-luna`/`max`, or explicitly passed those values as child-execution settings
+- the effective model and reasoning effort match the approved task choice, and Standard speed is established
 - parent-model and parent-effort inheritance were not used unintentionally for child execution
 - progress and task-reporting messages omitted model, reasoning, thinking, and analogous destination-setting overrides and did not alter a parent or peer task
 - the assignment's expected benefit and place within the finite allowance were recorded
@@ -131,3 +138,7 @@ Before accepting delegated work, confirm:
 - claims are supported by primary evidence
 - any edits are minimal and task-related
 - the main agent independently reviewed material findings and edits
+
+## Capability References
+
+For host behavior, consult the current [custom-agent precedence documentation](https://learn.chatgpt.com/docs/agent-configuration/subagents#custom-agents), [model and reasoning guidance](https://learn.chatgpt.com/docs/models), and [speed controls](https://learn.chatgpt.com/docs/agent-configuration/speed). These explain capabilities; availability alone does not expand this playbook's approved routes.

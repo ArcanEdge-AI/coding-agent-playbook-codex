@@ -13,17 +13,20 @@ Review the final diff for:
 - accidental formatting churn
 - generated, vendored, compiled, or package-owned files
 - missing or weak validation
+- redundant tests, fixtures, or mocks; tests preserving abandoned partial fixes or implementation details rather than intended final behavior
 - unused imports, variables, types, functions, or files caused by the change
 - naming clarity
 - consistency with existing patterns
 - incomplete fixes that minimize the diff while leaving required behavior unresolved
 - abstractions without a demonstrated boundary, invariant, meaningful duplication, or variability
+- substantial flow replacements without evidence of a significant benefit over improving the existing implementation, accounting for migration, verification, and maintenance costs
 - unnecessary change amplification across unrelated components
 - material technical debt without its scope, rationale, and follow-up condition
 - speculative configurability
 - behavior changes beyond the request
 - API compatibility required by supported consumers or explicit commitments
 - legacy paths or fallbacks retained without demonstrated dependencies, or removed despite unresolved consumers
+- support commitments invented for hypothetical users, obsolete test accounts, fixtures, or intermediate development versions
 - code retirement that discards useful data without authority or weakens necessary correctness safeguards
 - migration risk
 - safety risk
@@ -31,7 +34,8 @@ Review the final diff for:
 - accessibility regressions
 - subagent claims that were not independently verified
 - helper launches or retries that exceeded the recorded finite allowance or were not reconciled
-- child execution that did not select a verified Luna/max profile or explicit `gpt-5.6-luna`/`max` child-execution settings, or permissions, scope, authority, or workspace expansion beyond the parent assignment
+- unnecessary helper use whose concrete benefit does not justify context, coordination, and review overhead
+- child execution outside the approved task-based model/effort choices or Standard speed, conflicting profile overrides, or permissions, scope, authority, or workspace expansion beyond the parent assignment
 - progress or task-reporting messages that set `model`, `reasoning_effort`, `thinking`, or analogous destination-setting overrides, or altered a parent or peer task
 - task-created auxiliary worktrees without integration evidence and a verified `removed` or exact-blocker `preserved` disposition
 
@@ -42,6 +46,8 @@ Would I approve this in code review?
 ```
 
 If not, fix the issue or report the remaining risk clearly.
+
+Recommend additional tests only for an identified important behavior or realistic regression risk that existing checks do not establish. A focused unit test for a lasting rule is valid; each implementation step does not need its own permanent test. Preserve required assertions when consolidating tests, and never treat deleting a failing test as resolving its failure.
 
 Final report format:
 

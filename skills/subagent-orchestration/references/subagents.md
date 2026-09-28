@@ -1,6 +1,6 @@
 # Subagent Delegation Reference
 
-The main agent is the primary implementer and remains accountable for task framing, design, implementation, integration, verification, authorized delivery, and the final response. Helpers provide bounded assistance; they do not own the outcome.
+The main agent is the primary implementer and remains accountable for task framing, design, implementation, integration, verification, authorized delivery, and the final response. Use helpers sparingly when a bounded benefit justifies their extra context, coordination, latency, and review cost, or independent assistance is required; they do not own the outcome.
 
 ## When Assistance Is Worthwhile
 
@@ -15,17 +15,19 @@ Do not delegate merely because tools are available, a task is substantial, a gra
 
 No helper is required for a task to be legitimate. The main agent may directly complete coherent single-file, multi-file, or substantial work without recording an exception.
 
-## Codex Helper Roles
+## Role Perspectives and Helper Assignments
 
-| Role | Default mode | Best for |
+Each profile separates reusable role guidance from rules for delegated execution. The main agent may consult the role perspective directly for a concrete question without changing its model, reasoning effort, permissions, approval gates, or ownership. It does not inherit the profile's launch settings or helper-only escalation rules by reading them. Select only useful guidance, with no required role sequence or separate report. This is self-review; preserve separately required independent verification.
+
+| Role | Delegated mode | Best for |
 | --- | --- | --- |
-| planner | Read-only | Bounded decomposition, risks, sequencing, and validation strategy. |
+| planner | Read-only | Outcomes, reuse opportunities, risks, real dependencies, and completion checks. |
 | engineer | Bounded write | A clearly owned implementation slice after interfaces and constraints are known. |
 | reviewer | Read-only | Independent review of a bounded diff, design, or claim. |
-| tester | Read-mostly | Reproduction, test-output analysis, and targeted validation. |
+| tester | Read-mostly | Proportionate checks, evidence evaluation, and failure diagnosis when needed. |
 | docs | Read-only | Repository documentation and authoritative source lookup. |
 
-Choose a role because its boundary fits the assignment, not to fill a roster.
+For actual delegation, choose a role whose boundary fits the bounded assignment. A useful perspective alone does not justify launching a helper.
 
 ## Flat Delegation Boundary
 
@@ -52,7 +54,7 @@ For multi-node work, a helper may own a ready graph node or another bounded subs
 | Read/write scope | Exact ownership; serialize overlap unless isolation is verified. |
 | Verification gate | Evidence required before acceptance. |
 | Workspace | Exact shared workspace or root-permitted auxiliary worktree. |
-| Route | Verified Luna/max profile or explicit equivalent settings. |
+| Route | Verified task-selected model and effort at Standard speed. |
 
 A graph node does not have to be delegated. The main agent owns graph topology, readiness, integration, and final acceptance.
 
@@ -62,11 +64,11 @@ Start with the current workspace and an auxiliary-worktree budget of zero. A hel
 
 Only root may raise the worktree budget, issue a permit, or create, adopt, repurpose, move, or remove a worktree. Helpers use the exact assigned workspace and report any isolation need upward. Follow the worktree-lifecycle skill for integration and final disposition.
 
-## Fixed Model Route
+## Task-Based Model Selection
 
 Consult references/model-routing.md before launching a helper.
 
-Every delegated execution, retry, and replacement must select a verified bundled profile pinned to gpt-5.6-luna with max reasoning or pass equivalent explicit child-execution settings. The root model and effort remain independent.
+Select every delegated execution, retry, and replacement by the actual assignment using the approved task table: GPT-6 Luna/high, Sol/medium, Sol/high, or Astra/xhigh. Use Standard speed only; never Max, Ultra, or Fast. A profile's explicit model and effort can override spawn arguments, so establish the effective route. The main agent's user-selected model and effort remain independent.
 
 A helper must stop if the route is unavailable. It may not silently inherit, substitute a model, lower effort, or request escalation. Progress and task-reporting messages must preserve parent and peer settings.
 
@@ -108,7 +110,7 @@ Ownership and workspace:
 [Exact workspace and disjoint write ownership or bounded read scope.]
 
 Child-execution route:
-[Verified Luna/max profile or explicit gpt-5.6-luna/max settings.]
+[Verified task-selected model, reasoning effort, and Standard speed.]
 
 Launch/retry allowance:
 [Assignment's place within the finite allowance.]
@@ -124,7 +126,7 @@ Return:
 
 Before accepting helper work, verify:
 
-- the actual route was Luna/max and did not rely on unintended inheritance
+- the effective route matched the task-selected model and effort at Standard speed, without unintended inheritance or conflicting profile overrides
 - the helper did not spawn descendants
 - the assignment stayed within scope, authority, ownership, and workspace
 - claims are backed by primary evidence

@@ -4,6 +4,8 @@ Behavioral guidelines for producing elegant, maintainable, production-quality co
 
 Prefer the lowest reasonable total effort that delivers a correct, maintainable, verified result. Correctness, necessary safeguards, and delivery requirements take precedence over saving tokens or finishing quickly. Simpler execution does not mean weaker verification.
 
+Treat unnecessary abstractions, speculative compatibility, and redundant tests as maintainability defects. Added code and validation should serve the intended behavior, a demonstrated dependency, or a credible failure risk; more files, layers, and tests do not by themselves make a solution better.
+
 Keep general engineering behavior here; apply the explicit Codex helper-routing policy only when delegating. Put project-specific commands, framework procedures, and environment details in applicable repository guidance, skills, or references.
 
 ---
@@ -24,6 +26,8 @@ Complete coherent work directly by default, including substantial or multi-file 
 
 Single-agent-first execution does not waive applicable skills, references, dependency analysis, or verification methods. The main agent applies the relevant skills itself.
 
+The main agent may consult a relevant role profile and apply its perspective directly to a concrete question. Use only the guidance that helps; do not cycle through roles, create a subagent, or produce separate role reports merely because profiles exist. Consulting a profile preserves the main agent's configured model, reasoning effort, permissions, approval gates, and ownership; launch settings and delegated-use restrictions apply only to an actual delegated execution. A change of perspective remains self-review and does not satisfy a separately required independent-verification gate.
+
 Tools, tests, linters, typecheckers, and subagents provide evidence, not substitutes for judgment. The main agent remains accountable for the combined result and all required review and approval gates.
 
 ## 2. Understand Before Editing
@@ -31,6 +35,7 @@ Tools, tests, linters, typecheckers, and subagents provide evidence, not substit
 - Inspect the current workspace, applicable instructions, and relevant user changes before editing. Identify ownership and scope; do not treat unrelated changes as yours to repair or discard.
 - Identify the actual problem, requested deliverable, acceptance criteria, relevant facts, constraints, and delivery destination. Preserve supplied quantities, units, source labels, and qualifications when consequential.
 - Inspect relevant implementation, call sites, tests, configuration, and existing patterns. Start with the affected area and expand when evidence reveals a dependency, integration boundary, or unresolved risk; perform broader inspection when the task itself requires it.
+- Understand the whole affected flow before choosing a fix: relevant entry points, shared behavior, business rules, data changes, consumers, and success and failure outcomes. Identify what already works and the actual gap. Follow relevant dependencies without turning a bounded change into an unrelated system audit.
 - Before writing new code, look for suitable project implementations and common interaction patterns, including UI components, modals or dialogs, hooks, validators, and utilities. Reuse, compose, or extend them when they fit the requirement. Create shared code when a current need for shared behavior, a real boundary or invariant, or an established project convention justifies it; follow Section 7's abstraction guidance.
 - Question assumptions that unnecessarily constrain the solution. Check whether existing capabilities can remove the need for new code or infrastructure.
 - Compare alternatives when a consequential design choice warrants it. Routine implementation does not require an alternatives essay or separate checklist.
@@ -98,7 +103,7 @@ The lifecycle rule does not provide blanket authority to create remote infrastru
 
 ## 4. Subagent Delegation
 
-Delegation is optional unless governing instructions explicitly require it. Before spawning, identify the bounded output needed, how it will be checked, and the concrete expected benefit: independent evidence, genuinely parallel progress, or reduced main-agent context and work. A short note in the task record is sufficient; do not invent numerical savings.
+Use subagents sparingly. Complete the work directly unless a bounded assignment provides a concrete benefit that outweighs its added context, coordination, latency, and review effort, or governing instructions require independent assistance. Useful benefits include independent evidence, genuinely parallel progress on separable work, or reduced context for a large bounded investigation. Before spawning, identify the output, acceptance check, and expected benefit in a short task-record note; do not invent numerical savings.
 
 Do not delegate merely because tools are available, a helper is inexpensive, the task is large, or a role would otherwise be unused. Avoid delegating a tightly coupled step that requires repeated back-and-forth to reconstruct the same context. Do not outsource work the main agent has already completed.
 
@@ -118,9 +123,22 @@ When a helper result is insufficient, inspect the relevant evidence and choose b
 
 ### Model Selection for Subagents
 
-Preserve the approved helper route: every delegated execution, retry, and replacement must use `gpt-5.6-luna` with `max` reasoning through a verified profile or supported explicit execution settings. Use the host's actual field names. Do not assume a displayed role name or an inherited default establishes this route.
+Choose each delegated execution, retry, and replacement by the actual task and the lowest expected total cost of a correct, completed result. Include input and reasoning tokens, repeated context, retries, correction work, coordination, and verification. Token price or role name alone does not determine efficiency; do not require a cheaper failed attempt before selecting sufficient capability.
 
-Do not silently substitute another model, lower effort, or alter the main agent's configuration. If the route cannot be established, keep the work with the main agent and report the limitation; separately required independent verification remains an unmet gate until satisfied. If a helper cannot complete its assignment, it returns evidence and the blocker rather than broadening its scope or changing its route.
+Use these approved routes:
+
+| Task | Model | Reasoning |
+| --- | --- | --- |
+| Narrow lookup, extraction, file mapping, log summaries | `gpt-6-luna` | `high` |
+| Clear implementation, local fixes, bounded planning or straightforward review | `gpt-6-sol` | `medium` |
+| Coupled changes, difficult debugging, substantial review, conflicting evidence | `gpt-6-sol` | `high` |
+| Hard architecture questions, persistent debugging, complex cross-system reasoning | `gpt-6-astra` | `xhigh` only |
+
+Use Standard speed only. Do not select Max, Ultra, Fast, or priority processing. Preserve the main agent's user-selected model and reasoning settings; consulting a profile or selecting a helper route does not authorize changing them. High-impact decisions remain owned by the main agent.
+
+Select a verified profile matching the required route or a supported explicit execution route that preserves the role's instructions and boundaries. Use the host's actual field names and precedence rules: a custom profile can override spawn settings. Verify the effective model, effort, and Standard speed rather than relying on the role name, advertised options, or unintended inheritance. Consult `subagent-orchestration` and its model-routing reference when delegating.
+
+Only the main agent may reassign or change a helper's route within the approved choices and existing finite execution allowance. Use evidence from the task to justify the change; obtain approval before a material cost expansion. Helpers return evidence and blockers instead of broadening scope or changing their own route. If the host cannot establish the selected route, keep the work with the main agent and report the limitation; a separately required independent-verification gate remains unmet.
 
 Use supported status messaging or the normal final return. Status messages are not new execution requests. Do not set parent or peer `model`, `thinking`, reasoning, or analogous destination overrides when reporting progress, and do not relaunch helpers merely to collect status.
 
@@ -134,7 +152,7 @@ Context: necessary facts, inputs, file paths, interfaces, and prior accepted evi
 Skills and methods: applicable skills, required references, and relevant task-graph dependencies.
 Scope and authority: permitted reads/writes, non-goals, inherited constraints, and stop conditions.
 Ownership and route: root/helper ID or permit, assigned workspace, disjoint write scope,
-  verified Luna/max route, and place within the finite launch/retry allowance.
+  verified task-selected model, effort, Standard speed, and place within the finite launch/retry allowance.
 Return: result or patch, relevant primary evidence, checks actually run, and unresolved issues.
 ```
 
@@ -156,6 +174,8 @@ Build the smallest complete solution that solves the actual problem correctly an
 
 Question the approach before adding machinery. Be inventive in solving the problem and conservative in implementing the solution. Do not pursue novelty for its own sake. Prefer a root-cause fix within the authorized scope; report broader causes rather than silently expanding the task.
 
+Improve the existing implementation by default. Consider replacing a substantial part of an affected flow only when evidence demonstrates a significant benefit that justifies the implementation, migration, verification, and maintenance costs. Preserve suitable existing components. Do not rebuild merely because another design is possible or preferred. Describe benefits concretely; do not invent numerical quality scores or use fewer lines alone as proof of improvement. Necessary correctness and security fixes remain required.
+
 - Match existing architecture and style unless the pattern is harmful or insufficient for the current requirement.
 - Keep responsibilities, interfaces, dependencies, and data flow explicit. Make common behavior straightforward and isolate exceptional complexity.
 - Use names that reveal intent. Keep functions and modules cohesive, and make invalid states difficult to represent when practical.
@@ -176,6 +196,7 @@ Complexity must earn its existence through correctness, reliability, clarity, ar
 - Prefer a targeted change over a rewrite when it solves the problem completely. A necessary structural change may be better than a smaller workaround that introduces hidden coupling or duplicated sources of truth.
 - Do not take shortcuts that knowingly create avoidable duplicated logic, fragile workarounds, hidden coupling, or deferred cleanup.
 - Preserve or add compatibility paths only for demonstrated current dependencies or explicit retention requirements. Prefer one authoritative implementation within the affected scope. Use `legacy-path-retirement` when deciding whether superseded code, duplicate writers, old contracts, or fallbacks should remain; missing dependency evidence is not proof that removal is safe.
+- Do not invent support commitments for hypothetical users, obsolete test accounts, fixtures, or earlier implementation attempts. Their existence alone does not justify adapters, dual flows, fallback logic, or tests that preserve superseded behavior. Alpha status does not establish either a compatibility requirement or permission to rebuild a system or discard data. Resolve actual consumers and retention needs first.
 - A staged migration or compatibility adapter may be justified for a supported consumer or explicit requirement. When accepting material technical debt, record its scope, rationale, and a follow-up condition for revisiting or removing it. Never introduce material known debt silently, and do not turn minor implementation choices into a reporting ritual.
 
 Decide code retirement and data retention separately. Pre-production status does not authorize resetting development data or dropping useful configuration, and it does not waive correctness safeguards. Preserve or migrate required data deliberately; obtain authority for destructive changes.
@@ -206,23 +227,27 @@ Transform tasks into verifiable goals.
 Examples:
 
 ```text
-"Add validation" -> "Add tests for invalid inputs, then make them pass."
-"Fix the bug" -> "Reproduce the bug or add a regression test, then make it pass."
+"Add validation" -> "Define accepted and rejected inputs, then verify the intended behavior with the smallest meaningful checks."
+"Fix the bug" -> "Reproduce the failure, fix the affected flow, and verify the outcome; retain a regression test when it protects against a realistic recurrence."
 "Refactor X" -> "Confirm current behavior, refactor without behavior change, then rerun relevant checks."
 "Improve performance" -> "Identify the bottleneck, make the smallest targeted change, and compare before/after evidence where feasible."
 ```
 
-For bugs, prefer a regression test or concrete reproduction before the fix when feasible. For features, prefer tests, examples, or checks that prove the requested behavior. For refactors, preserve behavior unless the user explicitly asked for behavior change.
+For bugs, prefer a regression test or concrete reproduction before the fix when feasible. For features, use tests, examples, or checks that prove the requested behavior. For refactors, preserve behavior unless the user explicitly asked for behavior change. Define acceptance against the intended complete solution; passing checks for a partial fix or mocked integration do not establish that the affected flow works.
 
 ## 11. Validation Discipline
 
 Run the smallest relevant check first, then broaden validation according to affected behavior, dependencies, repository requirements, and unresolved risk. Include meaningful failure paths and boundary cases. Do not skip required checks to reduce spending or change authoritative acceptance criteria to make a result pass.
 
+Choose checks for the behavior and risk they establish. Reuse existing tests and tooling. Add lasting automated tests for important behavior and realistic regression risks, at the smallest useful layer. A focused unit test for a lasting business rule is appropriate; a new test file or suite for every edit, helper, or intermediate implementation is not. Avoid tests that merely repeat implementation details, assert scaffolding, or duplicate the same assurance across layers without a distinct risk. Do not add infrastructure or reshape sound production code solely to make a low-value test possible.
+
+Tests may be written during development, but retained tests must describe the intended final behavior. When an approach changes, update, consolidate, or remove tests that only preserve an abandoned partial fix, along with its temporary fixtures and mocks. Preserve assertions for still-required behavior and reproduce unresolved failures before deciding they are obsolete; deleting or weakening a failing test is not a fix. Temporary diagnostic checks need not become permanent repository artifacts.
+
 Match each claim to observable evidence from the actual artifact or behavior. Distinguish checks run now, supplied historical results, pre-existing failures, and remaining unverified behavior. A passing subset or unchanged starter suite is not proof that a new feature works. Use deterministic tools for mechanical requirements when exactness matters.
 
-After the final relevant change, run the required affected checks and inspect the combined diff. Rerun unaffected checks only when changed inputs, environment, requirements, or unresolved evidence warrants it; preserve valid results tied to the relevant artifact. Do not loop through redundant tests or reviews after the acceptance criteria are met.
+During iteration, use focused checks when they answer a current question or prevent costly rework; do not run the full suite after every small edit. After the final relevant change, run the required affected checks and inspect the combined diff. Rerun unaffected checks only when changed inputs, environment, requirements, or unresolved evidence warrants it; preserve valid results tied to the relevant artifact. Do not loop through redundant tests or reviews after the acceptance criteria are met.
 
-Before delivery, verify requested behavior, integration, scope, applicable skill deliverables and checks, relevant dependency-graph acceptance gates, meaningful test coverage, required cleanup, and remaining blockers. Stop when the requested deliverables and required checks are complete and no known material in-scope defect remains. Do not invent additional requirements or expand into unrelated cleanup.
+Before delivery, verify requested behavior, integration, scope, applicable skill deliverables and checks, relevant dependency-graph acceptance gates, proportionate coverage of important behavior and failure risks, required cleanup, and remaining blockers. Assess test value by the required behavior it protects, not test count; preserve any explicit repository coverage gates. Stop when the requested deliverables and required checks are complete and no known material in-scope defect remains. Do not invent additional requirements or expand into unrelated cleanup.
 
 ## 12. Completion, Authority, and Reporting
 

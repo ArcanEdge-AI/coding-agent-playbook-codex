@@ -9,7 +9,7 @@
 </p>
 
 <p align="center">
-  An open-source Codex playbook for installable instructions, self-contained skills, optional Luna/max assistance, independent review, and validation.
+  An open-source Codex playbook for installable instructions, self-contained skills, sparingly used, task-appropriate subagents, independent review, and validation.
 </p>
 
 <p align="center">
@@ -21,7 +21,7 @@
   <a href="#developed-through-real-world-use">Real-World Use</a> ·
   <a href="#public-evidence">Evidence</a> ·
   <a href="#whats-inside">What's Inside</a> ·
-  <a href="#subagent-model">Subagent Model</a> ·
+  <a href="#role-profiles-and-subagents">Role Profiles</a> ·
   <a href="#formal-task-graph-orchestration">Task Graphs</a> ·
   <a href="#task-local-worktree-lifecycle">Worktrees</a> ·
   <a href="#feature-integration-and-promotion-branches">Branch Lifecycle</a> ·
@@ -32,7 +32,7 @@
 
 <p align="center">
   <img src="https://img.shields.io/badge/Codex-Edition-6E7BFF" alt="Codex Edition" />
-  <img src="https://img.shields.io/badge/Subagents-Orchestrated-00C2FF" alt="Subagents Orchestrated" />
+  <img src="https://img.shields.io/badge/Subagents-Optional-00C2FF" alt="Subagents Optional" />
   <img src="https://img.shields.io/badge/Threads-Coordinated-4ECDC4" alt="Threads Coordinated" />
   <img src="https://img.shields.io/badge/Instructions-Tool--Agnostic-8A5CFF" alt="Instructions Tool Agnostic" />
   <a href="https://github.com/ArcanEdge-AI/coding-agent-playbook-claude-code"><img src="https://img.shields.io/badge/Claude%20Code-Edition-D97706" alt="Claude Code Edition" /></a>
@@ -71,13 +71,11 @@ I already added the global custom instructions manually. Follow INSTALL.md, but 
 
 ## The Operating Model
 
-This is more than one large `AGENTS.md` or a generic set of custom instructions. It is a reusable delivery model for real repositories, where local conventions, concurrent work, and incomplete evidence make a single giant context window a weak engineering process: the root agent acts as the senior engineer, while bounded supporting work is routed to an appropriate role using Luna/max when the task and available evidence justify it.
+The main agent understands the request, inspects the affected flow, implements the smallest complete solution, and verifies the result. It applies relevant skills and can consult a planner, engineer, reviewer, tester, or docs perspective directly when that helps answer a concrete question.
 
-The root owns understanding, architecture, decomposition, routing, coordination, integration, acceptance, and final validation. Supporting roles can handle bounded planning, engineering, testing, documentation, and independent review; they do not replace human authority or root accountability. Every supporting role uses Luna with max reasoning, with bounded assignments and independently checked evidence.
+The main agent retains design judgment, task authority, implementation, integration, and final acceptance. Changing perspective preserves its model and reasoning settings and does not require another agent or a separate report. Required independent verification remains a separate obligation.
 
-<p align="center">
-  <img src="./assets/codex-engineering-team.svg" alt="Operating model: a user works through a root senior engineer, bounded supporting roles, root integration, validation, correction, and final result." width="100%" />
-</p>
+Use subagents sparingly. Delegate only when a bounded assignment provides independent evidence, parallel progress, or context reduction worth the added coordination and review effort, or a governing requirement calls for independent assistance. Choose an approved model and reasoning effort for the actual task, use Standard speed, and inspect the returned evidence.
 
 It installs global instructions, self-contained reusable skills, and custom subagent profiles where Codex supports them. Each skill carries its own supporting references and templates. Try it with the one prompt above, then adapt the repository-level guidance to the codebase in front of you. You may fork, modify, redistribute, and test the approach under the [MIT License](./LICENSE).
 
@@ -160,6 +158,8 @@ AI coding agents are powerful, but they often fail in predictable ways:
 
 - They start coding before understanding the codebase.
 - They over-engineer simple requests.
+- They invent compatibility requirements for hypothetical users or obsolete test accounts.
+- They accumulate tests for abandoned partial fixes instead of maintaining tests for the intended final behavior.
 - They refactor unrelated code.
 - They trust editor diagnostics over real builds.
 - They claim tests passed when they did not run them.
@@ -203,7 +203,7 @@ Real-world use establishes provenance, but private field evidence is not the pub
 | Prompts | `codex-prompts/` | Setup and active-project coordination prompts. |
 | Skill resources | `skills/*/references/` | Supporting guidance and templates packaged with the workflow that owns them. |
 | Skills | `skills/` | Self-contained workflows for task graphs, subagents, worktrees, feature-branch promotion, legacy-path retirement, multi-session coordination, handoffs, session cleanup, doc routing, and senior review. |
-| Custom agents | `agents/` | Luna/max Codex subagent definitions for planning, engineering, review, testing, and documentation. |
+| Role profiles | `agents/` | Planning, engineering, review, testing, and documentation perspectives for direct main-agent use or bounded subagent assignments with task-based model selection. |
 | Repo guidance | `AGENTS.md` | Instructions for maintaining this public playbook repository. |
 
 ---
@@ -226,21 +226,25 @@ Support-only mode avoids duplicating the full instruction file and installs only
 
 ## Core Philosophy
 
-The main agent is the senior engineer and orchestrator.
+Understand the whole affected flow and improve the existing implementation by default. A substantial replacement needs evidence of a significant benefit that justifies implementation, migration, verification, and maintenance costs. Preserve suitable components; another possible design or alpha status is not a reason to rebuild.
+
+Use the smallest meaningful checks and retain automated tests for important behavior and realistic regression risks. Focused unit tests for lasting business rules are useful. As the implementation changes, update or remove tests that only preserve abandoned partial fixes, and reuse valid verification results. Required checks, supported contracts, data preservation, and correctness safeguards still apply.
+
+The main agent is the primary implementer and owns the requested outcome end to end.
 
 It owns:
 
 - task understanding
 - the working plan
 - architecture and design judgment
-- routing, decomposition, and delegation decisions
-- parallel-work coordination
+- implementation and proportionate decomposition
+- any justified delegation and parallel-work coordination
 - integration and final acceptance
 - final diff
 - validation strategy
 - final response
 
-The main agent completes coherent work directly by default, including substantial or multi-file work. It delegates only when a bounded helper would provide useful independent evidence, genuinely parallel progress, or worthwhile context reduction. Independent project threads may own separate workstreams, but the main coordinating agent still owns compatibility and integration decisions.
+The main agent completes coherent work directly by default, including substantial or multi-file work. It uses subagents sparingly, only when a bounded helper's concrete benefit outweighs its context, coordination, latency, and review cost, or governing instructions require independent assistance. Independent project threads may own separate workstreams, but the main coordinating agent still owns compatibility and integration decisions.
 
 > Delegation is optional assistance, not a completion requirement. No direct-execution exception report is needed when no helper is used.
 
@@ -250,23 +254,34 @@ Subagents share the current workspace by default. Worktrees have a separate fini
 
 ---
 
-## Subagent Model
+## Role Profiles and Subagents
 
-This playbook uses five Codex subagent roles that mirror a practical software delivery loop.
+The five profiles provide perspectives the main agent can consult directly and roles for bounded subagent assignments. Select one when it helps answer a concrete question; there is no required sequence, separate report per role, or expectation to use all five.
 
-| Subagent | Default mode | Best for |
+| Profile | Delegated mode | Useful perspective |
 | --- | --- | --- |
-| `planner` | Read-only | Decomposing non-trivial tasks, identifying risks, sequencing work, and defining validation. |
-| `engineer` | Bounded write | Implementing small, well-scoped changes after the plan and constraints are clear. |
+| `planner` | Read-only | Clarifying outcomes, reuse opportunities, risks, real dependencies, and completion checks. |
+| `engineer` | Bounded write | Implementing complete, maintainable changes that fit the existing system. |
 | `reviewer` | Read-only | Reviewing diffs, designs, and implementations for correctness, risk, maintainability, and scope discipline. |
-| `tester` | Read-mostly | Reproducing failures, analyzing test output, finding validation gaps, and recommending targeted checks. |
+| `tester` | Read-mostly | Choosing proportionate checks, evaluating evidence, and diagnosing failures when present. |
 | `docs` | Read-only | Finding, interpreting, and summarizing relevant repo docs, reference docs, and authoritative external documentation. |
 
-Every delegated subagent execution uses `gpt-5.6-luna` with `max` reasoning. This applies to all roles, retries, and replacements, independently of the main session's model or reasoning effort. It does not require model settings on ordinary tool calls or messages.
+For direct use, read the relevant `agents/<role>.toml` and apply its **Role perspective** and **Main-agent use** guidance. The main agent retains its model, reasoning effort, permissions, approval gates, and responsibility for completing the task. The profile's launch settings and **Delegated use** section govern actual subagent execution. Applying the reviewer or tester perspective to your own work remains self-review; required independent verification still needs separate evidence.
+
+Select the model and reasoning effort by the actual task, including for retries and replacements. Optimize total completion cost, including tokens, repeated context, corrections, and verification. A low token price alone does not establish efficiency, and a cheap failed attempt is not a prerequisite for using a capable model.
+
+| Work | Model and reasoning |
+| --- | --- |
+| Narrow lookup, extraction, file mapping, log summaries | GPT-6 Luna / High |
+| Clear implementation, local fixes, bounded planning or straightforward review | GPT-6 Sol / Medium |
+| Coupled changes, difficult debugging, substantial review, conflicting evidence | GPT-6 Sol / High |
+| Hard architecture questions, persistent debugging, complex cross-system reasoning | GPT-6 Astra / Extra High only |
+
+Use **Standard speed only**, with **no Max, Ultra, or Fast**. High-impact decisions stay with the main agent. Its user-selected model and reasoning remain unchanged unless the user selects otherwise.
 
 Subagents report through team collaboration messaging or a normal final return. They must not alter parent or peer model settings. Any separately authorized task report must omit destination model and reasoning overrides; see `skills/subagent-orchestration/references/model-routing.md` for the execution/reporting boundary.
 
-The base role names and `-luna` profile files remain available as compatible names; all ten profiles pin the same Luna/max settings. For child execution, select a compliant profile or pass its model and reasoning effort explicitly. If the host cannot honor both settings, report the limitation rather than silently substituting or inheriting defaults. Consult `skills/subagent-orchestration/references/model-routing.md` for dispatch and acceptance rules.
+Each role has one profile with an explicit starting default: Docs and Tester use Luna/High, Planner and Engineer use Sol/Medium, and Reviewer uses Sol/High. Task needs take precedence over those defaults. A custom profile can override spawn arguments, so use a matching profile or a supported explicit route with the same role guidance and safeguards. Verify the effective model, effort, and Standard speed; report unsupported routing rather than silently substituting or inheriting settings. Consult `skills/subagent-orchestration/references/model-routing.md` for selection and acceptance rules. When updating from the retired duplicate profiles, follow the [profile migration note](INSTALL.md#retired-profile-aliases).
 
 The delegation rule is simple:
 
@@ -280,7 +295,7 @@ For multi-node work, it also identifies the node, its inputs and accepted output
 
 ### Flat delegation and token economy
 
-Root assigns work directly to helpers, and bundled helpers execute their assignment without spawning descendants. Before dispatch, root records the bounded result, acceptance check, expected benefit, exact workspace, and finite launch/retry allowance. Record the actual root model only when provenance requires it, and verify each helper uses `gpt-5.6-luna` with `max` reasoning. When capacity is full, continue useful local work or wait; do not queue speculative helpers. Recursive orchestration is outside the default workflow and requires separate explicit authorization and controls.
+Root assigns work directly to helpers, and bundled helpers execute their assignment without spawning descendants. Before dispatch, root records the bounded result, acceptance check, expected benefit, exact workspace, and finite launch/retry allowance. Record the actual root model only when provenance requires it, and verify each helper's effective model and effort match the task-selected route at Standard speed. When capacity is full, continue useful local work or wait; do not queue speculative helpers. Recursive orchestration is outside the default workflow and requires separate explicit authorization and controls.
 
 ---
 
@@ -367,6 +382,8 @@ Use `legacy-path-retirement` when an authorized change raises a decision about s
 Prefer one authoritative implementation within the affected scope. Retain compatibility only for a demonstrated current dependency or explicit retention requirement; migrate or remove confirmed obsolete paths rather than automatically adding more guards around them. Incomplete dependency coverage is an evidence gap, not proof of non-use.
 
 Code retirement, data disposition, and correctness guarantees are separate decisions. Useful development data may need preservation or migration, destructive resets require authority, and pre-production status does not weaken stable identifiers, authorization, validation, persistence integrity, or cleanup safeguards.
+
+Hypothetical users and obsolete test accounts do not create support commitments. Establish actual retention needs and use existing migration or reset tools when appropriate and authorized, without inventing a second permanent flow to support earlier development versions.
 
 The skill is self-contained in:
 
@@ -471,15 +488,10 @@ skills/worktree-lifecycle/references/worktrees.md
 │   └── coding-agent-playbook-codex-hero.png
 ├── agents/
 │   ├── docs.toml
-│   ├── docs-luna.toml
 │   ├── engineer.toml
-│   ├── engineer-luna.toml
 │   ├── planner.toml
-│   ├── planner-luna.toml
 │   ├── reviewer.toml
-│   ├── reviewer-luna.toml
-│   ├── tester.toml
-│   └── tester-luna.toml
+│   └── tester.toml
 ├── codex-prompts/
 │   ├── coordinate-active-project-work.md
 │   └── setup-global-codex-support-system.md
@@ -553,7 +565,15 @@ skills/worktree-lifecycle/references/worktrees.md
 
 ---
 
-## Example: Better Delegation
+## Example: Direct Perspective and Bounded Delegation
+
+The main agent can use a perspective directly:
+
+```text
+Apply the reviewer perspective to this diff. Look for incomplete behavior, unnecessary compatibility paths, and redundant tests. Keep working in this chat without launching a subagent, and address in-scope findings under the existing task authority.
+```
+
+When a separate helper has a concrete benefit, give it a bounded assignment.
 
 Bad delegation:
 
@@ -590,8 +610,8 @@ The main agent still decides the design, applies or rejects recommendations, and
 1. Ask your coding agent to install this repository URL.
 2. Let the installer configure global instructions, self-contained skills with packaged references, and subagents.
 3. Add repo-specific AGENTS.md guidance to each project.
-4. Let the main agent frame, route, and coordinate each repository task.
-5. Complete coherent work directly; when a helper has a concrete benefit, give it a bounded root-to-helper assignment and select `gpt-5.6-luna` with `max` reasoning through a compliant profile or explicit programmatic route. Helpers execute directly and do not spawn descendants.
+4. Let the main agent understand and complete each repository task, consulting a relevant role perspective when useful.
+5. Complete coherent work directly; use a helper sparingly when its concrete benefit justifies the overhead, with a bounded root-to-helper assignment and an approved task-selected model and reasoning effort at Standard speed. Helpers execute directly and do not spawn descendants.
 6. For multi-node work, identify real blocking dependencies, parallel-safe nodes, ownership, and verification gates. If helpers are used, set a finite launch/retry allowance and dispatch only ready assignments that fit runtime, safety, and ownership capacity; get immediate user approval before materially expanding execution cost.
 7. Keep the auxiliary-worktree budget at zero unless root verifies a real isolation need. Before completion, remove each task-created auxiliary worktree safely or preserve it with an exact blocker.
 8. When a repository uses long-lived integration and production branches, use the feature-branch lifecycle for development-branch convergence, complete-feature validation, promotion, and authorized cleanup.

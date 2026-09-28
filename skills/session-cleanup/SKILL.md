@@ -29,6 +29,7 @@ Read the supplied methodology reference for the checks relevant to the current w
 - Prefer one canonical implementation path. Remove work-delta code that exists only because implementation churn, experimentation, or an abandoned design left it behind.
 - Do not add compatibility behavior for hypothetical users, old data, API consumers, deployments, or integrations. New compatibility code requires evidence of a real supported dependency.
 - Valid compatibility evidence includes currently deployed older versions, real persisted data using the old representation, active consumers using the old contract, documented supported-version requirements, an active migration window, or equivalent repository/runtime evidence.
+- Confirm that the consumer or data actually requires continued support. Obsolete test accounts, fixtures, and hypothetical users are not support commitments; use `legacy-path-retirement` to separate that decision from data preservation or an authorized reset. Alpha status does not justify rebuilding the flow.
 - "Someone might use it," "for backwards compatibility," "to be safe," "future-proofing," or similar speculation is not sufficient evidence.
 - Existing baseline compatibility code is not automatically junk. Before removing it, verify callers, data, supported clients, deployments, migrations, configuration, and dynamic usage. If its necessity cannot be established either way, leave the pre-existing path unchanged and report the uncertainty.
 - Branch history is not production history. Code introduced and superseded entirely within an unmerged development branch does not require backwards compatibility merely because an earlier commit used it.
@@ -47,8 +48,8 @@ Read the supplied methodology reference for the checks relevant to the current w
    - 8: inspect touched security boundaries for secrets, auth, authorization, ownership, input handling, logs, dynamic execution, and file safety; this is not a full unrelated security audit.
    - 9: inspect dependencies and configuration whenever packages, lockfiles, environment variables, build settings, or deployment configuration changed.
    - 10: inspect actual loading, empty, error, success, disabled, navigation, responsive, keyboard, accessibility, focus, and mutation flows whenever UI changed; source inspection alone does not prove UI behavior.
-   - 11: review tests for meaningful behavior coverage, weakened assertions, skipped tests, unrealistic fixtures, obsolete branch-only behavior, and worthwhile edge cases.
-   - 12: identify and run the project's existing formatting, lint, type, unit, integration, end-to-end, build, and project-specific gates as applicable.
+   - 11: review tests for intended final behavior and realistic regression risks, weakened assertions, skipped tests, unrealistic fixtures, redundant coverage, and tests that only preserve abandoned partial fixes or obsolete branch-only behavior.
+   - 12: select the smallest meaningful checks from the project's existing commands and run required affected gates; broaden only for changed behavior, repository requirements, or unresolved risk, preserving valid results.
    - 13: check directly affected README, setup, environment, API, example, architecture, configuration, and user-facing documentation against reality.
    - 14: resolve, remove, or classify work-delta-introduced TODO, FIXME, HACK, TEMP, XXX, workaround, and deferred-work markers.
    - 15: verify status, secrets, editor/OS debris, generated files, binaries, duplicates, ignore rules, and investigation scripts for repository hygiene.

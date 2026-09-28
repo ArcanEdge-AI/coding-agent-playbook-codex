@@ -25,6 +25,12 @@ END_MARKER = "<!-- coding-agent-playbook-codex:end -->"
 LEGACY_START_MARKER = "<!-- codex-agent-playbook:start -->"
 LEGACY_END_MARKER = "<!-- codex-agent-playbook:end -->"
 MANIFEST_HEADER = "# coding-agent-playbook-codex managed files v1"
+APPROVED_MODEL_EFFORTS = {
+    ("gpt-6-luna", "high"),
+    ("gpt-6-sol", "medium"),
+    ("gpt-6-sol", "high"),
+    ("gpt-6-astra", "xhigh"),
+}
 RESOURCE_PATTERN = re.compile(
     r"(?<![A-Za-z0-9_.-])(?P<path>(?:references|scripts|assets|agents)/[A-Za-z0-9._/-]+)"
 )
@@ -68,6 +74,7 @@ class Installer:
         # Recognize the former loose-reference destination only for safe migration.
         self.destination_roots["references"] = self.codex_home / "references"
         self.playbook_skill_names = sorted(path.name for path in (self.repo_root / "skills").iterdir() if path.is_dir())
+        self.playbook_agent_names = sorted(path.name for path in (self.repo_root / "agents").glob("*.toml"))
 
     def say(self, message: str = "") -> None:
         print(message)
@@ -263,22 +270,30 @@ class Installer:
                     checked += 1
         self.say(f"OK skill-local references: {checked} resolved paths")
 
-    def validate_agents(self, agents_root: Path) -> None:
+    def validate_agents(self, agents_root: Path, agent_names: Optional[List[str]] = None) -> None:
+        names = agent_names if agent_names is not None else sorted(path.name for path in agents_root.glob("*.toml"))
         checked = 0
-        for path in sorted(agents_root.glob("*.toml")):
+        for name in names:
+            path = agents_root / name
             text = path.read_text(encoding="utf-8")
             if tomllib is not None:
                 data = tomllib.loads(text)
-                valid = data.get("model") == "gpt-5.6-luna" and data.get("model_reasoning_effort") == "max"
             else:
-                valid = bool(
-                    re.search(r'^model\s*=\s*"gpt-5\.6-luna"\s*$', text, re.MULTILINE)
-                    and re.search(r'^model_reasoning_effort\s*=\s*"max"\s*$', text, re.MULTILINE)
-                )
-            if not valid:
-                raise ValueError(f"Agent profile is not pinned to gpt-5.6-luna/max: {path}")
+                # Bundled profiles use simple quoted top-level settings.
+                data = {}
+                for key in ("model", "model_reasoning_effort", "service_tier"):
+                    match = re.search(
+                        rf"""^{key}\s*=\s*(["'])([^"']+)\1\s*(?:#.*)?$""", text, re.MULTILINE
+                    )
+                    if match:
+                        data[key] = match.group(2)
+            route = (data.get("model"), data.get("model_reasoning_effort"))
+            if route not in APPROVED_MODEL_EFFORTS:
+                raise ValueError(f"Agent profile must declare an approved model/effort pair: {path}")
+            if data.get("service_tier") in ("fast", "priority"):
+                raise ValueError(f"Agent profile must not select Fast or priority processing: {path}")
             checked += 1
-        self.say(f"OK agent profiles: {checked} TOML files pinned to gpt-5.6-luna/max")
+        self.say(f"OK agent profiles: {checked} TOML files use approved task-based routes")
 
     def add_or_replace_section(self, target: Path, title: str, body: str) -> None:
         raw = target.read_bytes() if target.is_file() else b""
@@ -356,7 +371,7 @@ class Installer:
             self.say(f"[dry-run] Would validate installed skill-local references under {self.user_skills_home}")
         else:
             self.validate_skill_references(self.user_skills_home, self.playbook_skill_names)
-            self.validate_agents(self.codex_home / "agents")
+            self.validate_agents(self.codex_home / "agents", self.playbook_agent_names)
         self.retire_stale_files(previous, current)
         self.retire_legacy_skills(previous)
         self.write_manifest(current)

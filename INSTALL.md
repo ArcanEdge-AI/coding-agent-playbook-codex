@@ -22,15 +22,10 @@ $CODEX_HOME/
   .coding-agent-playbook-codex-managed-files.tsv
   agents/
     planner.toml
-    planner-luna.toml
     engineer.toml
-    engineer-luna.toml
     reviewer.toml
-    reviewer-luna.toml
     tester.toml
-    tester-luna.toml
     docs.toml
-    docs-luna.toml
 
 $CODEX_HOME/skills/
   subagent-orchestration/
@@ -100,6 +95,12 @@ After a successful run, the installer writes `$CODEX_HOME/.coding-agent-playbook
 When `USER_SKILLS_HOME` is not explicitly set, an update also migrates previously managed skill files from the former `$HOME/.agents/skills` default. Exact hash matches are backed up and retired after the new `$CODEX_HOME/skills` packages are installed; customized legacy files are preserved with a warning.
 
 The first manifest-aware update has no previous ownership record, so it safely preserves existing unlisted files. Subsequent updates can distinguish unchanged retired files from user customizations.
+
+### Retired profile aliases
+
+The duplicate `*-luna.toml` profiles have been removed. Use `planner`, `engineer`, `reviewer`, `tester`, and `docs`; these profiles now carry reusable role perspectives and explicit task-appropriate defaults. See the [routing policy](skills/subagent-orchestration/references/model-routing.md) for approved model/effort pairs, Standard-speed requirements, and profile precedence. Update any custom prompts or configuration that select a corresponding `*_luna` name or `*-luna.toml` path to use the standard role name or file.
+
+The existing manifest cleanup backs up and retires unchanged managed copies during an update. Customized or unlisted copies remain for manual review. The installer does not rewrite custom prompts or configuration; review those references before removing a preserved copy.
 
 ### Support-only install
 
@@ -178,18 +179,14 @@ After installation, verify:
 - `$CODEX_HOME/skills/multi-session-coordination/references/templates/active-work-record.md` exists.
 - `$CODEX_HOME/skills/task-graph-orchestration/references/templates/task-graph.md` exists.
 - `$CODEX_HOME/agents/planner.toml` exists.
-- `$CODEX_HOME/agents/planner-luna.toml` exists.
 - `$CODEX_HOME/agents/engineer.toml` exists.
-- `$CODEX_HOME/agents/engineer-luna.toml` exists.
 - `$CODEX_HOME/agents/reviewer.toml` exists.
-- `$CODEX_HOME/agents/reviewer-luna.toml` exists.
 - `$CODEX_HOME/agents/tester.toml` exists.
-- `$CODEX_HOME/agents/tester-luna.toml` exists.
 - `$CODEX_HOME/agents/docs.toml` exists.
-- `$CODEX_HOME/agents/docs-luna.toml` exists.
-- Every installed `agents/*.toml` file explicitly defines `model` and `model_reasoning_effort`.
+- Every current playbook-managed `agents/*.toml` file explicitly defines `model` and `model_reasoning_effort`; unrelated user profiles are outside this validation scope.
 - Installed reporting guidance preserves parent and peer task settings and omits destination-setting overrides from reports.
-- Every bundled role retains its base and `-luna` profiles, and all profiles set `model = "gpt-5.6-luna"` and `model_reasoning_effort = "max"`.
+- Each of the five bundled roles has one profile under its standard name with an approved model/effort pair: `gpt-6-luna`/`high`, `gpt-6-sol`/`medium`, `gpt-6-sol`/`high`, or `gpt-6-astra`/`xhigh`. No bundled profile explicitly selects Fast or priority processing.
+- Standard speed must be established through the host at execution time. File validation does not prove the effective live speed, and the installer does not change the main agent's model, reasoning, or speed configuration.
 - `$CODEX_HOME/skills/subagent-orchestration/SKILL.md` exists.
 - `$CODEX_HOME/skills/task-graph-orchestration/SKILL.md` exists.
 - `$CODEX_HOME/skills/worktree-lifecycle/SKILL.md` exists.
@@ -213,15 +210,10 @@ To remove it manually, delete:
 ```text
 $CODEX_HOME/.coding-agent-playbook-codex-managed-files.tsv
 $CODEX_HOME/agents/planner.toml
-$CODEX_HOME/agents/planner-luna.toml
 $CODEX_HOME/agents/engineer.toml
-$CODEX_HOME/agents/engineer-luna.toml
 $CODEX_HOME/agents/reviewer.toml
-$CODEX_HOME/agents/reviewer-luna.toml
 $CODEX_HOME/agents/tester.toml
-$CODEX_HOME/agents/tester-luna.toml
 $CODEX_HOME/agents/docs.toml
-$CODEX_HOME/agents/docs-luna.toml
 $CODEX_HOME/skills/subagent-orchestration/
 $CODEX_HOME/skills/task-graph-orchestration/
 $CODEX_HOME/skills/worktree-lifecycle/

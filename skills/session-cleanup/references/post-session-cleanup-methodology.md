@@ -438,13 +438,17 @@ Remove or update work-delta tests that only preserve abandoned branch behavior a
 
 Do not create excessive tests for trivial implementation details.
 
+Retained tests should protect the intended final solution, including focused unit tests for lasting business rules. Tests can guide development before the whole feature is finished, but each partial fix does not warrant another permanent test. As the approach changes, update, consolidate, or remove tests and their temporary fixtures or mocks when they only describe an abandoned implementation. Preserve assertions for still-required behavior; a failing test needs investigation before it can be classified as obsolete.
+
+Prefer extending existing coverage. Add lasting tests for an identified important behavior or realistic regression risk that existing checks do not establish. Do not multiply test layers for the same assurance without a distinct risk, or keep diagnostic probes merely because they were useful during investigation. Mocked behavior alone does not prove the completed flow works.
+
 ---
 
 # 12. Run the Project's Validation Pipeline
 
-Identify the project's existing validation commands and run the appropriate ones.
+Identify the project's existing validation commands and select the smallest meaningful checks for the affected behavior and risk. Run required repository gates, and broaden only when a changed dependency, failure, or unresolved concern warrants it.
 
-Where available, this should include:
+Select from the available checks as applicable:
 
 * formatting
 * linting
@@ -472,7 +476,7 @@ Fix failures introduced by the work delta.
 
 Do not opportunistically repair unrelated failures unless necessary for this work.
 
-After cleanup, re-run the affected checks and re-review the comparison against the verified baseline.
+After the final relevant cleanup change, run the required affected checks and re-review the comparison against the verified baseline. Preserve valid results whose inputs remain unchanged. Do not repeat the full pipeline after every small edit or restart testing merely because cleanup is a separate workflow phase.
 
 ---
 

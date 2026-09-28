@@ -54,13 +54,13 @@ Add fan-in nodes where several accepted outputs must be combined. Add independen
 
 Execute only nodes whose dependencies and hidden constraints are satisfied.
 
-The main agent completes coherent work directly by default. If delegation would provide independent evidence, genuinely parallel progress, or worthwhile context reduction:
+The main agent completes coherent work directly by default. Use helpers sparingly, only when independent evidence, parallel progress, or context reduction justifies the coordination and review overhead, or governing instructions require independent assistance:
 
 - use a direct root-to-helper assignment
 - apply the subagent-orchestration skill and its assignment contract
 - set a finite helper-launch and retry allowance
 - assign disjoint ownership or serialize conflicting writes
-- select the required Luna/max route
+- select and establish the approved task-based model and reasoning effort at Standard speed
 - require the helper to execute directly without spawning descendants
 - verify the returned artifact before accepting it
 

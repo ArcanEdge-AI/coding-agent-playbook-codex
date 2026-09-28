@@ -1,11 +1,13 @@
 ---
 name: subagent-orchestration
-description: Use when bounded helper assistance would provide useful independent evidence, genuinely parallel progress, or worthwhile context reduction. Keeps delegation optional, direct, finite, explicitly routed to Luna/max, scoped to non-overlapping work, and subject to main-agent verification.
+description: Use when considering or carrying out bounded delegation. Uses subagents sparingly when a concrete benefit justifies the overhead or independent assistance is required, with task-based model routing, Standard speed, finite scope, and main-agent verification.
 ---
 
 # Subagent Orchestration
 
-The main agent is the primary implementer and owns the requested outcome end to end. Delegation is optional assistance, not a requirement or a substitute for main-agent judgment.
+The main agent is the primary implementer and owns the requested outcome end to end. Use subagents sparingly, only when a bounded assignment's concrete benefit outweighs its context, coordination, latency, and review cost or governing instructions require independent assistance.
+
+Consulting a role profile for a different perspective does not require this delegation workflow. The main agent can apply the profile's role guidance directly while retaining its configured settings and task authority. Use the workflow below only when considering or carrying out actual delegation; a perspective change does not satisfy an independent-verification gate.
 
 Consult references/subagents.md for the full assignment and acceptance guidance and references/model-routing.md before launching a helper.
 
@@ -31,7 +33,7 @@ Serialize overlapping writes. Disjoint bounded writers may share the current wor
 
 ## Route Every Helper Explicitly
 
-Every delegated execution, retry, and replacement must use a verified profile pinned to gpt-5.6-luna with max reasoning or explicit equivalent child-execution settings. Do not rely on parent inheritance or silently substitute another route.
+Select each delegated execution, retry, and replacement by the task table in references/model-routing.md: GPT-6 Luna/high, Sol/medium, Sol/high, or Astra/xhigh. Use Standard speed only, with no Max, Ultra, or Fast. Minimize total completion cost, including retries and corrections. Use a matching profile or supported explicit route; verify effective settings because profile values can override spawn arguments. Preserve the main agent's selected configuration.
 
 If the route cannot be established, keep the work with the main agent and report any separately required independent-verification gap.
 
@@ -47,7 +49,7 @@ Provide one concise contract containing:
 - permitted reads and writes
 - non-goals and stop conditions
 - exact workspace and ownership
-- verified Luna/max route
+- verified task-selected model, reasoning effort, and Standard speed
 - place within the finite launch/retry allowance
 - required evidence and return format
 

@@ -12,7 +12,7 @@ Use selected questions for non-trivial, cross-cutting, or difficult-to-reverse d
 2. Does the proposed change solve the root cause or only its symptom, and is that root cause within the authorized scope?
 3. Are assumptions unnecessarily constraining the approach?
 4. Could a simpler approach eliminate the problem or the need for new machinery?
-5. Can existing capabilities satisfy the requirement?
+5. Which parts of the affected flow already satisfy the requirement, from entry points and shared rules through data changes, consumers, and success or failure outcomes? Can they be reused or improved?
 6. Can the implementation be clearer or smaller while remaining complete?
 7. Does the existing architecture provide an appropriate pattern?
 8. What complexity does this introduce?
@@ -32,9 +32,15 @@ Prefer clear responsibilities and small interfaces. Avoid wrappers, managers, fa
 
 ## Simpler Approaches and Complete Fixes
 
+Inspect the whole affected flow before choosing its replacement. Improve the existing implementation by default, preserving suitable components and boundaries. A substantial replacement needs evidence of a significant benefit that outweighs implementation, migration, verification, and maintenance costs. Another valid design, personal preference, or alpha status does not establish that benefit.
+
+Use concrete evidence such as repeated defects at the same boundary, competing implementations, or a requirement that currently forces coordinated edits across unrelated modules. Measure relevant performance or operating costs when those motivate the change. Do not invent percentages for code quality or optimize line count as a substitute for maintainability. Necessary correctness and security fixes remain required.
+
 If a value can be reliably derived from existing state, storing another copy may create unnecessary synchronization and consistency work. Inspect actual requirements before introducing that state.
 
 A small patch that repeats a workaround can cost more to maintain than a focused change at the correct boundary. Compare completeness, affected surfaces, reliability, and verification needs rather than counting changed lines. A broader root cause is not permission for an unrelated redesign.
+
+Tests, fixtures, and mocks are part of the maintenance surface. Retain tests for the intended final behavior and credible regression risks, including focused unit tests for lasting rules. Update or remove tests that only describe abandoned intermediate fixes. Prefer extending existing coverage over creating a parallel suite, and do not reshape sound production code solely to support low-value tests.
 
 ## Material Technical Debt
 

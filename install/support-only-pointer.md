@@ -4,7 +4,7 @@ Supporting references live inside their owning skill packages under the Codex ho
 
 - `skills/reference-doc-routing/references/README.md` — map of packaged reference docs
 - `skills/reference-doc-routing/references/engineering-design.md` — selective design questions and examples for complete solutions and justified complexity
-- `skills/subagent-orchestration/references/model-routing.md` — mandatory explicit Luna/max subagent routing, escalation, and acceptance rules
+- `skills/subagent-orchestration/references/model-routing.md` — task-based model and reasoning choices, Standard speed, escalation, and acceptance rules
 - `skills/subagent-orchestration/references/subagents.md` — subagent delegation rules, assignment template, and acceptance checklist
 - `skills/worktree-lifecycle/references/worktrees.md` — root-owned task-local worktree budgeting, permits, integration, cleanup, and preservation rules
 - `skills/feature-branch-lifecycle/references/branching-rule.md` — development-branch integration, complete-feature validation, promotion, and safe temporary-branch cleanup
@@ -24,10 +24,12 @@ Reusable skills live under `skills/`, including:
 - `reference-doc-routing`
 - `senior-code-review`
 
-Custom Codex subagents live under `agents/`, including the base and `-luna` planner, engineer, reviewer, tester, and docs profiles.
+Custom Codex subagents live under `agents/`, with one profile each for planner, engineer, reviewer, tester, and docs.
 
-Reference documents are supporting context, not automatic truth. The main agent remains accountable for orchestration, final diff, validation, acceptance, and the final response.
+The main agent may consult a profile's role perspective directly without launching a helper, changing its settings or authority, or applying delegated-use restrictions to itself. Use only relevant perspectives; no role sequence or separate report is required. Self-review does not satisfy a required independent-verification gate.
 
-Configure every delegated helper execution through a verified Luna/max profile or explicit child-execution settings, independently of the root model or effort. This requirement does not apply to tool calls or reporting messages. Helpers must preserve parent and peer settings, execute their assignment directly without spawning descendants, and omit destination model and reasoning overrides from separately authorized task reports.
+Reference documents are supporting context, not automatic truth. The main agent completes work directly by default and remains accountable for the requested outcome, final diff, validation, acceptance, and the final response.
+
+Use subagents sparingly when a bounded benefit outweighs the added overhead or independent assistance is required. Select each actual helper route by task using the model-routing reference: GPT-6 Luna/high, Sol/medium, Sol/high, or Astra/xhigh. Use Standard speed only; never Max, Ultra, or Fast. Establish the effective settings because profile values can override spawn arguments. Preserve the main agent's selected settings. Helpers execute directly without descendants, and reporting messages must omit destination model and reasoning overrides.
 
 The auxiliary-worktree budget starts at zero. Only root may issue a worktree permit or create, adopt, repurpose, move, or remove an auxiliary worktree. Before the final response, remove each task-created auxiliary under verified safety gates or preserve it with its exact owner, path, branch or HEAD, blocker, and next action.
