@@ -98,7 +98,7 @@ The first manifest-aware update has no previous ownership record, so it safely p
 
 ### Retired profile aliases
 
-The duplicate `*-luna.toml` profiles have been removed. Use `planner`, `engineer`, `reviewer`, `tester`, and `docs`; these profiles now carry reusable role perspectives and explicit task-appropriate defaults. See the [routing policy](skills/subagent-orchestration/references/model-routing.md) for approved model/effort pairs, Standard-speed requirements, and profile precedence. Update any custom prompts or configuration that select a corresponding `*_luna` name or `*-luna.toml` path to use the standard role name or file.
+The duplicate `*-luna.toml` profiles have been removed. Use `planner`, `engineer`, `reviewer`, `tester`, and `docs`; these profiles now carry reusable role perspectives and explicit task-appropriate defaults. See the [routing policy](skills/subagent-orchestration/references/model-routing.md) for approved model/effort pairs and profile precedence. Update any custom prompts or configuration that select a corresponding `*_luna` name or `*-luna.toml` path to use the standard role name or file.
 
 The existing manifest cleanup backs up and retires unchanged managed copies during an update. Customized or unlisted copies remain for manual review. The installer does not rewrite custom prompts or configuration; review those references before removing a preserved copy.
 
@@ -185,8 +185,8 @@ After installation, verify:
 - `$CODEX_HOME/agents/docs.toml` exists.
 - Every current playbook-managed `agents/*.toml` file explicitly defines `model` and `model_reasoning_effort`; unrelated user profiles are outside this validation scope.
 - Installed reporting guidance preserves parent and peer task settings and omits destination-setting overrides from reports.
-- Each of the five bundled roles has one profile under its standard name with an approved model/effort pair: `gpt-6.1-sol`/`low` (Light), `gpt-6.1-sol`/`medium`, `gpt-6.1-sol`/`high`, or `gpt-6-astra`/`xhigh` (Extra High). No bundled profile explicitly selects Fast; the validator rejects its `fast` and `priority` service-tier values.
-- Standard speed must be established through the host at execution time. File validation does not prove the effective live speed, and the installer does not change the main agent's model, reasoning, or speed configuration.
+- Each of the five bundled roles has one profile under its standard name with an approved model/effort pair: `gpt-6.1-sol`/`low` (Light), `gpt-6.1-sol`/`medium`, `gpt-6.1-sol`/`high`, or `gpt-6-astra`/`xhigh` (Extra High).
+- The installer does not change the main agent's configuration.
 - `$CODEX_HOME/skills/subagent-orchestration/SKILL.md` exists.
 - `$CODEX_HOME/skills/task-graph-orchestration/SKILL.md` exists.
 - `$CODEX_HOME/skills/worktree-lifecycle/SKILL.md` exists.

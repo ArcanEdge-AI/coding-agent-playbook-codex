@@ -15,7 +15,7 @@ Optimize for the total cost of an accepted result: input and reasoning tokens, r
 
 Light is the app's reasoning label; use `low` for `model_reasoning_effort` in TOML and supported launch fields. Medium, High, and Extra High use `medium`, `high`, and `xhigh`. Do not write `light` as a configuration value.
 
-**Standard speed only. Do not select Fast.** Speed is separate from reasoning effort. High-impact judgments remain with the main agent even when a helper contributes evidence.
+High-impact judgments remain with the main agent even when a helper contributes evidence.
 
 These are approved policy choices, not a measured performance ranking for every repository. Change them only through an explicit policy decision. Do not substitute a different generation merely because it is newer or available.
 
@@ -35,14 +35,14 @@ The task table controls selection. For example, difficult root-cause analysis as
 
 On hosts using Codex custom-agent files, explicit `model` and `model_reasoning_effort` values in the file can override spawn arguments. Verify precedence before dispatch. Use a matching profile, or a supported explicit launch that carries the relevant role instructions, scope, and safeguards without a conflicting profile override. Never assume passing a different model alongside a fixed profile changes the effective model.
 
-Use the host's actual fields and controls to establish the effective model, effort, and Standard speed. Bundled files declare model and effort; they do not mechanically enforce the live speed setting. An omitted service tier does not prove that Fast is disabled in a parent or session override. Do not invent a Standard-speed configuration value or silently accept Fast when the host cannot establish the requested route. Keep the work with the main agent or report an unmet independent-verification gate.
+Use the host's actual fields and controls to establish the effective model and reasoning effort. If the host cannot establish the requested route, keep the work with the main agent or report an unmet independent-verification gate.
 
 Reading a role perspective does not change the main agent's model, reasoning, permissions, or ownership and does not count as independent verification. Preserve the main agent's user-selected settings; recommend a change when useful and let the user select it.
 
 ## Selection and Retry Rules
 
 1. Establish that the helper is useful, authorized, and within the finite launch/retry allowance before selecting its route. Task size, available roles, and graph nodes do not require delegation.
-2. Record the bounded result, acceptance check, expected benefit, exact scope and workspace, model, reasoning effort, and Standard speed in the existing assignment.
+2. Record the bounded result, acceptance check, expected benefit, exact scope and workspace, model, and reasoning effort in the existing assignment.
 3. Use direct root-to-helper assignments. Helpers do not spawn descendants or broaden their inputs, access, scope, permissions, or ownership.
 4. Dispatch only ready work within available capacity. Serialize conflicts and do not queue speculative helpers.
 5. Before retrying or reassigning, identify what failed and what will change. Reuse accepted evidence. Avoid chains of attempts that repeat the same misunderstanding.
@@ -75,7 +75,7 @@ A subagent must stop and report when:
 - the conclusion cannot be independently verified
 - the work becomes security-sensitive, destructive, or production-impacting
 - the task requires architectural or cross-system judgment
-- the host cannot establish the selected model, reasoning effort, and Standard speed
+- the host cannot establish the selected model and reasoning effort
 
 Helpers return evidence and a blocker when a task or route is unsuitable. They may not change their own execution settings or silently fall back to inherited settings. The main agent decides whether to complete directly, correct the assignment, or use another approved route within the existing execution and cost authority.
 
@@ -86,7 +86,7 @@ Subagents must not alter a parent or peer task's model or reasoning settings. Us
 Correct:
 
 ```text
-Child execution: establish the approved task-selected model, reasoning effort, and Standard speed.
+Child execution: establish the approved task-selected model and reasoning effort.
 Task report: send_message_to_thread({ threadId: parentId, prompt: "..." })
 ```
 
@@ -106,7 +106,6 @@ The incorrect form can override the destination task's model or reasoning settin
 Role:
 Selected profile or model: [Verified profile or supported explicit task-selected route]
 Reasoning effort: [Light, Medium, High, or Extra High from the task table; configuration: low, medium, high, or xhigh]
-Speed: Standard
 Why this selection is suitable:
 Expected benefit:
 Goal:
@@ -128,7 +127,7 @@ Return format:
 
 Before accepting delegated work, confirm:
 
-- the effective model and reasoning effort match the approved task choice, and Standard speed is established
+- the effective model and reasoning effort match the approved task choice
 - parent-model and parent-effort inheritance were not used unintentionally for child execution
 - progress and task-reporting messages omitted model, reasoning, thinking, and analogous destination-setting overrides and did not alter a parent or peer task
 - the assignment's expected benefit and place within the finite allowance were recorded
@@ -143,4 +142,4 @@ Before accepting delegated work, confirm:
 
 ## Capability References
 
-For host behavior, consult the current [custom-agent precedence documentation](https://learn.chatgpt.com/docs/agent-configuration/subagents#custom-agents), [model and reasoning labels](https://learn.chatgpt.com/docs/models#pick-a-reasoning-effort), [GPT-6.1 Sol model specification](https://developers.openai.com/api/docs/models/gpt-6.1-sol), [configuration values](https://learn.chatgpt.com/docs/config-file/config-reference), and [speed controls](https://learn.chatgpt.com/docs/agent-configuration/speed). These explain capabilities; availability alone does not expand this playbook's approved routes.
+For host behavior, consult the current [custom-agent precedence documentation](https://learn.chatgpt.com/docs/agent-configuration/subagents#custom-agents), [model and reasoning labels](https://learn.chatgpt.com/docs/models#pick-a-reasoning-effort), [GPT-6.1 Sol model specification](https://developers.openai.com/api/docs/models/gpt-6.1-sol), and [configuration values](https://learn.chatgpt.com/docs/config-file/config-reference). These explain capabilities; availability alone does not expand this playbook's approved routes.

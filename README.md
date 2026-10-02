@@ -75,7 +75,7 @@ The main agent understands the request, inspects the affected flow, implements t
 
 The main agent retains design judgment, task authority, implementation, integration, and final acceptance. Changing perspective preserves its model and reasoning settings and does not require another agent or a separate report. Required independent verification remains a separate obligation.
 
-Use subagents sparingly. Delegate only when a bounded assignment provides independent evidence, parallel progress, or context reduction worth the added coordination and review effort, or a governing requirement calls for independent assistance. Choose an approved model and reasoning effort for the actual task, use Standard speed, and inspect the returned evidence.
+Use subagents sparingly. Delegate only when a bounded assignment provides independent evidence, parallel progress, or context reduction worth the added coordination and review effort, or a governing requirement calls for independent assistance. Choose an approved model and reasoning effort for the actual task, and inspect the returned evidence.
 
 It installs global instructions, self-contained reusable skills, and custom subagent profiles where Codex supports them. Each skill carries its own supporting references and templates. Try it with the one prompt above, then adapt the repository-level guidance to the codebase in front of you. You may fork, modify, redistribute, and test the approach under the [MIT License](./LICENSE).
 
@@ -277,11 +277,11 @@ Select the model and reasoning effort by the actual task, including for retries 
 | Coupled changes, difficult debugging, substantial review, conflicting evidence | GPT-6.1 Sol / High |
 | Hard architecture questions, persistent debugging, complex cross-system reasoning | GPT-6 Astra / Extra High only |
 
-Use **Standard speed only**, not Fast. Speed and reasoning effort are separate settings. The app's Light reasoning label uses `low` in TOML; Medium, High, and Extra High use `medium`, `high`, and `xhigh`. High-impact decisions stay with the main agent. Its user-selected model and reasoning remain unchanged unless the user selects otherwise.
+The app's Light reasoning label uses `low` in TOML; Medium, High, and Extra High use `medium`, `high`, and `xhigh`. High-impact decisions stay with the main agent. Its user-selected model and reasoning remain unchanged unless the user selects otherwise.
 
 Subagents report through team collaboration messaging or a normal final return. They must not alter parent or peer model settings. Any separately authorized task report must omit destination model and reasoning overrides; see `skills/subagent-orchestration/references/model-routing.md` for the execution/reporting boundary.
 
-Each role has one profile with an explicit GPT-6.1 Sol starting default: Docs and Tester use Light, Planner and Engineer use Medium, and Reviewer uses High. Task needs take precedence over those defaults. A custom profile can override spawn arguments, so use a matching profile or a supported explicit route with the same role guidance and safeguards. Verify the effective model, effort, and Standard speed; report unsupported routing rather than silently substituting or inheriting settings. Consult `skills/subagent-orchestration/references/model-routing.md` for selection and acceptance rules. When updating from the retired duplicate profiles, follow the [profile migration note](INSTALL.md#retired-profile-aliases).
+Each role has one profile with an explicit GPT-6.1 Sol starting default: Docs and Tester use Light, Planner and Engineer use Medium, and Reviewer uses High. Task needs take precedence over those defaults. A custom profile can override spawn arguments, so use a matching profile or a supported explicit route with the same role guidance and safeguards. Verify the effective model and reasoning effort; report unsupported routing rather than silently substituting or inheriting settings. Consult `skills/subagent-orchestration/references/model-routing.md` for selection and acceptance rules. When updating from the retired duplicate profiles, follow the [profile migration note](INSTALL.md#retired-profile-aliases).
 
 The delegation rule is simple:
 
@@ -295,7 +295,7 @@ For multi-node work, it also identifies the node, its inputs and accepted output
 
 ### Flat delegation and token economy
 
-Root assigns work directly to helpers, and bundled helpers execute their assignment without spawning descendants. Before dispatch, root records the bounded result, acceptance check, expected benefit, exact workspace, and finite launch/retry allowance. Record the actual root model only when provenance requires it, and verify each helper's effective model and effort match the task-selected route at Standard speed. When capacity is full, continue useful local work or wait; do not queue speculative helpers. Recursive orchestration is outside the default workflow and requires separate explicit authorization and controls.
+Root assigns work directly to helpers, and bundled helpers execute their assignment without spawning descendants. Before dispatch, root records the bounded result, acceptance check, expected benefit, exact workspace, and finite launch/retry allowance. Record the actual root model only when provenance requires it, and verify each helper's effective model and effort match the task-selected route. When capacity is full, continue useful local work or wait; do not queue speculative helpers. Recursive orchestration is outside the default workflow and requires separate explicit authorization and controls.
 
 ---
 
@@ -611,7 +611,7 @@ The main agent still decides the design, applies or rejects recommendations, and
 2. Let the installer configure global instructions, self-contained skills with packaged references, and subagents.
 3. Add repo-specific AGENTS.md guidance to each project.
 4. Let the main agent understand and complete each repository task, consulting a relevant role perspective when useful.
-5. Complete coherent work directly; use a helper sparingly when its concrete benefit justifies the overhead, with a bounded root-to-helper assignment and an approved task-selected model and reasoning effort at Standard speed. Helpers execute directly and do not spawn descendants.
+5. Complete coherent work directly; use a helper sparingly when its concrete benefit justifies the overhead, with a bounded root-to-helper assignment and an approved task-selected model and reasoning effort. Helpers execute directly and do not spawn descendants.
 6. For multi-node work, identify real blocking dependencies, parallel-safe nodes, ownership, and verification gates. If helpers are used, set a finite launch/retry allowance and dispatch only ready assignments that fit runtime, safety, and ownership capacity; get immediate user approval before materially expanding execution cost.
 7. Keep the auxiliary-worktree budget at zero unless root verifies a real isolation need. Before completion, remove each task-created auxiliary worktree safely or preserve it with an exact blocker.
 8. When a repository uses long-lived integration and production branches, use the feature-branch lifecycle for development-branch convergence, complete-feature validation, promotion, and authorized cleanup.

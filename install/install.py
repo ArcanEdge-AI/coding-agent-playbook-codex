@@ -281,7 +281,7 @@ class Installer:
             else:
                 # Bundled profiles use simple quoted top-level settings.
                 data = {}
-                for key in ("model", "model_reasoning_effort", "service_tier"):
+                for key in ("model", "model_reasoning_effort"):
                     match = re.search(
                         rf"""^{key}\s*=\s*(["'])([^"']+)\1\s*(?:#.*)?$""", text, re.MULTILINE
                     )
@@ -290,8 +290,6 @@ class Installer:
             route = (data.get("model"), data.get("model_reasoning_effort"))
             if route not in APPROVED_MODEL_EFFORTS:
                 raise ValueError(f"Agent profile must declare an approved model/effort pair: {path}")
-            if data.get("service_tier") in ("fast", "priority"):
-                raise ValueError(f"Agent profile must not select Fast (fast/priority service tier): {path}")
             checked += 1
         self.say(f"OK agent profiles: {checked} TOML files use approved task-based routes")
 

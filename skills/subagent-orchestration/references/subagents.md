@@ -54,7 +54,7 @@ For multi-node work, a helper may own a ready graph node or another bounded subs
 | Read/write scope | Exact ownership; serialize overlap unless isolation is verified. |
 | Verification gate | Evidence required before acceptance. |
 | Workspace | Exact shared workspace or root-permitted auxiliary worktree. |
-| Route | Verified task-selected model and effort at Standard speed. |
+| Route | Verified task-selected model and reasoning effort. |
 
 A graph node does not have to be delegated. The main agent owns graph topology, readiness, integration, and final acceptance.
 
@@ -68,7 +68,7 @@ Only root may raise the worktree budget, issue a permit, or create, adopt, repur
 
 Consult references/model-routing.md before launching a helper.
 
-Select every delegated execution, retry, and replacement by the actual assignment using the approved task table: GPT-6.1 Sol at Light, Medium, or High, or GPT-6 Astra at Extra High. Light uses `low` in configuration. Use Standard speed only, not Fast. A profile's explicit model and effort can override spawn arguments, so establish the effective route. The main agent's user-selected model and effort remain independent.
+Select every delegated execution, retry, and replacement by the actual assignment using the approved task table: GPT-6.1 Sol at Light, Medium, or High, or GPT-6 Astra at Extra High. Light uses `low` in configuration. A profile's explicit model and effort can override spawn arguments, so establish the effective route. The main agent's user-selected model and effort remain independent.
 
 A helper must stop if the route is unavailable. It may not silently inherit, substitute a model, lower effort, or request escalation. Progress and task-reporting messages must preserve parent and peer settings.
 
@@ -110,7 +110,7 @@ Ownership and workspace:
 [Exact workspace and disjoint write ownership or bounded read scope.]
 
 Child-execution route:
-[Verified task-selected model, reasoning effort, and Standard speed.]
+[Verified task-selected model and reasoning effort.]
 
 Launch/retry allowance:
 [Assignment's place within the finite allowance.]
@@ -126,7 +126,7 @@ Return:
 
 Before accepting helper work, verify:
 
-- the effective route matched the task-selected model and effort at Standard speed, without unintended inheritance or conflicting profile overrides
+- the effective route matched the task-selected model and effort, without unintended inheritance or conflicting profile overrides
 - the helper did not spawn descendants
 - the assignment stayed within scope, authority, ownership, and workspace
 - claims are backed by primary evidence
