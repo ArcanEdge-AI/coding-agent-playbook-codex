@@ -272,16 +272,16 @@ Select the model and reasoning effort by the actual task, including for retries 
 
 | Work | Model and reasoning |
 | --- | --- |
-| Narrow lookup, extraction, file mapping, log summaries | GPT-6 Luna / High |
-| Clear implementation, local fixes, bounded planning or straightforward review | GPT-6 Sol / Medium |
-| Coupled changes, difficult debugging, substantial review, conflicting evidence | GPT-6 Sol / High |
+| Narrow lookup, extraction, file mapping, log summaries | GPT-6.1 Sol / Light |
+| Clear implementation, local fixes, bounded planning or straightforward review | GPT-6.1 Sol / Medium |
+| Coupled changes, difficult debugging, substantial review, conflicting evidence | GPT-6.1 Sol / High |
 | Hard architecture questions, persistent debugging, complex cross-system reasoning | GPT-6 Astra / Extra High only |
 
-Use **Standard speed only**, with **no Max, Ultra, or Fast**. High-impact decisions stay with the main agent. Its user-selected model and reasoning remain unchanged unless the user selects otherwise.
+Use **Standard speed only**, not Fast. Speed and reasoning effort are separate settings. The app's Light reasoning label uses `low` in TOML; Medium, High, and Extra High use `medium`, `high`, and `xhigh`. High-impact decisions stay with the main agent. Its user-selected model and reasoning remain unchanged unless the user selects otherwise.
 
 Subagents report through team collaboration messaging or a normal final return. They must not alter parent or peer model settings. Any separately authorized task report must omit destination model and reasoning overrides; see `skills/subagent-orchestration/references/model-routing.md` for the execution/reporting boundary.
 
-Each role has one profile with an explicit starting default: Docs and Tester use Luna/High, Planner and Engineer use Sol/Medium, and Reviewer uses Sol/High. Task needs take precedence over those defaults. A custom profile can override spawn arguments, so use a matching profile or a supported explicit route with the same role guidance and safeguards. Verify the effective model, effort, and Standard speed; report unsupported routing rather than silently substituting or inheriting settings. Consult `skills/subagent-orchestration/references/model-routing.md` for selection and acceptance rules. When updating from the retired duplicate profiles, follow the [profile migration note](INSTALL.md#retired-profile-aliases).
+Each role has one profile with an explicit GPT-6.1 Sol starting default: Docs and Tester use Light, Planner and Engineer use Medium, and Reviewer uses High. Task needs take precedence over those defaults. A custom profile can override spawn arguments, so use a matching profile or a supported explicit route with the same role guidance and safeguards. Verify the effective model, effort, and Standard speed; report unsupported routing rather than silently substituting or inheriting settings. Consult `skills/subagent-orchestration/references/model-routing.md` for selection and acceptance rules. When updating from the retired duplicate profiles, follow the [profile migration note](INSTALL.md#retired-profile-aliases).
 
 The delegation rule is simple:
 

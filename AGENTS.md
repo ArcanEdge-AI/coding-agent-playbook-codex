@@ -13,7 +13,7 @@ Repository-specific guidance overrides the global instructions where it is more 
 - Make the main agent accountable for planning, any delegation it chooses, validation, and final reporting.
 - Keep the Codex subagent model aligned around `planner`, `engineer`, `reviewer`, `tester`, and `docs`.
 - Use subagents sparingly, only when their concrete benefit justifies context, coordination, and review costs or an independent-assistance requirement applies.
-- Give every bundled profile an explicit approved model and reasoning default. Select actual delegated routes by task: GPT-6 Luna/high, Sol/medium, Sol/high, or Astra/xhigh; use Standard speed only, with no Max, Ultra, or Fast. Preserve the main agent's user-selected configuration.
+- Give every bundled profile an explicit approved model and reasoning default. Select actual delegated routes by task: GPT-6.1 Sol at Light, Medium, or High, or GPT-6 Astra at Extra High; use Standard speed only, not Fast. Light uses `low` in configuration. Preserve the main agent's user-selected configuration.
 - Keep the default delegation structure flat: root assigns bounded work directly, and bundled helpers do not spawn descendants.
 - Subagent progress and result messages must preserve parent and peer settings; never attach worker model or reasoning overrides to reports.
 - Keep one profile per bundled role under its standard name. Defaults do not replace task-based selection, and profile precedence must not silently override the chosen route.
@@ -37,7 +37,7 @@ This repo is mostly Markdown and TOML. Before finalizing meaningful changes:
 - Review Markdown headings and fenced code blocks for correctness.
 - Confirm TOML files are syntactically valid when a TOML parser is available.
 - Confirm every `agents/*.toml` file explicitly defines `model` and `model_reasoning_effort`.
-- Confirm each of the five bundled roles has one profile under its standard name, with an explicit model/effort pair from the approved task-routing table and no Fast or priority setting.
+- Confirm each of the five bundled roles has one profile under its standard name, with an explicit model/effort pair from the approved task-routing table and no Fast selection (`service_tier = "fast"` or `"priority"`).
 - Confirm profiles retain clear scope and stop conditions; helpers report route issues, and only the main agent may reassign within approved routes and execution authority.
 - Confirm helper-specific scope, escalation, reporting, and launch settings apply only to delegated execution; direct role use adds no mandatory sequence or separate reports.
 - Confirm reporting guidance uses team messages or normal returns and omits destination-setting overrides from any separately authorized task report.

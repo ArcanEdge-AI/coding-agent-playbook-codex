@@ -26,9 +26,9 @@ LEGACY_START_MARKER = "<!-- codex-agent-playbook:start -->"
 LEGACY_END_MARKER = "<!-- codex-agent-playbook:end -->"
 MANIFEST_HEADER = "# coding-agent-playbook-codex managed files v1"
 APPROVED_MODEL_EFFORTS = {
-    ("gpt-6-luna", "high"),
-    ("gpt-6-sol", "medium"),
-    ("gpt-6-sol", "high"),
+    ("gpt-6.1-sol", "low"),
+    ("gpt-6.1-sol", "medium"),
+    ("gpt-6.1-sol", "high"),
     ("gpt-6-astra", "xhigh"),
 }
 RESOURCE_PATTERN = re.compile(
@@ -291,7 +291,7 @@ class Installer:
             if route not in APPROVED_MODEL_EFFORTS:
                 raise ValueError(f"Agent profile must declare an approved model/effort pair: {path}")
             if data.get("service_tier") in ("fast", "priority"):
-                raise ValueError(f"Agent profile must not select Fast or priority processing: {path}")
+                raise ValueError(f"Agent profile must not select Fast (fast/priority service tier): {path}")
             checked += 1
         self.say(f"OK agent profiles: {checked} TOML files use approved task-based routes")
 

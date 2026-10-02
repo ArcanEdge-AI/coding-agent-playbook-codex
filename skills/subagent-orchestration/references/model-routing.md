@@ -6,14 +6,16 @@ Use subagents sparingly, only when a bounded assignment's concrete benefit outwe
 
 Optimize for the total cost of an accepted result: input and reasoning tokens, repeated context, retries, corrections, coordination, and verification. A lower token price or a higher reasoning setting does not establish better value. Choose sufficient capability upfront without a mandatory cheap attempt first. Use comparable task evidence when available; do not invent savings or run paid comparisons without authority.
 
-| Task | Model | Reasoning |
+| Task | Model | Reasoning setting |
 | --- | --- | --- |
-| Narrow lookup, extraction, file mapping, log summaries | `gpt-6-luna` | `high` |
-| Clear implementation, local fixes, bounded planning or straightforward review | `gpt-6-sol` | `medium` |
-| Coupled changes, difficult debugging, substantial review, conflicting evidence | `gpt-6-sol` | `high` |
-| Hard architecture questions, persistent debugging, complex cross-system reasoning | `gpt-6-astra` | `xhigh` only |
+| Narrow lookup, extraction, file mapping, log summaries | `gpt-6.1-sol` | Light |
+| Clear implementation, local fixes, bounded planning or straightforward review | `gpt-6.1-sol` | Medium |
+| Coupled changes, difficult debugging, substantial review, conflicting evidence | `gpt-6.1-sol` | High |
+| Hard architecture questions, persistent debugging, complex cross-system reasoning | `gpt-6-astra` | Extra High only |
 
-**Standard speed only. Do not select Max, Ultra, Fast, or priority processing.** High-impact judgments remain with the main agent even when a helper contributes evidence.
+Light is the app's reasoning label; use `low` for `model_reasoning_effort` in TOML and supported launch fields. Medium, High, and Extra High use `medium`, `high`, and `xhigh`. Do not write `light` as a configuration value.
+
+**Standard speed only. Do not select Fast.** Speed is separate from reasoning effort. High-impact judgments remain with the main agent even when a helper contributes evidence.
 
 These are approved policy choices, not a measured performance ranking for every repository. Change them only through an explicit policy decision. Do not substitute a different generation merely because it is newer or available.
 
@@ -23,13 +25,13 @@ Each role has one profile with an explicit default:
 
 | Profile | Default model | Reasoning | Typical delegated scope |
 | --- | --- | --- | --- |
-| `docs` | `gpt-6-luna` | `high` | Focused source lookup and extraction. |
-| `planner` | `gpt-6-sol` | `medium` | Bounded planning and real dependencies. |
-| `engineer` | `gpt-6-sol` | `medium` | Clear, isolated implementation. |
-| `tester` | `gpt-6-luna` | `high` | Focused log analysis and known-check reproduction. |
-| `reviewer` | `gpt-6-sol` | `high` | Substantial bounded review. |
+| `docs` | `gpt-6.1-sol` | Light | Focused source lookup and extraction. |
+| `planner` | `gpt-6.1-sol` | Medium | Bounded planning and real dependencies. |
+| `engineer` | `gpt-6.1-sol` | Medium | Clear, isolated implementation. |
+| `tester` | `gpt-6.1-sol` | Light | Focused log analysis and known-check reproduction. |
+| `reviewer` | `gpt-6.1-sol` | High | Substantial bounded review. |
 
-The task table controls selection. For example, difficult root-cause analysis assigned to a tester requires a stronger route than its default, while a straightforward review may use Sol/medium. Do not create model-specific copies of the roles.
+The task table controls selection. For example, difficult root-cause analysis assigned to a tester requires a stronger route than its default, while a straightforward review may use GPT-6.1 Sol/Medium. Do not create model-specific copies of the roles.
 
 On hosts using Codex custom-agent files, explicit `model` and `model_reasoning_effort` values in the file can override spawn arguments. Verify precedence before dispatch. Use a matching profile, or a supported explicit launch that carries the relevant role instructions, scope, and safeguards without a conflicting profile override. Never assume passing a different model alongside a fixed profile changes the effective model.
 
@@ -93,7 +95,7 @@ The task-reporting call above is allowed only when separately authorized and int
 Incorrect:
 
 ```text
-send_message_to_thread({ threadId: parentId, prompt: "...", model: "gpt-6-sol", thinking: "high" })
+send_message_to_thread({ threadId: parentId, prompt: "...", model: "gpt-6.1-sol", thinking: "high" })
 ```
 
 The incorrect form can override the destination task's model or reasoning settings.
@@ -103,7 +105,7 @@ The incorrect form can override the destination task's model or reasoning settin
 ```text
 Role:
 Selected profile or model: [Verified profile or supported explicit task-selected route]
-Reasoning effort: [high, medium, or xhigh as specified by the task table]
+Reasoning effort: [Light, Medium, High, or Extra High from the task table; configuration: low, medium, high, or xhigh]
 Speed: Standard
 Why this selection is suitable:
 Expected benefit:
@@ -141,4 +143,4 @@ Before accepting delegated work, confirm:
 
 ## Capability References
 
-For host behavior, consult the current [custom-agent precedence documentation](https://learn.chatgpt.com/docs/agent-configuration/subagents#custom-agents), [model and reasoning guidance](https://learn.chatgpt.com/docs/models), and [speed controls](https://learn.chatgpt.com/docs/agent-configuration/speed). These explain capabilities; availability alone does not expand this playbook's approved routes.
+For host behavior, consult the current [custom-agent precedence documentation](https://learn.chatgpt.com/docs/agent-configuration/subagents#custom-agents), [model and reasoning labels](https://learn.chatgpt.com/docs/models#pick-a-reasoning-effort), [GPT-6.1 Sol model specification](https://developers.openai.com/api/docs/models/gpt-6.1-sol), [configuration values](https://learn.chatgpt.com/docs/config-file/config-reference), and [speed controls](https://learn.chatgpt.com/docs/agent-configuration/speed). These explain capabilities; availability alone does not expand this playbook's approved routes.

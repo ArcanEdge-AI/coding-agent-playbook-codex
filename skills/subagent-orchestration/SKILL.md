@@ -33,7 +33,7 @@ Serialize overlapping writes. Disjoint bounded writers may share the current wor
 
 ## Route Every Helper Explicitly
 
-Select each delegated execution, retry, and replacement by the task table in references/model-routing.md: GPT-6 Luna/high, Sol/medium, Sol/high, or Astra/xhigh. Use Standard speed only, with no Max, Ultra, or Fast. Minimize total completion cost, including retries and corrections. Use a matching profile or supported explicit route; verify effective settings because profile values can override spawn arguments. Preserve the main agent's selected configuration.
+Select each delegated execution, retry, and replacement by the task table in references/model-routing.md: GPT-6.1 Sol at Light, Medium, or High, or GPT-6 Astra at Extra High. Light uses `low` in configuration. Use Standard speed only, not Fast. Minimize total completion cost, including retries and corrections. Use a matching profile or supported explicit route; verify effective settings because profile values can override spawn arguments. Preserve the main agent's selected configuration.
 
 If the route cannot be established, keep the work with the main agent and report any separately required independent-verification gap.
 

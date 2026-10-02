@@ -127,14 +127,14 @@ Choose each delegated execution, retry, and replacement by the actual task and t
 
 Use these approved routes:
 
-| Task | Model | Reasoning |
+| Task | Model | Reasoning setting |
 | --- | --- | --- |
-| Narrow lookup, extraction, file mapping, log summaries | `gpt-6-luna` | `high` |
-| Clear implementation, local fixes, bounded planning or straightforward review | `gpt-6-sol` | `medium` |
-| Coupled changes, difficult debugging, substantial review, conflicting evidence | `gpt-6-sol` | `high` |
-| Hard architecture questions, persistent debugging, complex cross-system reasoning | `gpt-6-astra` | `xhigh` only |
+| Narrow lookup, extraction, file mapping, log summaries | `gpt-6.1-sol` | Light |
+| Clear implementation, local fixes, bounded planning or straightforward review | `gpt-6.1-sol` | Medium |
+| Coupled changes, difficult debugging, substantial review, conflicting evidence | `gpt-6.1-sol` | High |
+| Hard architecture questions, persistent debugging, complex cross-system reasoning | `gpt-6-astra` | Extra High only |
 
-Use Standard speed only. Do not select Max, Ultra, Fast, or priority processing. Preserve the main agent's user-selected model and reasoning settings; consulting a profile or selecting a helper route does not authorize changing them. High-impact decisions remain owned by the main agent.
+The app's Light reasoning setting uses `low` in configuration and supported launch fields; Medium, High, and Extra High use `medium`, `high`, and `xhigh`. Speed is separate: use Standard only, not Fast. Preserve the main agent's user-selected model and reasoning settings; consulting a profile or selecting a helper route does not authorize changing them. High-impact decisions remain owned by the main agent.
 
 Select a verified profile matching the required route or a supported explicit execution route that preserves the role's instructions and boundaries. Use the host's actual field names and precedence rules: a custom profile can override spawn settings. Verify the effective model, effort, and Standard speed rather than relying on the role name, advertised options, or unintended inheritance. Consult `subagent-orchestration` and its model-routing reference when delegating.
 

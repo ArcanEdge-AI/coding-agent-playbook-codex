@@ -185,7 +185,7 @@ After installation, verify:
 - `$CODEX_HOME/agents/docs.toml` exists.
 - Every current playbook-managed `agents/*.toml` file explicitly defines `model` and `model_reasoning_effort`; unrelated user profiles are outside this validation scope.
 - Installed reporting guidance preserves parent and peer task settings and omits destination-setting overrides from reports.
-- Each of the five bundled roles has one profile under its standard name with an approved model/effort pair: `gpt-6-luna`/`high`, `gpt-6-sol`/`medium`, `gpt-6-sol`/`high`, or `gpt-6-astra`/`xhigh`. No bundled profile explicitly selects Fast or priority processing.
+- Each of the five bundled roles has one profile under its standard name with an approved model/effort pair: `gpt-6.1-sol`/`low` (Light), `gpt-6.1-sol`/`medium`, `gpt-6.1-sol`/`high`, or `gpt-6-astra`/`xhigh` (Extra High). No bundled profile explicitly selects Fast; the validator rejects its `fast` and `priority` service-tier values.
 - Standard speed must be established through the host at execution time. File validation does not prove the effective live speed, and the installer does not change the main agent's model, reasoning, or speed configuration.
 - `$CODEX_HOME/skills/subagent-orchestration/SKILL.md` exists.
 - `$CODEX_HOME/skills/task-graph-orchestration/SKILL.md` exists.
