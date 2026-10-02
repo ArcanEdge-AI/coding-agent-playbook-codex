@@ -60,7 +60,7 @@ The main agent completes coherent work directly by default. Use helpers sparingl
 - apply the subagent-orchestration skill and its assignment contract
 - set a finite helper-launch and retry allowance
 - assign disjoint ownership or serialize conflicting writes
-- select and establish the approved task-based model and reasoning effort at Standard speed
+- select and establish the approved task-based model and reasoning effort
 - require the helper to execute directly without spawning descendants
 - verify the returned artifact before accepting it
 

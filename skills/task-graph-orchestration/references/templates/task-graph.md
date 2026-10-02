@@ -53,7 +53,7 @@ Do not add an edge solely to mirror list order.
 
 Remove this section when no helpers are used.
 
-| Node | Helper role | Bounded benefit | Exact workspace and scope | Model / effort / Standard speed | Acceptance check | Attempt |
+| Node | Helper role | Bounded benefit | Exact workspace and scope | Model / effort | Acceptance check | Attempt |
 | --- | --- | --- | --- | --- | --- | --- |
 | N0 | [Role] | [Independent evidence, parallel progress, or context reduction] | [Workspace and ownership] | [Verified profile or explicit settings] | [Evidence] | 1 |
 

@@ -35,7 +35,7 @@ Review the final diff for:
 - subagent claims that were not independently verified
 - helper launches or retries that exceeded the recorded finite allowance or were not reconciled
 - unnecessary helper use whose concrete benefit does not justify context, coordination, and review overhead
-- child execution outside the approved task-based model/effort choices or Standard speed, conflicting profile overrides, or permissions, scope, authority, or workspace expansion beyond the parent assignment
+- child execution outside the approved task-based model/effort choices, conflicting profile overrides, or permissions, scope, authority, or workspace expansion beyond the parent assignment
 - progress or task-reporting messages that set `model`, `reasoning_effort`, `thinking`, or analogous destination-setting overrides, or altered a parent or peer task
 - task-created auxiliary worktrees without integration evidence and a verified `removed` or exact-blocker `preserved` disposition
 

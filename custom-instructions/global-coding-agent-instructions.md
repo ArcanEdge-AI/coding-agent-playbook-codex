@@ -134,9 +134,9 @@ Use these approved routes:
 | Coupled changes, difficult debugging, substantial review, conflicting evidence | `gpt-6.1-sol` | High |
 | Hard architecture questions, persistent debugging, complex cross-system reasoning | `gpt-6-astra` | Extra High only |
 
-The app's Light reasoning setting uses `low` in configuration and supported launch fields; Medium, High, and Extra High use `medium`, `high`, and `xhigh`. Speed is separate: use Standard only, not Fast. Preserve the main agent's user-selected model and reasoning settings; consulting a profile or selecting a helper route does not authorize changing them. High-impact decisions remain owned by the main agent.
+The app's Light reasoning setting uses `low` in configuration and supported launch fields; Medium, High, and Extra High use `medium`, `high`, and `xhigh`. Preserve the main agent's user-selected model and reasoning settings; consulting a profile or selecting a helper route does not authorize changing them. High-impact decisions remain owned by the main agent.
 
-Select a verified profile matching the required route or a supported explicit execution route that preserves the role's instructions and boundaries. Use the host's actual field names and precedence rules: a custom profile can override spawn settings. Verify the effective model, effort, and Standard speed rather than relying on the role name, advertised options, or unintended inheritance. Consult `subagent-orchestration` and its model-routing reference when delegating.
+Select a verified profile matching the required route or a supported explicit execution route that preserves the role's instructions and boundaries. Use the host's actual field names and precedence rules: a custom profile can override spawn settings. Verify the effective model and reasoning effort rather than relying on the role name, advertised options, or unintended inheritance. Consult `subagent-orchestration` and its model-routing reference when delegating.
 
 Only the main agent may reassign or change a helper's route within the approved choices and existing finite execution allowance. Use evidence from the task to justify the change; obtain approval before a material cost expansion. Helpers return evidence and blockers instead of broadening scope or changing their own route. If the host cannot establish the selected route, keep the work with the main agent and report the limitation; a separately required independent-verification gate remains unmet.
 
@@ -152,7 +152,7 @@ Context: necessary facts, inputs, file paths, interfaces, and prior accepted evi
 Skills and methods: applicable skills, required references, and relevant task-graph dependencies.
 Scope and authority: permitted reads/writes, non-goals, inherited constraints, and stop conditions.
 Ownership and route: root/helper ID or permit, assigned workspace, disjoint write scope,
-  verified task-selected model, effort, Standard speed, and place within the finite launch/retry allowance.
+  verified task-selected model, effort, and place within the finite launch/retry allowance.
 Return: result or patch, relevant primary evidence, checks actually run, and unresolved issues.
 ```
 

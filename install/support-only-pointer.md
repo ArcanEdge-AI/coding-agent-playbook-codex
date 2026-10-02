@@ -4,7 +4,7 @@ Supporting references live inside their owning skill packages under the Codex ho
 
 - `skills/reference-doc-routing/references/README.md` — map of packaged reference docs
 - `skills/reference-doc-routing/references/engineering-design.md` — selective design questions and examples for complete solutions and justified complexity
-- `skills/subagent-orchestration/references/model-routing.md` — task-based model and reasoning choices, Standard speed, escalation, and acceptance rules
+- `skills/subagent-orchestration/references/model-routing.md` — task-based model and reasoning choices, escalation, and acceptance rules
 - `skills/subagent-orchestration/references/subagents.md` — subagent delegation rules, assignment template, and acceptance checklist
 - `skills/worktree-lifecycle/references/worktrees.md` — root-owned task-local worktree budgeting, permits, integration, cleanup, and preservation rules
 - `skills/feature-branch-lifecycle/references/branching-rule.md` — development-branch integration, complete-feature validation, promotion, and safe temporary-branch cleanup
@@ -30,6 +30,6 @@ The main agent may consult a profile's role perspective directly without launchi
 
 Reference documents are supporting context, not automatic truth. The main agent completes work directly by default and remains accountable for the requested outcome, final diff, validation, acceptance, and the final response.
 
-Use subagents sparingly when a bounded benefit outweighs the added overhead or independent assistance is required. Select each actual helper route by task using the model-routing reference: GPT-6.1 Sol at Light, Medium, or High, or GPT-6 Astra at Extra High. Light uses `low` in configuration. Use Standard speed only, not Fast. Establish the effective settings because profile values can override spawn arguments. Preserve the main agent's selected settings. Helpers execute directly without descendants, and reporting messages must omit destination model and reasoning overrides.
+Use subagents sparingly when a bounded benefit outweighs the added overhead or independent assistance is required. Select each actual helper route by task using the model-routing reference: GPT-6.1 Sol at Light, Medium, or High, or GPT-6 Astra at Extra High. Light uses `low` in configuration. Establish the effective settings because profile values can override spawn arguments. Preserve the main agent's selected settings. Helpers execute directly without descendants, and reporting messages must omit destination model and reasoning overrides.
 
 The auxiliary-worktree budget starts at zero. Only root may issue a worktree permit or create, adopt, repurpose, move, or remove an auxiliary worktree. Before the final response, remove each task-created auxiliary under verified safety gates or preserve it with its exact owner, path, branch or HEAD, blocker, and next action.
