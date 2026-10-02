@@ -68,7 +68,7 @@ Only root may raise the worktree budget, issue a permit, or create, adopt, repur
 
 Consult references/model-routing.md before launching a helper.
 
-Select every delegated execution, retry, and replacement by the actual assignment using the approved task table: GPT-6 Luna/high, Sol/medium, Sol/high, or Astra/xhigh. Use Standard speed only; never Max, Ultra, or Fast. A profile's explicit model and effort can override spawn arguments, so establish the effective route. The main agent's user-selected model and effort remain independent.
+Select every delegated execution, retry, and replacement by the actual assignment using the approved task table: GPT-6.1 Sol at Light, Medium, or High, or GPT-6 Astra at Extra High. Light uses `low` in configuration. Use Standard speed only, not Fast. A profile's explicit model and effort can override spawn arguments, so establish the effective route. The main agent's user-selected model and effort remain independent.
 
 A helper must stop if the route is unavailable. It may not silently inherit, substitute a model, lower effort, or request escalation. Progress and task-reporting messages must preserve parent and peer settings.
 

@@ -27,7 +27,7 @@ Avoid adding:
 - Keep guidance tool-agnostic unless the file is explicitly tool-specific.
 - Prefer behavior and decision rules over rigid command sequences.
 - Use examples that are generic and safe for public reuse.
-- Keep direct-first main-agent ownership, optional bounded assistance, task-based helper routing with Standard speed and no Max, Ultra, or Fast, flat default delegation, scope and authority limits, and the task-local worktree lifecycle model intact.
+- Keep direct-first main-agent ownership, optional bounded assistance, task-based helper routing with Standard speed only (not Fast), flat default delegation, scope and authority limits, and the task-local worktree lifecycle model intact.
 - Keep this repository's policy and implementation Codex-specific. The companion Claude Code playbook is maintained independently; do not modify it from this repository's workflow.
 - For routing, skills, and agent-profile changes, explain the task boundary and validation evidence rather than asserting a model choice is universally best.
 - For benchmark contributions, use [`docs/evidence/RUN-TEMPLATE.md`](docs/evidence/RUN-TEMPLATE.md), distinguish public reproduction from private field work, and report missing evidence as missing.
