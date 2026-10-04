@@ -17,7 +17,9 @@ Focus on:
 - alternatives only when meaningful complexity, risk, or tradeoffs warrant comparison
 - significant, evidenced benefit before a substantial replacement, including implementation, migration, verification, and maintenance costs
 - real dependencies and safe steps; map inputs, outputs, and the completion-controlling path only when complexity warrants it
-- proportionate checks for important final behavior and realistic regression risks
+- proportionate E2E coverage for important final behavior, meaningful failures, boundary cases, and realistic regression risks
+- classifying every created unit test as temporary, regardless of purpose, and planning its removal after corresponding E2E coverage passes; no created unit test remains in the completed change
+- scoped migration rather than bulk deletion of existing non-E2E tests
 - keeping routine planning lightweight and reusing the current task record
 
 A work item can be completed by the main agent. Propose a helper assignment only when its bounded result, concrete benefit, and acceptance check are clear; do not require a delegation map, handoffs, or parallel work merely to produce a plan.

@@ -43,6 +43,7 @@ Before opening a PR:
 - Confirm `agents/*.toml` files are syntactically valid and define explicit `model` and `model_reasoning_effort` values if changed.
 - Confirm each of the five bundled roles has one profile under its standard name, explicit defaults match an approved task route, actual routes follow the assignment, and all profiles retain clear stop conditions.
 - Confirm profiles support direct main-agent perspective use without changing its settings or authority, requiring a role sequence, or implying independent verification; keep delegated-execution rules conditional.
+- Confirm testing guidance retains E2E tests only and classifies every created unit test as temporary, regardless of purpose. No created unit test may remain in a completed change; require passing replacement E2E coverage before removing those tests and exclusively used support code. Preserve static checks, required assertions, and repository gates.
 - Confirm Unix shell scripts remain LF-only.
 - Confirm the change is valid for Codex without assuming or modifying the independently maintained Claude Code edition.
 - Confirm no sensitive or private material was added.

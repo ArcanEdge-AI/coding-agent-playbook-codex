@@ -14,6 +14,7 @@ Review the final diff for:
 - generated, vendored, compiled, or package-owned files
 - missing or weak validation
 - redundant tests, fixtures, or mocks; tests preserving abandoned partial fixes or implementation details rather than intended final behavior
+- any created unit test left in the completed change, regardless of its purpose or label; isolated integration tests retained, unused unit-test support code, or cleanup before corresponding E2E assertions pass
 - unused imports, variables, types, functions, or files caused by the change
 - naming clarity
 - consistency with existing patterns
@@ -47,7 +48,7 @@ Would I approve this in code review?
 
 If not, fix the issue or report the remaining risk clearly.
 
-Recommend additional tests only for an identified important behavior or realistic regression risk that existing checks do not establish. A focused unit test for a lasting rule is valid; each implementation step does not need its own permanent test. Preserve required assertions when consolidating tests, and never treat deleting a failing test as resolving its failure.
+Recommend retained E2E tests only for an identified important behavior or realistic regression risk that existing coverage does not establish, including relevant failure and boundary cases. Every unit test created is temporary, regardless of purpose; none may remain in a completed change. Verify their still-required assertions in passing E2E coverage before removing them and exclusively used support code. Keep migration of existing non-E2E suites within authorized scope. Build, lint, type checking, and static validation remain appropriate. Preserve required assertions and repository gates, and never treat deleting a failing test as resolving its failure.
 
 Final report format:
 

@@ -40,7 +40,7 @@ If a value can be reliably derived from existing state, storing another copy may
 
 A small patch that repeats a workaround can cost more to maintain than a focused change at the correct boundary. Compare completeness, affected surfaces, reliability, and verification needs rather than counting changed lines. A broader root cause is not permission for an unrelated redesign.
 
-Tests, fixtures, and mocks are part of the maintenance surface. Retain tests for the intended final behavior and credible regression risks, including focused unit tests for lasting rules. Update or remove tests that only describe abandoned intermediate fixes. Prefer extending existing coverage over creating a parallel suite, and do not reshape sound production code solely to support low-value tests.
+Tests, fixtures, and mocks are part of the maintenance surface. Retain only E2E behavioral tests for the intended final flow, important rules, meaningful failures, boundary cases, and credible regression risks. Every unit test created is temporary, regardless of purpose; none may remain in a completed change. Remove them and exclusively used support code after corresponding E2E coverage passes, preserving still-required assertions. Keep existing non-E2E migration within authorized scope. Prefer extending existing E2E coverage over creating a parallel suite, and do not reshape sound production code solely to support low-value tests. Build, lint, type checking, and static validation remain appropriate checks.
 
 ## Material Technical Debt
 
