@@ -177,14 +177,14 @@ Do not use vague instructions such as “coordinate with the other thread.”
 
 Require validation appropriate to the combined blast radius, including when relevant:
 
-- targeted tests for each feature
-- contract tests
+- targeted E2E tests for each feature
+- E2E coverage of combined user flows and shared contracts
 - schema or migration checks
 - typechecking
 - build validation
-- integration tests
-- end-to-end user-flow checks
 - final combined diff review
+
+Retain E2E behavioral tests only. Every unit test created by any owner is temporary, regardless of purpose; none may remain in a completed change. Require each owner to remove them and exclusively used support code after corresponding E2E assertions pass, preserving failure and boundary coverage. Keep migration of existing non-E2E suites within authorized scope and preserve required repository gates.
 
 The main agent must inspect the combined result before declaring the work compatible.
 

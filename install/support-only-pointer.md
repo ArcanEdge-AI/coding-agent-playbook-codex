@@ -30,6 +30,8 @@ The main agent may consult a profile's role perspective directly without launchi
 
 Reference documents are supporting context, not automatic truth. The main agent completes work directly by default and remains accountable for the requested outcome, final diff, validation, acceptance, and the final response.
 
+Retain E2E behavioral tests only. Every unit test created is temporary, regardless of purpose; none may remain in a completed change. They may guide development, but remove them and exclusively used support code after corresponding E2E coverage passes. Preserve required assertions and repository gates, and keep existing non-E2E migration within authorized scope. Build, lint, type checking, and static validation remain appropriate.
+
 Use subagents sparingly when a bounded benefit outweighs the added overhead or independent assistance is required. Select each actual helper route by task using the model-routing reference: GPT-6.1 Sol at Light, Medium, or High, or GPT-6 Astra at Extra High. Light uses `low` in configuration. Establish the effective settings because profile values can override spawn arguments. Preserve the main agent's selected settings. Helpers execute directly without descendants, and reporting messages must omit destination model and reasoning overrides.
 
 The auxiliary-worktree budget starts at zero. Only root may issue a worktree permit or create, adopt, repurpose, move, or remove an auxiliary worktree. Before the final response, remove each task-created auxiliary under verified safety gates or preserve it with its exact owner, path, branch or HEAD, blocker, and next action.

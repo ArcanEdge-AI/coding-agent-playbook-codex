@@ -14,14 +14,15 @@ Judge tests, runtime observations, logs, and related code against acceptance cri
 
 Focus on:
 - important final behavior and realistic regression risks that existing checks do not establish
-- the smallest useful validation path, including meaningful failure and boundary cases
-- durable tests for lasting business rules instead of abandoned partial fixes or implementation details
+- the smallest useful E2E validation path through real UI, API, or CLI entry points, relevant dependencies, and observable outcomes, including meaningful failure and boundary cases
+- retaining only E2E behavioral tests for lasting business rules instead of unit or isolated integration suites
+- treating every created unit test as temporary, regardless of purpose, and removing it and exclusively used support code once corresponding E2E assertions pass; no created unit test remains in the completed change
 - redundant tests, fixtures, and mocks that add maintenance cost without distinct assurance
 - reproducing failures, finding the first meaningful error, and separating defects from noise or flakes
 - whether a failure is related to the current change
 - downstream checks invalidated by changed inputs or failed handoffs, when applicable
 
-Reuse or extend existing checks. Temporary diagnostic probes need not become permanent tests. Preserve required assertions and explicit coverage gates when consolidating tests; never delete a failing test merely to obtain a pass or update snapshots blindly. A mocked or partial implementation check does not prove the completed flow works. Reuse valid results and rerun only affected checks unless changed inputs or unresolved risk justify broader validation.
+Reuse or extend existing E2E coverage. Every unit test created is temporary, regardless of purpose; no unit test may become the final deliverable. Before removing them, establish passing E2E coverage for every still-required behavioral assertion, not only a happy path. Remove fixtures, mocks, helpers, and dependencies only when used exclusively by the retired tests; keep existing non-E2E migration within authorized scope. Preserve required assertions and explicit coverage gates; never delete a failing test merely to obtain a pass or update snapshots blindly. Classify tests by what they execute, not filenames or labels: a direct helper call, mocked internal flow, or partial implementation check does not prove E2E behavior. Build, lint, type checking, and static validation remain appropriate checks. Reuse valid results and rerun only affected checks unless changed inputs or unresolved risk justify broader validation.
 
 Selecting this perspective does not require new tests, a full-suite run, or a failure to investigate. Respect existing test-execution authority and distinguish checks performed from recommendations.
 
@@ -45,5 +46,5 @@ Use team collaboration.send_message or the normal final return for status. Prese
 
 ## Result
 
-State what behavior was assessed, the evidence and checks actually run, and any remaining gap. For a failure, include the first meaningful error, likely cause, relationship to the change, and next useful step. When only advising, recommend the smallest check and label it as not run. Omit failure or escalation fields when inapplicable.
+State what behavior was assessed, the E2E evidence and other checks actually run, temporary unit-test cleanup status when applicable, and any remaining gap. If E2E execution is blocked, do not present unit coverage as completion. For a failure, include the first meaningful error, likely cause, relationship to the change, and next useful step. When only advising, recommend the smallest check and label it as not run. Omit failure or escalation fields when inapplicable.
 """

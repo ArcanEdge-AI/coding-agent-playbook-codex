@@ -49,7 +49,7 @@ This repo is mostly Markdown and TOML. Before finalizing meaningful changes:
 - Confirm the feature-branch lifecycle remains a self-contained skill, detects repository-specific branch names, preserves approval gates for remote deletion and production promotion, and is not conflated with worktree lifecycle.
 - Confirm legacy-path retirement requires dependency evidence or explicit retention requirements, separates code retirement from data disposal, preserves correctness safeguards, and does not treat uncertain dependency coverage as permission to remove behavior.
 - Confirm design guidance reviews the whole affected flow, improves existing implementations by default, and requires evidence of significant benefit before a substantial replacement.
-- Confirm testing guidance favors the smallest meaningful checks and lasting tests for intended final behavior and realistic regression risks, removes only obsolete intermediate tests, and preserves required assertions and repository gates.
+- Confirm retained behavioral tests are E2E only and every created unit test is temporary, regardless of purpose. No created unit test remains in a completed change; remove them and exclusively used support code once corresponding E2E coverage passes, with required assertions, failure cases, and repository gates preserved. Existing non-E2E migration stays within authorized scope; build, lint, type checking, and static validation remain valid checks.
 - Keep Codex policy internally consistent and document Codex-specific capability assumptions where they affect behavior.
 - Search the final diff for paths, schemas, model names, and commands that belong to another coding-agent environment; remove any accidental contamination before merging.
 

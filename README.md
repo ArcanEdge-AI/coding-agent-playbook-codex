@@ -228,7 +228,7 @@ Support-only mode avoids duplicating the full instruction file and installs only
 
 Understand the whole affected flow and improve the existing implementation by default. A substantial replacement needs evidence of a significant benefit that justifies implementation, migration, verification, and maintenance costs. Preserve suitable components; another possible design or alpha status is not a reason to rebuild.
 
-Use the smallest meaningful checks and retain automated tests for important behavior and realistic regression risks. Focused unit tests for lasting business rules are useful. As the implementation changes, update or remove tests that only preserve abandoned partial fixes, and reuse valid verification results. Required checks, supported contracts, data preservation, and correctness safeguards still apply.
+Retain only end-to-end (E2E) behavioral tests that exercise complete supported flows through real UI, API, or CLI entry points. Every unit test created is temporary, regardless of its purpose; none may remain in a completed change. Unit tests may guide development, but remove them and their exclusively used support code once corresponding E2E coverage is ready and passing. Preserve required behavior, failures, and boundary cases in that coverage before cleanup; a mocked component check or happy path alone is insufficient. Reuse existing E2E coverage and valid verification results. Build, lint, type checking, repository gates, supported contracts, and data-preservation safeguards still apply. Migrating existing non-E2E suites requires scoped replacement coverage, not bulk deletion.
 
 The main agent is the primary implementer and owns the requested outcome end to end.
 

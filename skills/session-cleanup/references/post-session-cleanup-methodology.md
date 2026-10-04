@@ -421,7 +421,7 @@ Review the tests associated with the work.
 
 Ask:
 
-* Are important new behaviors covered?
+* Are important new behaviors, meaningful failures, and boundary cases covered by passing E2E tests?
 * Do the tests verify behavior rather than implementation trivia?
 * Were any existing tests weakened simply to make them pass?
 * Were assertions removed without justification?
@@ -431,16 +431,18 @@ Ask:
 * Do old tests still describe the current intended behavior?
 * Are tests preserving branch-only transitional behavior that never shipped?
 * Are compatibility tests backed by an actual supported compatibility requirement?
+* Has every unit test created during the work been treated as temporary and removed after its still-required assertions are covered by passing E2E tests, regardless of its purpose or label?
+* Were fixtures, mocks, helpers, and dependencies used only by those temporary tests removed without affecting E2E or production code?
 
-Add or improve tests where there is a meaningful gap introduced by this work.
+Add or improve E2E tests where there is a meaningful gap introduced by this work.
 
 Remove or update work-delta tests that only preserve abandoned branch behavior and no longer describe the intended implementation.
 
 Do not create excessive tests for trivial implementation details.
 
-Retained tests should protect the intended final solution, including focused unit tests for lasting business rules. Tests can guide development before the whole feature is finished, but each partial fix does not warrant another permanent test. As the approach changes, update, consolidate, or remove tests and their temporary fixtures or mocks when they only describe an abandoned implementation. Preserve assertions for still-required behavior; a failing test needs investigation before it can be classified as obsolete.
+Retain only E2E behavioral tests that exercise the intended final solution through real UI, API, or CLI entry points, relevant dependencies, and observable outcomes. Every unit test created is temporary, regardless of its purpose or who creates it; none may remain in a completed change. Once corresponding E2E coverage is ready and passing, remove all created unit tests and exclusively used fixtures, mocks, helpers, and dependencies. Carry still-required behavioral assertions, including meaningful failures and boundary cases, into E2E coverage first; a happy path alone is insufficient. If coverage or cleanup is incomplete, report unfinished work rather than treating unit tests as the final solution or declaring completion. Keep migration of pre-existing non-E2E suites within authorized scope and preserve required repository gates.
 
-Prefer extending existing coverage. Add lasting tests for an identified important behavior or realistic regression risk that existing checks do not establish. Do not multiply test layers for the same assurance without a distinct risk, or keep diagnostic probes merely because they were useful during investigation. Mocked behavior alone does not prove the completed flow works.
+Prefer extending existing E2E coverage for an identified important behavior or realistic regression risk that existing checks do not establish. As the approach changes, update, consolidate, or remove E2E tests and fixtures that only describe abandoned fixes. Preserve required assertions and investigate failures before removal; deleting a failing test is not a fix. Do not keep diagnostic probes merely because they were useful during investigation. Direct helper calls and mocked internal flows do not prove E2E behavior.
 
 ---
 
@@ -453,11 +455,11 @@ Select from the available checks as applicable:
 * formatting
 * linting
 * type checking
-* unit tests
-* integration tests
-* relevant end-to-end tests
+* relevant E2E tests for complete supported flows
 * build
 * project-specific verification scripts
+
+Build and static checks remain valid; they do not replace required E2E behavior evidence. Run any still-mandatory existing non-E2E gate until its migration is authorized and complete; do not silently disable it or claim the migration is finished.
 
 Do not invent replacement validation commands if the repository already defines them.
 

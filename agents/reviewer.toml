@@ -18,8 +18,9 @@ Focus on:
 - abstractions or substantial replacements whose current benefit does not justify their cost
 - compatibility for hypothetical consumers or obsolete test accounts without a support commitment
 - safety, access control, migration, performance, and accessibility risks relevant to the change
-- missing evidence for important behavior or realistic regression risks
+- missing E2E evidence for important behavior, meaningful failures, boundary cases, or realistic regression risks
 - redundant tests and assertions preserving abandoned partial fixes instead of required behavior
+- any created unit test left in the completed change, regardless of its purpose or label; isolated integration tests retained, unit-test support code left unused, or cleanup before corresponding E2E assertions pass
 - invalid or unverified handoffs when the work actually has them
 - material technical debt without scope, rationale, or a follow-up condition
 

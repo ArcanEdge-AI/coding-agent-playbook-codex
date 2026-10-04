@@ -72,7 +72,7 @@ When implementation is authorized:
 - test meaningful failures and safeguards, including authorization, invalid input, reference integrity, and cleanup when affected
 - check that duplicate writes, competing sources of truth, and retired-path wiring are gone from the affected surface
 
-Retain required regression tests. Replace tests that only enforce obsolete behavior with tests for the accepted contract; do not change an authoritative acceptance requirement merely to obtain a pass.
+Preserve required regression assertions in E2E coverage of the accepted contract. Replace tests that only enforce obsolete behavior with relevant E2E cases. Every unit test created is temporary, regardless of purpose; none may remain in a completed change. Remove them and exclusively used support code after corresponding E2E assertions pass. Keep existing non-E2E migration within authorized scope and do not change an authoritative acceptance requirement merely to obtain a pass.
 
 ## Completion Record
 

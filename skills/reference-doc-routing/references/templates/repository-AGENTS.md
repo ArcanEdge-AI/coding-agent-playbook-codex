@@ -17,13 +17,15 @@ Describe:
 Document the normal commands for:
 
 - install/setup
-- targeted tests
-- full tests
+- targeted E2E tests
+- full E2E suite
 - typecheck
 - lint
 - format
 - build
 - local run/smoke test
+
+Retain only E2E behavioral tests. Every unit test created is temporary, regardless of purpose; none may remain in a completed change. They may guide development, but remove them and exclusively used support code after corresponding E2E coverage passes. Preserve still-required assertions, failure cases, and repository gates. Keep migration of existing non-E2E tests within authorized scope.
 
 ## Architecture Rules
 

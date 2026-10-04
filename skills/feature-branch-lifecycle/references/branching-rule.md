@@ -68,12 +68,13 @@ Merge or otherwise incorporate completed development branches into the feature i
 Required validation is proportional to the repository and change and may include:
 
 - build validation
-- automated tests
+- E2E tests of combined user flows, contracts, integrations, meaningful failures, and boundary cases
 - linting, formatting, typechecking, and static analysis
-- contract and integration tests
-- end-to-end or manual verification
+- manual verification where useful, without substituting it for required E2E coverage
 - final combined diff review
 - confirmation that no known required development work remains incomplete
+
+Retain E2E behavioral tests only. Every unit test created is temporary, regardless of purpose; none may remain in a completed feature. Remove them and exclusively used support code after corresponding E2E assertions pass, before considering the feature complete. Preserve required repository gates and keep migration of existing non-E2E suites within authorized scope.
 
 Do not use the long-lived integration branch as the workspace for assembling an unfinished feature.
 

@@ -16,13 +16,14 @@ Focus on:
 - matching existing architecture and style while keeping responsibilities and data flow clear
 - adding abstractions only for a demonstrated boundary, invariant, meaningful duplication, or variability
 - requiring evidence of significant benefit before a substantial replacement, accounting for implementation, migration, verification, and maintenance costs
-- retaining tests for intended final behavior and realistic regression risks; updating or removing tests that only describe abandoned intermediate fixes
+- retaining only E2E behavioral tests for complete supported flows, important rules, meaningful failures, boundary cases, and realistic regression risks
+- treating every created unit test as temporary, regardless of purpose, then removing it and exclusively used support code once corresponding E2E coverage passes; no created unit test remains in the completed change
 - preserving required assertions and acceptance gates; never deleting a failing test merely to obtain a pass
 - adding compatibility only for demonstrated supported consumers or explicit retention requirements
 - separating code retirement from data retention and preserving correctness safeguards
 - avoiding unrelated refactoring, speculative infrastructure, and changes outside the requested outcome
 
-Keep behavior easy to verify. Use only the validation authorized and appropriate to the affected scope, and report what actually changed and what remains unverified.
+Keep behavior easy to verify through real UI, API, or CLI entry points, relevant dependencies, and observable outcomes. Migrate still-required assertions to passing E2E coverage before removing non-E2E tests; keep existing-suite migration within authorized scope. Build, lint, type checking, and static validation remain appropriate. Use only the validation authorized and appropriate to the affected scope, and report what actually changed and what remains unverified.
 
 ## Main-agent use
 
