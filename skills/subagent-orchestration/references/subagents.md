@@ -70,7 +70,7 @@ Consult references/model-routing.md before launching a helper.
 
 Select every delegated execution, retry, and replacement by the actual assignment using the approved task table: GPT-6.1 Sol at Light, Medium, or High, or GPT-6 Astra at Extra High. Light uses `low` in configuration. A profile's explicit model and effort can override spawn arguments, so establish the effective route. The main agent's user-selected model and effort remain independent.
 
-A helper must stop if the route is unavailable. It may not silently inherit, substitute a model, lower effort, or request escalation. Progress and task-reporting messages must preserve parent and peer settings.
+A helper must stop and report if the route is unavailable. It may return evidence that another route is needed, but it may not silently inherit settings, substitute a model, or change its own effort. The main agent decides any reassignment. Progress and task-reporting messages must preserve parent and peer settings.
 
 ## Keep Consequential Ownership With Root
 
@@ -92,31 +92,20 @@ A helper may gather bounded evidence or perform an authorized implementation sli
 
 ~~~text
 Goal and acceptance:
-[Bounded result and observable acceptance check.]
+[Bounded result, observable acceptance check, and expected benefit.]
 
-Expected benefit:
-[Independent evidence, parallel progress, or context reduction.]
-
-Context and authoritative inputs:
+Context:
 [Only necessary facts, paths, interfaces, and accepted upstream evidence.]
 
-Skills and graph dependencies:
-[Applicable skills and real dependencies, or None.]
+Skills and methods:
+[Applicable skills, required references, and real dependencies, or None.]
 
 Scope and authority:
-[Permitted reads/writes, non-goals, permissions, and approval boundary.]
+[Permitted reads/writes, non-goals, permissions, approval boundary, and stop conditions.]
 
-Ownership and workspace:
-[Exact workspace and disjoint write ownership or bounded read scope.]
-
-Child-execution route:
-[Verified task-selected model and reasoning effort.]
-
-Launch/retry allowance:
-[Assignment's place within the finite allowance.]
-
-Stop conditions:
-[Ambiguity, conflict, scope expansion, unavailable route, or high-impact decision.]
+Ownership and route:
+[Role and helper ID or permit, exact workspace, read/write ownership,
+ verified task-selected model and effort, and place within the finite launch/retry allowance.]
 
 Return:
 [Artifact or findings, primary evidence, checks run, and unresolved issues.]

@@ -7,15 +7,18 @@ description: Use before finalizing a meaningful code change. Reviews the final d
 
 Use this skill before finalizing meaningful code changes.
 
-Review the final diff for:
+Review only the checks relevant to the final diff. Preserve required gates.
+
+## Scope and ownership
 
 - unrelated changes
 - accidental formatting churn
 - generated, vendored, compiled, or package-owned files
-- missing or weak validation
-- redundant tests, fixtures, or mocks; tests preserving abandoned partial fixes or implementation details rather than intended final behavior
-- any created unit test left in the completed change, regardless of its purpose or label; isolated integration tests retained, unused unit-test support code, or cleanup before corresponding E2E assertions pass
 - unused imports, variables, types, functions, or files caused by the change
+- behavior changes beyond the request
+
+## Design and maintainability
+
 - naming clarity
 - consistency with existing patterns
 - incomplete fixes that minimize the diff while leaving required behavior unresolved
@@ -24,7 +27,9 @@ Review the final diff for:
 - unnecessary change amplification across unrelated components
 - material technical debt without its scope, rationale, and follow-up condition
 - speculative configurability
-- behavior changes beyond the request
+
+## Behavior and affected risks
+
 - API compatibility required by supported consumers or explicit commitments
 - legacy paths or fallbacks retained without demonstrated dependencies, or removed despite unresolved consumers
 - support commitments invented for hypothetical users, obsolete test accounts, fixtures, or intermediate development versions
@@ -33,12 +38,24 @@ Review the final diff for:
 - safety risk
 - performance risk
 - accessibility regressions
+
+## Validation
+
+- missing or weak evidence for the complete affected behavior
+- redundant tests, fixtures, or mocks, or tests preserving abandoned fixes or implementation details instead of required behavior
+- created unit tests left in the completed change, regardless of purpose or label
+- isolated integration tests retained as lasting coverage, unused unit-test support code, or cleanup before corresponding E2E assertions pass
+
+## Delegation and worktrees, when used
+
 - subagent claims that were not independently verified
 - helper launches or retries that exceeded the recorded finite allowance or were not reconciled
 - unnecessary helper use whose concrete benefit does not justify context, coordination, and review overhead
 - child execution outside the approved task-based model/effort choices, conflicting profile overrides, or permissions, scope, authority, or workspace expansion beyond the parent assignment
 - progress or task-reporting messages that set `model`, `reasoning_effort`, `thinking`, or analogous destination-setting overrides, or altered a parent or peer task
 - task-created auxiliary worktrees without integration evidence and a verified `removed` or exact-blocker `preserved` disposition
+
+## Acceptance and report
 
 Ask:
 

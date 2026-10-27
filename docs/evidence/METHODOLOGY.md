@@ -1,8 +1,15 @@
 # Evidence Methodology
 
-Each public run record must identify the benchmark identifier; date; Playbook version or commit; Codex version where available; starting repository commit; exact user task; root model and reasoning effort; subagent roles, models, and reasoning efforts; task graph and dependencies; agent count; and worktree usage.
+Each public run record must identify:
 
-Capture exact start and end times with timezone, then report elapsed time derived from those values. Also record human interventions, commits produced, files changed, additions/deletions where available, tests run and results, typecheck/build/lint results where applicable, independent reviewer findings, correction cycles, final validation, environmental limitations, failures, and unresolved findings.
+- **Baseline:** benchmark identifier, date, Playbook version or commit, Codex version where available, starting repository commit, and exact user task.
+- **Execution:** root model and reasoning effort, subagent roles/models/efforts, task graph and dependencies, agent count, and worktree usage.
+
+Capture exact start and end times with timezone. Derive elapsed time from those values. Also record:
+
+- **Changes:** human interventions, commits, files changed, and additions/deletions where available.
+- **Validation:** tests and results, applicable typecheck/build/lint results, independent findings, correction cycles, and final checks.
+- **Limits:** environmental limitations, failures, and unresolved findings.
 
 ## Evidence rules
 

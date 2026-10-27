@@ -1,0 +1,4 @@
+interface:
+  display_name: "Multi-Role Repo Review"
+  short_description: "Coordinate evidence-based repository reviews"
+  default_prompt: "Use $multi-role-repo-review to inspect this repository and produce a prioritized cross-functional review."

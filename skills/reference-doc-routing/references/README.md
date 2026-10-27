@@ -2,7 +2,7 @@
 
 This directory contains the reference documents owned by the `reference-doc-routing` skill. Other workflows keep their own references inside their skill packages.
 
-These documents are intentionally generic and tool-agnostic. They should not contain repo-specific workflows, sensitive access material, local machine quirks, project names, or one-off incident notes.
+Shared engineering references are generic and tool-agnostic. Explicitly Codex-specific templates may use supported Codex paths and fields. Do not include project-specific workflows, sensitive access material, local machine quirks, project names, or one-off incident notes in reusable guidance.
 
 ## How to Use These References
 
@@ -13,7 +13,7 @@ The main agent should:
 3. Consult only the packaged reference documents that are relevant.
 4. Treat reference docs as supporting context, not automatic truth.
 5. When delegation is justified and authorized, pass only relevant context.
-6. Resolve conflicts using primary evidence.
+6. Resolve instruction conflicts by authority. Use primary evidence to establish current behavior, not to override the authorized target requirement.
 
 Primary evidence includes:
 

@@ -31,4 +31,4 @@ foreach ($Launcher in $Launchers) {
   exit $LASTEXITCODE
 }
 
-throw "Python 3 is required. Install Python 3 or run install/install.py with an available Python 3 interpreter."
+throw "Python 3.8 or newer is required. Install it or run install/install.py with a compatible interpreter."

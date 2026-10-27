@@ -96,7 +96,7 @@ If no approval-gated action exists, write None and remove the placeholder row.
 
 - Consolidation nodes: [IDs and expected inputs]
 - Integrated validation: [Commands, runtime checks, or inspection]
-- Independent verification: [Helper or direct evidence, or reason not needed]
+- Independent verification: [Independent source or reviewer and evidence, or reason not required; main-agent self-review does not satisfy an independent-review gate]
 - Final diff reviewed: [Yes / No]
 - Required nodes and gates complete: [Yes / No]
 - Every task-created auxiliary worktree has a verified disposition: [Yes / No / N/A]

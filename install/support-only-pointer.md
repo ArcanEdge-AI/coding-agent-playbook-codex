@@ -1,6 +1,6 @@
 The primary global coding-agent behavior may be configured in Codex Personalization > Custom instructions or in this AGENTS.md file.
 
-Supporting references live inside their owning skill packages under the Codex home:
+Supporting references live inside their owning skill packages. The `skills/...` paths below use the default layout under `$CODEX_HOME`. If `USER_SKILLS_HOME` is overridden, resolve each package under that actual skills root instead:
 
 - `skills/reference-doc-routing/references/README.md` — map of packaged reference docs
 - `skills/reference-doc-routing/references/engineering-design.md` — selective design questions and examples for complete solutions and justified complexity
@@ -20,6 +20,7 @@ Reusable skills live under `skills/`, including:
 - `worktree-lifecycle`
 - `feature-branch-lifecycle`
 - `legacy-path-retirement` — dependency-based retain, migrate, or remove decisions with separate data-retention and correctness safeguards
+- `local-ci-preflight` — project-specific local checks before remote CI, with self-contained validation-contract and portable agent templates under `skills/local-ci-preflight/assets/`
 - `multi-session-coordination`
 - `reference-doc-routing`
 - `senior-code-review`

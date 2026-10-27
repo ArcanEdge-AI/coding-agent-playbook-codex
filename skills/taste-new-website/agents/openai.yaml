@@ -1,0 +1,4 @@
+interface:
+  display_name: "taste-new-website"
+  short_description: "Create a Taste website with questions or autofill"
+  default_prompt: "Use $taste-new-website to guide a new website brief, design, build, and checks."

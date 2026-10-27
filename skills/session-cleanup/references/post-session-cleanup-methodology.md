@@ -14,8 +14,8 @@ Development is iterative. The final codebase should preserve the required implem
 
 ## Governing Principles
 
-* Do not over-engineer it.
-* Make it elegant, not bloated.
+* Add complexity only when a demonstrated requirement justifies it.
+* Remove unnecessary layers, state, configuration, and duplication introduced by the work delta.
 * Prefer the smallest complete solution that reliably solves the demonstrated problem.
 * Prefer the smallest maintainable implementation surface, not merely the fewest lines of code.
 * Preserve necessary complexity where required for correctness, security, integrity, accessibility, maintainability, or a demonstrated compatibility requirement.
@@ -211,7 +211,7 @@ Do not perform broad unrelated codebase cleanup.
 
 # 4. Simplify and Minimize the Implementation Surface
 
-Review the final implementation with fresh eyes.
+Review the final implementation against the demonstrated requirement, not the sequence of earlier attempts.
 
 For each file, abstraction, wrapper, helper, state variable, configuration option, dependency, feature flag, compatibility path, and code path introduced by the work delta, ask whether it is necessary for the demonstrated requirement.
 
@@ -244,9 +244,9 @@ Remove work-delta code that exists only because:
 
 Simplify when the improvement is obvious, low-risk, verifiable, and within the scope of the completed work.
 
-The objective is not code golf. Preserve useful boundaries and necessary complexity.
+Do not minimize line count at the expense of useful boundaries or necessary complexity.
 
-Do not chase architectural purity.
+Do not redesign working code merely to match a preferred architecture.
 
 ---
 
@@ -272,7 +272,7 @@ Review the affected implementation for:
 ### Readability
 
 * Control flow is understandable.
-* Clever code has not replaced clear code.
+* Control flow and intent are explicit rather than hidden in compact expressions or indirection.
 * Complex behavior has explanation where explanation is genuinely useful.
 * Comments explain intent or non-obvious constraints rather than restating code.
 * Comments do not justify speculative compatibility with hypothetical users or future requirements.
@@ -559,6 +559,18 @@ Before finishing, verify:
 Never use destructive cleanup commands blindly.
 
 Inspect before deleting.
+
+## Runtime Resource Disposition
+
+Reconcile in-scope resource identifiers, ownership, and recovery attempts before completion, including existing project resources recovered from earlier sessions. Apply the global runtime lifecycle rules; this pass does not authorize a sweep of unrelated processes, containers, virtualized environments, images, or caches.
+
+- While the task still needs an existing project environment, prefer its supported start, resume, or scoped restart over a replacement. A stopped or unhealthy prior-session environment is a recovery candidate, not automatically abandoned or untouchable. Verify readiness after recovery, and report an exhausted recovery allowance rather than launching another stack.
+- Recovery authority and cleanup authority are different. Recovering an existing environment does not make it task-created or disposable. Leave persistent project environments in the requested handoff state; do not stop or delete them merely because the current task is ending. A shared-backend or machine-wide restart must satisfy the global impact and authority gate, not a blanket prohibition on recovery.
+- Close task-owned temporary browser pages and contexts through supported controls. Close a browser process only when the task owns the whole temporary instance and no other work depends on it. Never terminate browsers by executable name alone.
+- Stop or remove a temporary container only after verifying its exact identity, task ownership, cleanup authority, active consumers, and any output or data that must be retained. Release task-owned connections to shared services without stopping those services.
+- Preserve persistent volumes, user data, valid reusable images, and build caches. Remove an explicitly disposable image only when its exact removal is authorized and no required consumer or retained artifact depends on it. Do not use broad container, image, or volume pruning as session cleanup.
+- Confirm that success and failure paths release task-owned temporary resources. Do not leave overlapping browser suites, image builds, or heavy validation jobs running after their output is no longer needed. Stop only the task-owned jobs through supported controls; do not cancel another chat's work.
+- Verify teardown actually completed. If cleanup is blocked or a resource must remain for an authorized handoff, report its exact identifier, owner, current state, reason, and next action. Reconcile any task-created replacement with the superseded resource and its retained data; retire only exact authorized disposable targets so replacements do not accumulate. Recover and reuse the established environment rather than creating an unbounded chain of replacements.
 
 ---
 

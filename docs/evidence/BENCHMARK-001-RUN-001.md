@@ -9,7 +9,7 @@ This is the first published measured run for [Benchmark 001](./BENCHMARK-001.md)
 - Playbook version / commit: [`5bea3c1ebacfa376e959206be5d1228904d6bd7e`](https://github.com/ArcanEdge-AI/coding-agent-playbook-codex/commit/5bea3c1ebacfa376e959206be5d1228904d6bd7e).
 - Codex version (where available): Codex CLI `0.125.0`; Codex Desktop application build: Not captured.
 - Starting repository commit: [`2a7244f0106cf7f4e106a832b737028144d28389`](https://github.com/ArcanEdge-AI/coding-agent-playbook-benchmarks/commit/2a7244f0106cf7f4e106a832b737028144d28389), tag `benchmark-001-baseline-v1`.
-- Repository visibility and disclosure permission: The [Playbook](https://github.com/ArcanEdge-AI/coding-agent-playbook-codex), [benchmark fixture](https://github.com/ArcanEdge-AI/coding-agent-playbook-benchmarks), implementation commit, and [implementation PR #1](https://github.com/ArcanEdge-AI/coding-agent-playbook-benchmarks/pull/1) are public. PR #1 is open and unmerged.
+- Repository visibility and disclosure permission recorded for this run: The [Playbook](https://github.com/ArcanEdge-AI/coding-agent-playbook-codex), [benchmark fixture](https://github.com/ArcanEdge-AI/coding-agent-playbook-benchmarks), implementation commit, and [implementation PR #1](https://github.com/ArcanEdge-AI/coding-agent-playbook-benchmarks/pull/1) were public. PR #1 was open and unmerged on the run date.
 - Exact user task: Extend the fixture's TypeScript release-readiness CLI with scoped, expiring waivers (`checkId`, `reason`, and `expiresAt`), requiring deterministic `--as-of` handling whenever waivers exist, and meet the published Benchmark 001 acceptance criteria.
 
 ## Routing and execution
@@ -41,7 +41,7 @@ This is the first published measured run for [Benchmark 001](./BENCHMARK-001.md)
 - Independent reviewer findings: 0 actionable findings.
 - Correction cycles and dispositions: One orchestrator-to-engineer correction cycle occurred before independent review. It corrected TypeScript inference; exact fractional-second expiry comparison; exposure of internal timestamp helpers from the public barrel; explicit CLI invalid-input coverage; and no-waiver JSON compatibility coverage. Review-triggered correction cycles: 0.
 - Final validation: `npm ci`, `npm run check`, typecheck, build, tests, explicit `npm run build`, and `git diff --check` passed. CLI validation confirmed: active-waiver human output (`WAIVED` / ready / exit 0); expired-waiver JSON (`expired` / blocked / exit 2); exact expiry boundary (active / exit 0); identical boundary runs (exact output match); waiver without `--as-of` (exit 65); legacy ready/blocked behavior (exits 0 and 2); unknown, duplicate, malformed, and inapplicable waivers (exit 65); duplicate, missing, and unknown CLI options plus extra positionals (exit 64); and preserved no-waiver human and JSON behavior.
-- Final outcome: The implementation met the recorded validation criteria in the public [implementation PR #1](https://github.com/ArcanEdge-AI/coding-agent-playbook-benchmarks/pull/1), which remains open and unmerged.
+- Final outcome: The implementation met the recorded validation criteria in the public [implementation PR #1](https://github.com/ArcanEdge-AI/coding-agent-playbook-benchmarks/pull/1), which was open and unmerged on the run date.
 
 ## Usage, environment, and limits
 
@@ -58,7 +58,7 @@ This is the first published measured run for [Benchmark 001](./BENCHMARK-001.md)
 - Which required fields are `Not captured`, and why? The Codex Desktop application build was not captured.
 - Which required fields are `Not applicable`, and why? Lint results are not applicable because the fixture has no lint script. Benchmark-specific account usage and before-and-after evidence are not applicable because concurrent workloads prevented attribution and no quantitative observation is reported.
 - Does every reported account-usage observation have before-and-after evidence? No account-usage observation is reported; no usage, cost, token, or efficiency claim is made.
-- Are review findings, corrections, and final validation linked or described with enough public evidence to inspect? Yes. The public implementation commit and open, unmerged [PR #1](https://github.com/ArcanEdge-AI/coding-agent-playbook-benchmarks/pull/1) provide the inspectable implementation trail; the correction cycle, independent-review result, and validation outcomes are recorded above.
+- Are review findings, corrections, and final validation linked or described with enough public evidence to inspect? Yes. The public implementation commit and [PR #1](https://github.com/ArcanEdge-AI/coding-agent-playbook-benchmarks/pull/1), recorded as open and unmerged on the run date, provide the implementation trail; the correction cycle, independent-review result, and validation outcomes are recorded above.
 
 ## What This Run Does Not Prove
 

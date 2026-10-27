@@ -41,17 +41,14 @@ Progress and result messages must not alter parent or peer settings. Use team co
 
 ## Assignment Contract
 
-Provide one concise contract containing:
+Use the same six sections as the global assignment contract:
 
-- goal and acceptance condition
-- necessary context and authoritative inputs
-- applicable skills and real graph dependencies
-- permitted reads and writes
-- non-goals and stop conditions
-- exact workspace and ownership
-- verified task-selected model and reasoning effort
-- place within the finite launch/retry allowance
-- required evidence and return format
+1. **Goal and acceptance:** bounded result, acceptance check, and expected benefit.
+2. **Context:** necessary facts, inputs, paths, interfaces, and accepted evidence.
+3. **Skills and methods:** applicable skills, required references, and real graph dependencies.
+4. **Scope and authority:** permitted reads/writes, non-goals, constraints, and stop conditions.
+5. **Ownership and route:** helper ID or permit, exact workspace, ownership, verified model/effort, and place within the finite launch/retry allowance.
+6. **Return:** artifact or findings, primary evidence, checks run, and unresolved issues.
 
 Pass only necessary context. Do not copy full histories, transcripts, or long logs.
 

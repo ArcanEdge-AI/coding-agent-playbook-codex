@@ -32,7 +32,8 @@ APPROVED_MODEL_EFFORTS = {
     ("gpt-6-astra", "xhigh"),
 }
 RESOURCE_PATTERN = re.compile(
-    r"(?<![A-Za-z0-9_.-])(?P<path>(?:references|scripts|assets|agents)/[A-Za-z0-9._/-]+)"
+    r"(?<![A-Za-z0-9_./-])(?:<skill-(?:base-)?dir>/)?"
+    r"(?P<path>(?:references|reference|scripts|assets|agents)/[A-Za-z0-9._/-]+)"
 )
 
 
@@ -376,6 +377,7 @@ class Installer:
         self.retire_legacy_manifest()
 
         self.say()
+        self.say("Companion marketplace plugin: Intuitive Software Design is managed separately; see INSTALL.md.")
         if self.dry_run:
             self.say("Dry run complete. No files were changed.")
         else:
@@ -386,7 +388,7 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
     mode = parser.add_mutually_exclusive_group()
     mode.add_argument("--full", action="store_true", help="Install full global instructions (default).")
-    mode.add_argument("--support-only", action="store_true", help="Install only the support pointer and managed files.")
+    mode.add_argument("--support-only", action="store_true", help="Install the support pointer, skills, and agent profiles without the full global instructions.")
     parser.add_argument("--dry-run", action="store_true", help="Report changes without writing them.")
     return parser.parse_args()
 

@@ -1,11 +1,11 @@
 ---
 name: task-graph-orchestration
-description: Use for complex coding tasks with substantial fan-out, multiple genuine dependencies, broad file or repository scope, multi-layer consolidation, separate implementation and verification paths, or an approval-gated irreversible action. Compiles an instruction-only task graph, executes only ready work, preserves completeness through fan-in, and retries only invalidated work. Skip for small or genuinely linear tasks.
+description: Use for complex coding tasks with several independent work items, real dependencies, broad file or repository scope, layered consolidation, separate implementation and verification paths, or an approval-gated irreversible action. Records an instruction-only dependency graph, executes ready work, combines accepted results, and repeats only invalidated work. Skip for small or genuinely linear tasks.
 ---
 
 # Task Graph Orchestration
 
-Use instructions and Markdown to make complex work topology explicit. Do not introduce a graph database, scheduler, runner, schema package, or orchestration framework. A work node is a bounded outcome, not automatically a separate agent.
+Use the task record to show bounded outcomes and their real dependencies. Do not introduce a graph database, scheduler, runner, schema package, or orchestration framework. A work node is an outcome, not automatically a separate agent.
 
 ## Decide Whether to Use a Formal Graph
 
@@ -24,7 +24,7 @@ Skip formal graph mode when the task is small, genuinely linear, dominated by on
 
 Keep a medium graph in the working plan or response. For long-running, multi-phase, or multi-session implementation, create .codex/task-graphs/<task-slug>.md only when repository policy permits that local coordination artifact. Do not create a repository artifact for an informational question or when the task does not authorize changes.
 
-## Compile the Graph
+## Define the Graph
 
 Define each meaningful node with:
 
@@ -48,7 +48,7 @@ Audit every proposed edge:
 
 If yes, do not add a dependency merely to preserve narrative order. Track overlapping writes, shared mutable state, schema or interface ordering, external ownership, resource limits, and approval gates as hidden constraints.
 
-Add fan-in nodes where several accepted outputs must be combined. Add independent verification nodes when risk or blast radius warrants them. Identify the completion-controlling path and current ready set.
+Add a consolidation node when several accepted outputs must be combined. Add independent verification when required by the risk or affected scope. Identify the chain of required outcomes that controls completion and the work that is ready now.
 
 ## Execute Ready Work
 
@@ -73,7 +73,7 @@ Validate each necessary handoff and the final combined result. When a gate fails
 - preserve accepted outputs whose inputs remain valid
 - revise or rerun the failed work
 - repeat downstream work only when its consumed input changed
-- recompile the affected graph portion when the failure reveals a missing edge
+- update the affected graph portion when the failure reveals a missing dependency
 - stop unchanged retries when evidence shows the approach is not progressing
 
 Retries and replacements remain within the finite helper allowance when delegated. Expand execution cost only for an identified new dependency, invalidated gate, or changed user scope; obtain user approval immediately before a material expansion.

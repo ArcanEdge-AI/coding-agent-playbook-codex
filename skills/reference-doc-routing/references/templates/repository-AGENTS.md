@@ -1,6 +1,6 @@
 # Repository Coding Agent Instructions
 
-Repository-specific instructions override global guidance where they are more specific.
+Follow the host's instruction hierarchy first. Within the same authority level, apply repository-specific instructions where they are more specific than global guidance.
 
 ## Repository Overview
 

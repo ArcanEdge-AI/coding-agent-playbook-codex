@@ -5,17 +5,21 @@ Use this prompt when multiple Codex threads are working on related features in t
 ```markdown
 Coordinate all active work for the current project.
 
-Use the `multi-session-coordination` skill and its packaged references. Use the `worktree-lifecycle` skill when any participating task owns or proposes an auxiliary worktree. Use the `feature-branch-lifecycle` skill when development branches must converge through one feature integration branch or when promotion and temporary-branch cleanup are in scope.
+Use `multi-session-coordination` and its packaged references.
+If a participating task owns or proposes an auxiliary worktree, also use `worktree-lifecycle`.
+If development branches must converge, or promotion and temporary-branch cleanup are in scope, also use `feature-branch-lifecycle`.
 
 Identify the current project, repository, default branch, active branch, and available worktrees from the environment. Do not ask me for information that can be detected reliably.
 
-When creating a new project thread, use `Project - Three-to-Four-Word Description`. Detect the project name and derive the description from the primary objective. Do not include literal square brackets or ask me for a title when the project and task are already clear.
+This coordination request does not authorize creating or messaging threads. If I separately authorize a new project thread, use `Project - Three-to-Four-Word Description`. Detect the project name and derive the description from the primary objective. Do not include literal square brackets or ask me for a title when the project and task are already clear.
 
 Begin with related Codex threads active during the previous 72 hours. Include older work when repository evidence shows that it remains unmerged, incomplete, blocked, contract-relevant, or otherwise active.
 
 When direct thread discovery is unavailable, inspect branches, worktrees, pull requests, commits, diffs, tests, and optional active-work records. Clearly distinguish directly reviewed threads from repository-inferred work and identify any potentially missing work.
 
 Classify relevant checkouts as host-managed primary, user-managed existing, or task-created auxiliary. Do not infer cleanup authority from age, inactivity, or clean status. Require each owning task to integrate and remove its own safe task-created auxiliaries or preserve them with exact blocker evidence; do not defer that responsibility to scheduled automation.
+
+Follow the host's instruction hierarchy. Use code, tests, and runtime evidence to establish current behavior, not to override an authorized user decision or target contract. Report consequential conflicts instead of choosing silently.
 
 Build a shared change map and identify conflicts across files, architecture, APIs, events, schemas, migrations, shared types, dependencies, authentication, user flows, and tests. Do not limit the review to Git merge conflicts.
 

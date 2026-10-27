@@ -2,7 +2,7 @@
 
 This repository is a public playbook for Codex custom instructions, reference documents, skills, and custom subagent definitions.
 
-Repository-specific guidance overrides the global instructions where it is more specific.
+Follow the host's instruction hierarchy first. Within the same authority level, apply repository-specific guidance where it is more specific than global guidance.
 
 ## Repository Goals
 
@@ -28,6 +28,7 @@ Repository-specific guidance overrides the global instructions where it is more 
 - Do not copy configuration paths, file names, agent formats, model identifiers, or command vocabulary from another coding-agent environment into this repository.
 - Prefer terms like "safety", "access control", and "sensitive access material" when public documentation does not need product-specific terminology.
 - Keep templates reusable and clearly marked as templates.
+- Use STE-inspired clarity for instructions: direct actions, explicit actors and conditions, and consistent terms. Preserve technical identifiers, approval gates, exceptions, and required evidence. This is an authoring approach, not a claim of ASD-STE100 compliance.
 - Treat the companion Claude Code playbook as independently maintained. Do not edit it from this repository or claim current parity without separately verified evidence.
 
 ## Validation
@@ -42,6 +43,7 @@ This repo is mostly Markdown and TOML. Before finalizing meaningful changes:
 - Confirm helper-specific scope, escalation, reporting, and launch settings apply only to delegated execution; direct role use adds no mandatory sequence or separate reports.
 - Confirm reporting guidance uses team messages or normal returns and omits destination-setting overrides from any separately authorized task report.
 - Confirm each `SKILL.md` has YAML frontmatter with `name` and `description`.
+- Confirm `local-ci-preflight` retains its self-contained templates and default global route, preserves project and remote acceptance boundaries, and treats unconfigured or skipped required checks as gaps rather than passes. Retire an exact superseded standalone route only after canonical installation and source parity are verified; preserve customized or ambiguous blocks.
 - Confirm links and paths in `README.md` match the repository tree.
 - Confirm install docs and scripts reference the current Codex agent files; installed-profile validation checks the current managed profiles without imposing playbook routing on unrelated user agents.
 - Confirm the Python installer and thin PowerShell/Bash launchers default normal installs and updates to full mode, create a marked global section on first install, maintain the managed-file manifest, retire only unchanged formerly managed files, and preserve customized or unrelated files.

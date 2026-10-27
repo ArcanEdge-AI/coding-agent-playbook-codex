@@ -24,10 +24,14 @@ Avoid adding:
 ## Style
 
 - Prefer concise, direct language.
+- Use STE-inspired clarity, not formal ASD-STE100 compliance. Prefer one main instruction per sentence, active voice, explicit actors, and consistent terms.
+- Put conditions before the actions they control. Separate required actions, exceptions, and rationale when that makes the decision clearer.
+- Preserve every consequential qualifier, including "only", "before", "unless", and approval or verification requirements. Do not shorten a rule by weakening it.
+- Preserve exact commands, paths, schemas, configuration values, and historical evidence. Do not impose a restricted dictionary or sentence-length limit on technical content.
 - Keep guidance tool-agnostic unless the file is explicitly tool-specific.
 - Prefer behavior and decision rules over rigid command sequences.
 - Use examples that are generic and safe for public reuse.
-- Keep direct-first main-agent ownership, optional bounded assistance, task-based helper routing, flat default delegation, scope and authority limits, and the task-local worktree lifecycle model intact.
+- Preserve direct-first main-agent ownership and optional bounded assistance. Keep task-based helper routing, flat default delegation, scope and authority limits, and task-local worktree lifecycle gates intact.
 - Keep this repository's policy and implementation Codex-specific. The companion Claude Code playbook is maintained independently; do not modify it from this repository's workflow.
 - For routing, skills, and agent-profile changes, explain the task boundary and validation evidence rather than asserting a model choice is universally best.
 - For benchmark contributions, use [`docs/evidence/RUN-TEMPLATE.md`](docs/evidence/RUN-TEMPLATE.md), distinguish public reproduction from private field work, and report missing evidence as missing.
@@ -51,4 +55,4 @@ Before opening a PR:
 
 ## License
 
-By contributing to this repository, you agree that your contribution will be licensed under the MIT License. See `LICENSE`. Do not change the license without an explicit maintainer decision.
+By contributing original material to this repository, you agree that your contribution will be licensed under the MIT License. See `LICENSE`. Imported third-party work must retain its own license and attribution; record its source and adaptations in [THIRD_PARTY.md](THIRD_PARTY.md). Do not change the repository license without an explicit maintainer decision.
