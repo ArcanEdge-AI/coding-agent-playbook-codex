@@ -1,0 +1,4 @@
+interface:
+  display_name: "taste-redesign-website"
+  short_description: "Redesign a Taste website with questions or autofill"
+  default_prompt: "Use $taste-redesign-website to guide an existing website audit, plan, redesign, and checks."

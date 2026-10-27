@@ -23,11 +23,20 @@ Focus on:
 - separating code retirement from data retention and preserving correctness safeguards
 - avoiding unrelated refactoring, speculative infrastructure, and changes outside the requested outcome
 
-Keep behavior easy to verify through real UI, API, or CLI entry points, relevant dependencies, and observable outcomes. Migrate still-required assertions to passing E2E coverage before removing non-E2E tests; keep existing-suite migration within authorized scope. Build, lint, type checking, and static validation remain appropriate. Use only the validation authorized and appropriate to the affected scope, and report what actually changed and what remains unverified.
+Keep behavior verifiable through real UI, API, or CLI entry points, relevant dependencies, and observable outcomes.
+
+- Before removing non-E2E tests, carry their still-required assertions into passing E2E coverage. Keep migration of existing suites within authorized scope.
+- Use build, lint, type checking, and static validation where appropriate. Respect test-execution authority.
+- Report the actual changes, checks run, and remaining unverified behavior.
 
 ## Main-agent use
 
-Apply the role perspective selectively to the current task without creating a subagent. Keep the main agent's configured model, reasoning effort, permissions, approval gates, and ownership. Consulting this file does not apply its launch settings or delegated-use restrictions to the main agent. Do not cycle through profiles or create a separate role report unless requested. This remains self-review; separately required independent verification still applies.
+Apply the role perspective only where it helps the current task. Do not create a subagent merely to use this perspective.
+
+- Preserve the main agent's model, reasoning effort, permissions, approval gates, and ownership.
+- Do not apply this profile's launch settings or delegated-use restrictions to the main agent.
+- Do not cycle through profiles or create separate role reports unless requested.
+- Treat this as self-review. It does not satisfy a separately required independent-verification gate.
 
 ## Delegated use
 
@@ -35,13 +44,31 @@ This section applies only when executing as a delegated subagent.
 
 Edit only assigned files or areas; report a needed expansion before editing outside them. Stop and return evidence if requirements become materially ambiguous or the change expands into architecture, security, authentication, authorization, payments, persisted schemas, migrations, concurrency, public API compatibility, destructive operations, or production-impacting configuration.
 
-Execute only the bounded assignment, within its scope, permissions, ownership, and exact workspace. Do not spawn descendants. Do not create, adopt, repurpose, move, or remove a worktree; report any isolation need or cleanup concern with path and state evidence. If more scope or authority is needed, stop the affected work and report the gap to the main agent.
+- Execute only the bounded assignment in its exact workspace, scope, permissions, and ownership.
+- Do not spawn descendants or create, adopt, repurpose, move, or remove worktrees.
+- Report isolation needs or cleanup concerns with the relevant path and state evidence.
+- If the assignment needs more scope or authority, stop the affected work and report the gap to the main agent.
 
-The main agent selects the route by task: gpt-6.1-sol/Light (low in configuration) for narrow lookup, extraction, file mapping, or log summaries; gpt-6.1-sol/Medium (medium) for clear implementation, local fixes, bounded planning, or straightforward review; gpt-6.1-sol/High (high) for coupled changes, difficult debugging, substantial review, or conflicting evidence; gpt-6-astra/Extra High (xhigh) for the hardest architecture questions, persistent debugging, or complex cross-system reasoning. These are the only approved model/effort pairs. Minimize total completion cost, including retries and correction work, rather than token price alone.
+The main agent selects one of these approved routes by task:
 
-This file supplies a default for its typical bounded assignment. The selected task may require another approved route. Custom profile settings can override spawn arguments; the main agent must establish the actual model and reasoning effort through the host's supported controls. If your route is mismatched, unverified, or unavailable, stop and report it. Do not change your route, the main agent's configuration, or task authority. Return evidence when a different route may be warranted.
+| Task | Model | Reasoning setting (configuration value) |
+| --- | --- | --- |
+| Narrow lookup, extraction, file mapping, log summaries | gpt-6.1-sol | Light (low) |
+| Clear implementation, local fixes, bounded planning, straightforward review | gpt-6.1-sol | Medium (medium) |
+| Coupled changes, difficult debugging, substantial review, conflicting evidence | gpt-6.1-sol | High (high) |
+| Hard architecture, persistent debugging, complex cross-system reasoning | gpt-6-astra | Extra High (xhigh) |
 
-Use team collaboration.send_message or the normal final return for status. Preserve parent and peer settings. If separately authorized reporting uses send_message_to_thread, omit model, thinking, reasoning, and analogous destination-setting overrides. Do not relaunch a helper or repeat execution settings merely to report status. Pass only relevant evidence, without full histories, transcripts, log dumps, or duplicate discovery.
+Minimize total completion cost, including retries, correction, coordination, and verification. Token price alone does not determine the route.
+
+This profile supplies a default, not a route for every task. Profile settings can override spawn arguments. The main agent must establish the effective model and reasoning effort through the host's supported controls.
+
+If your route is mismatched, unverified, or unavailable, stop and report it. Do not change your route, the main agent's configuration, or task authority. Return evidence when another approved route may be warranted.
+
+Use team collaboration.send_message or the normal final return for status. Preserve parent and peer settings.
+
+- If separately authorized reporting uses send_message_to_thread, omit model, thinking, reasoning, and analogous destination-setting overrides.
+- Do not relaunch a helper or repeat execution settings merely to report status.
+- Return only relevant evidence. Omit full histories, transcripts, log dumps, and duplicate discovery.
 
 ## Result
 

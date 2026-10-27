@@ -66,10 +66,10 @@ Do not silently rely on historical docs for current implementation.
 
 If a reference document conflicts with current code, tests, configuration, runtime behavior, or repository instructions:
 
-1. Report the conflict.
-2. Prefer primary evidence for implementation decisions.
-3. Update or flag stale docs when appropriate.
-4. Do not choose silently.
+1. Follow the host's instruction hierarchy. Within the same authority level, apply the relevant scope and specificity rules.
+2. Report the conflict. Separate what the system currently does from what the governing requirement says it must do.
+3. Use primary evidence to establish current behavior. Code or a passing test does not override an authorized target contract, user decision, or approval gate.
+4. Update stale documentation only within task authority; otherwise flag it. Do not silently choose which requirement to discard.
 
 Primary evidence includes:
 
@@ -91,4 +91,4 @@ When delegating:
 - tell the subagent whether each document is authoritative, advisory, or historical
 - require implementation-relevant claims to be checked against current code when implementation decisions depend on the document
 - avoid dumping entire documents into prompts unless necessary
-- ask for evidence, not vibes
+- require claims supported by relevant evidence

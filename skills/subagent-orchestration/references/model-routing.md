@@ -103,24 +103,13 @@ The incorrect form can override the destination task's model or reasoning settin
 ## Required Assignment Fields
 
 ```text
-Role:
-Selected profile or model: [Verified profile or supported explicit task-selected route]
-Reasoning effort: [Light, Medium, High, or Extra High from the task table; configuration: low, medium, high, or xhigh]
-Why this selection is suitable:
-Expected benefit:
-Goal:
-Context:
-Scope:
-Non-goals:
-Permissions:
-Finite helper-launch and retry allowance:
-Declared ownership or read scope:
-Exact assigned workspace and worktree permit ID when applicable:
-Acceptance condition:
-Evidence required:
-Escalation conditions:
-Output format:
-Return format:
+Goal and acceptance: [Bounded result, acceptance check, expected benefit.]
+Context: [Necessary facts, inputs, paths, interfaces, accepted evidence.]
+Skills and methods: [Applicable skills, required references, real dependencies.]
+Scope and authority: [Reads/writes, permissions, non-goals, constraints, stop conditions.]
+Ownership and route: [Role and helper ID or permit, exact workspace, read/write ownership,
+  verified profile or explicit model/effort, why it fits, place in launch/retry allowance.]
+Return: [Artifact or findings, primary evidence, checks run, unresolved issues.]
 ```
 
 ## Acceptance Check

@@ -54,7 +54,13 @@ The easiest install path is to give this repo URL to your coding agent:
 ```text
 Install this globally: https://github.com/ArcanEdge-AI/coding-agent-playbook-codex
 
-Follow the repository's INSTALL.md exactly. Use full mode even when an older installation exists; do not infer support-only mode unless I explicitly request it. Preserve my existing instructions, back up anything you change, install the global instructions, self-contained skills, and custom subagents where supported, then report the installed files and validation results.
+Follow the repository's INSTALL.md exactly.
+Use full mode for this install or update, even if an older installation exists.
+Use support-only mode only if I explicitly request it.
+Preserve instructions outside the managed section and back up existing files before replacing them.
+Install the global instructions, self-contained skills, and supported custom subagents.
+Include Intuitive Software Design from the Codex plugin marketplace; reuse the maintained marketplace installation when available.
+Report the installed files, backups, preservation warnings, and validation results.
 ```
 
 That is the intended public experience: users should not need to understand the file layout before installation. The agent should read `INSTALL.md`, clone or fetch the repo, install into user-level Codex/agent configuration locations, validate the result, and report what changed.
@@ -137,6 +143,10 @@ skills/reference-doc-routing/references/templates/repository-AGENTS.md
 
 Then fill in the actual build commands, test commands, architecture rules, generated-file rules, and release expectations for that repository.
 
+For validation before remote CI, use [Local CI Preflight](skills/local-ci-preflight/SKILL.md). Adapt its [local validation contract](skills/local-ci-preflight/assets/LOCAL_VALIDATION.template.md) to inspected project commands, and merge its [portable agent snippet](skills/local-ci-preflight/assets/AGENTS.local-validation.md) only where equivalent routing is not already present. The supplied contract is intentionally `NOT_CONFIGURED`, not evidence of a passing check.
+
+Run cheap checks before dependent builds and complete affected E2E/native profiles. Reuse existing scripts and runtime ownership; optional workflow emulation is not a required framework migration. Local success does not replace authentic remote acceptance or authorize a push, deployment, or paid run.
+
 ---
 
 ## Harness Editions
@@ -189,7 +199,9 @@ Client and unreleased-product repositories remain private. [ArcanEdge](https://w
 
 Real-world use establishes provenance, but private field evidence is not the public reproducibility layer. [`docs/evidence/`](./docs/evidence/README.md) defines a compact benchmark and run-record format so outside developers can inspect prompts, routing, delegation, review, corrections, validation, and outcomes without needing access to private repositories.
 
-[Benchmark 001](./docs/evidence/BENCHMARK-001.md) has one published measured record: [Benchmark 001 Run 001](./docs/evidence/BENCHMARK-001-RUN-001.md). Its fixture baseline is frozen at [`benchmark-001-baseline-v1`](https://github.com/ArcanEdge-AI/coding-agent-playbook-benchmarks/tree/benchmark-001-baseline-v1) and [exact commit](https://github.com/ArcanEdge-AI/coding-agent-playbook-benchmarks/commit/2a7244f0106cf7f4e106a832b737028144d28389); the documented implementation remains in public, open and unmerged [Benchmark PR #1](https://github.com/ArcanEdge-AI/coding-agent-playbook-benchmarks/pull/1). The evidence framework is designed to make results inspectable; it does not claim universal cost, token, speed, or quality advantages.
+[Benchmark 001](./docs/evidence/BENCHMARK-001.md) has one published measured record: [Benchmark 001 Run 001](./docs/evidence/BENCHMARK-001-RUN-001.md). Its fixture baseline is frozen at [`benchmark-001-baseline-v1`](https://github.com/ArcanEdge-AI/coding-agent-playbook-benchmarks/tree/benchmark-001-baseline-v1) and [exact commit](https://github.com/ArcanEdge-AI/coding-agent-playbook-benchmarks/commit/2a7244f0106cf7f4e106a832b737028144d28389). The run records [Benchmark PR #1](https://github.com/ArcanEdge-AI/coding-agent-playbook-benchmarks/pull/1) as public, open, and unmerged on 2026-08-17; that is historical status, not a current PR-status claim.
+
+The evidence framework makes recorded results inspectable. It does not claim universal cost, token, speed, or quality advantages, or a measured benefit from STE-inspired wording.
 
 ---
 
@@ -201,10 +213,35 @@ Real-world use establishes provenance, but private field evidence is not the pub
 | Installer | `install/install.py` | Canonical standard-library Python 3.8+ installer; thin PowerShell and Bash launchers remain available. |
 | Global instructions | `custom-instructions/` | Tool-agnostic behavior rules for elegant, maintainable code. |
 | Prompts | `codex-prompts/` | Setup and active-project coordination prompts. |
-| Skill resources | `skills/*/references/` | Supporting guidance and templates packaged with the workflow that owns them. |
-| Skills | `skills/` | Self-contained workflows for task graphs, subagents, worktrees, feature-branch promotion, legacy-path retirement, multi-session coordination, handoffs, session cleanup, doc routing, and senior review. |
+| Skill resources | `skills/*/references/` and `skills/*/assets/` | Supporting guidance and templates packaged with the workflow that owns them. |
+| Skills | `skills/` | Self-contained workflows for local CI preflight, task graphs, subagents, worktrees, feature-branch promotion, legacy-path retirement, multi-session coordination, handoffs, session cleanup, doc routing, and senior review. |
+| AWS local preflight | [`aws-local-preflight`](skills/aws-local-preflight/SKILL.md) | Moto Server coverage and endpoint isolation for complete local application flows; extends the local CI contract. |
+| Repository reviews | [`multi-role-repo-review`](skills/multi-role-repo-review/SKILL.md), [`technical-debt-auditor`](skills/technical-debt-auditor/SKILL.md) | Evidence-backed cross-functional reviews and resumable technical-debt audits. |
+| Platform documentation | [`platform-documentation`](skills/platform-documentation/SKILL.md) | Discover behavior from implementation, then write or correct documentation for its readers. |
+| Frontend design | [`design-taste-frontend`](skills/design-taste-frontend/SKILL.md), [`impeccable`](skills/impeccable/SKILL.md) | Imported design guidance with supporting resources and upstream attribution. |
+| Taste workflows | [`taste-new-website`](skills/taste-new-website/SKILL.md), [`taste-redesign-website`](skills/taste-redesign-website/SKILL.md) | Staged briefs, design approval, implementation, and verification derived from Taste's prompt guide. |
+| Writing | [`humanizer`](skills/humanizer/SKILL.md) | Imported guidance for editing AI-generated prose while preserving meaning and voice. |
+| Production readiness | [`production-pass-orchestrator`](skills/production-pass-orchestrator/SKILL.md), [`production-readiness-report`](skills/production-readiness-report/SKILL.md), and eleven specialist skills | Evidence-backed assessments, scoped remediation, release gates, and reports across the complete production flow. |
+| Companion marketplace plugin | [Intuitive Software Design](plugins/README.md) | The maintained marketplace plugin, providing eight design and evaluation skills; managed separately from standalone skill files. |
+| Third-party credits | [`THIRD_PARTY.md`](THIRD_PARTY.md) | Sources, retained licenses, and packaging adaptations for imported skills. |
 | Role profiles | `agents/` | Planning, engineering, review, testing, and documentation perspectives for direct main-agent use or bounded subagent assignments with task-based model selection. |
 | Repo guidance | `AGENTS.md` | Instructions for maintaining this public playbook repository. |
+
+The standalone collection contains 33 skills. The production specialists are:
+
+| Skill | Focus |
+| --- | --- |
+| [`production-api-integration`](skills/production-api-integration/SKILL.md) | API contracts and integration failures |
+| [`production-architecture-review`](skills/production-architecture-review/SKILL.md) | Architecture and dependency boundaries |
+| [`production-code-quality`](skills/production-code-quality/SKILL.md) | Maintainability and code quality |
+| [`production-database-integrity`](skills/production-database-integrity/SKILL.md) | Persistence, migration, and data integrity |
+| [`production-devops-release`](skills/production-devops-release/SKILL.md) | CI/CD, deployment, and rollback readiness |
+| [`production-documentation-onboarding`](skills/production-documentation-onboarding/SKILL.md) | Documentation and developer onboarding |
+| [`production-performance-review`](skills/production-performance-review/SKILL.md) | Performance and scalability |
+| [`production-reliability-observability`](skills/production-reliability-observability/SKILL.md) | Reliability and operational evidence |
+| [`production-security-review`](skills/production-security-review/SKILL.md) | Security and access control |
+| [`production-testing-qa`](skills/production-testing-qa/SKILL.md) | E2E coverage and validation confidence |
+| [`production-ux-accessibility`](skills/production-ux-accessibility/SKILL.md) | Usability and accessibility |
 
 ---
 
@@ -214,7 +251,7 @@ Real-world use establishes provenance, but private field evidence is not the pub
 
 Use this for normal installs and updates. Full mode is the default and safely replaces the playbook-owned marked section and current managed files.
 
-Full install writes the global instructions into the user's Codex home `AGENTS.md`, installs self-contained skills and custom subagents, and records their paths and hashes in a managed-file manifest. Later updates can back up and retire unchanged files removed upstream while preserving customized or unrelated files.
+Full install writes a marked section in the user's Codex home `AGENTS.md`, installs self-contained skills and custom subagents, and records their paths and hashes in a manifest. It preserves instructions outside the section. Current managed support files are backed up and replaced when different; retired files are removed only when they match the previous manifest hash. Customized retired files and unrelated files are preserved. See [update behavior](INSTALL.md#full-install) for the conditions.
 
 ### Support-only install
 
@@ -228,7 +265,15 @@ Support-only mode avoids duplicating the full instruction file and installs only
 
 Understand the whole affected flow and improve the existing implementation by default. A substantial replacement needs evidence of a significant benefit that justifies implementation, migration, verification, and maintenance costs. Preserve suitable components; another possible design or alpha status is not a reason to rebuild.
 
-Retain only end-to-end (E2E) behavioral tests that exercise complete supported flows through real UI, API, or CLI entry points. Every unit test created is temporary, regardless of its purpose; none may remain in a completed change. Unit tests may guide development, but remove them and their exclusively used support code once corresponding E2E coverage is ready and passing. Preserve required behavior, failures, and boundary cases in that coverage before cleanup; a mocked component check or happy path alone is insufficient. Reuse existing E2E coverage and valid verification results. Build, lint, type checking, repository gates, supported contracts, and data-preservation safeguards still apply. Migrating existing non-E2E suites requires scoped replacement coverage, not bulk deletion.
+Retain only end-to-end (E2E) behavioral tests through complete supported UI, API, or CLI flows. Treat every created unit test as temporary, regardless of purpose:
+
+1. Carry its still-required assertions, meaningful failures, and boundary cases into passing E2E coverage. A mocked component check or happy path alone is insufficient.
+2. Remove the created unit tests and their exclusively used support code before completion.
+3. If replacement coverage or cleanup is incomplete, report unfinished work. Do not declare completion.
+
+Reuse existing E2E coverage and valid results. Build, lint, type checking, required repository gates, supported contracts, and data-preservation safeguards still apply. Migrate existing non-E2E suites only within authorized scope, after replacement coverage passes; do not bulk-delete them.
+
+Write instructions with STE-inspired clarity: direct actions, explicit actors and conditions, and consistent terms. Preserve technical identifiers and consequential exceptions. This is not formal ASD-STE100 compliance and does not impose a restricted dictionary or sentence-length limit.
 
 The main agent is the primary implementer and owns the requested outcome end to end.
 
@@ -266,7 +311,9 @@ The five profiles provide perspectives the main agent can consult directly and r
 | `tester` | Read-mostly | Choosing proportionate checks, evaluating evidence, and diagnosing failures when present. |
 | `docs` | Read-only | Finding, interpreting, and summarizing relevant repo docs, reference docs, and authoritative external documentation. |
 
-For direct use, read the relevant `agents/<role>.toml` and apply its **Role perspective** and **Main-agent use** guidance. The main agent retains its model, reasoning effort, permissions, approval gates, and responsibility for completing the task. The profile's launch settings and **Delegated use** section govern actual subagent execution. Applying the reviewer or tester perspective to your own work remains self-review; required independent verification still needs separate evidence.
+For direct use, read the relevant `agents/<role>.toml` and apply its **Role perspective** and **Main-agent use** guidance. Preserve the main agent's model, reasoning effort, permissions, approval gates, and ownership.
+
+The profile's launch settings and **Delegated use** section apply only to actual subagents. A reviewer or tester perspective applied to your own work is self-review, not required independent verification.
 
 Select the model and reasoning effort by the actual task, including for retries and replacements. Optimize total completion cost, including tokens, repeated context, corrections, and verification. A low token price alone does not establish efficiency, and a cheap failed attempt is not a prerequisite for using a capable model.
 
@@ -289,7 +336,7 @@ The delegation rule is simple:
 Precise assignment → Evidence-backed output → Main-agent verification → Accept or reject
 ```
 
-A good subagent prompt includes role, goal, context, selected profile or model, reasoning effort, scope, non-goals, permissions, required evidence, escalation conditions, output format, and stop conditions.
+A good assignment uses six sections: Goal and acceptance, Context, Skills and methods, Scope and authority, Ownership and route, and Return. Include the verified model/effort, exact workspace, finite launch/retry allowance, stop conditions, and required evidence. See the [assignment template](skills/subagent-orchestration/references/subagents.md#assignment-template).
 
 For multi-node work, it also identifies the node, its inputs and accepted output, blocking dependencies, ownership or read scope, and verification gate. The orchestration skill explains fan-out, handoff validation, selective retries, and final combined validation.
 
@@ -301,7 +348,7 @@ Root assigns work directly to helpers, and bundled helpers execute their assignm
 
 ## Formal Task-Graph Orchestration
 
-Use `task-graph-orchestration` for complex work with substantial fan-out, genuine dependencies, broad scope, layered consolidation, or separate implementation and verification paths. Prompt engineering defines each node; task-graph orchestration defines how the nodes connect, become ready, merge, fail, and require approval. Small or linear work may skip the formal graph.
+Use `task-graph-orchestration` for complex work with several independent work items, real dependencies, broad scope, layered consolidation, or separate implementation and verification paths. Record each bounded outcome, the accepted inputs it needs, and its completion check. Execute ready work, combine accepted results, and repeat only work invalidated by a change or failure. Small or linear work may skip the formal graph.
 
 The graph is an instruction and Markdown artifact. It does not add a graph database, scheduler, runner, dependency, or orchestration framework. Medium tasks can keep the graph in the working plan. Long-running, multi-phase, or multi-session implementation may use `.codex/task-graphs/<task-slug>.md` when repository policy permits it.
 
@@ -446,7 +493,7 @@ The optional active-work record gives repositories a local fallback when direct 
 
 ---
 
-## Reference Docs Without Context Soup
+## Focused Reference Documents
 
 Large documents are useful only when routed correctly.
 
@@ -456,7 +503,7 @@ The main agent should:
 2. Read only relevant sections when possible.
 3. Classify docs as authoritative, advisory, or historical.
 4. Pass only relevant context to subagents or active project threads.
-5. Resolve conflicts using primary evidence.
+5. Resolve instruction conflicts by authority. Use primary evidence to establish current behavior, not to override the authorized target requirement.
 
 Primary evidence includes current code, tests, schemas, configuration, logs, build output, typecheck output, runtime behavior, and authoritative external documentation.
 
@@ -483,6 +530,7 @@ skills/worktree-lifecycle/references/worktrees.md
 ├── INSTALL.md
 ├── LICENSE
 ├── README.md
+├── THIRD_PARTY.md
 ├── assets/
 │   ├── codex-engineering-team.svg
 │   └── coding-agent-playbook-codex-hero.png
@@ -510,7 +558,13 @@ skills/worktree-lifecycle/references/worktrees.md
 │   ├── install.ps1
 │   ├── install.sh
 │   └── support-only-pointer.md
+├── plugins/
+│   └── README.md
 └── skills/
+    ├── design-taste-frontend/
+    │   ├── SKILL.md
+    │   ├── LICENSE
+    │   └── NOTICE.md
     ├── feature-branch-lifecycle/
     │   ├── SKILL.md
     │   └── references/branching-rule.md
@@ -520,11 +574,66 @@ skills/worktree-lifecycle/references/worktrees.md
     │   └── references/context-contract.md
     ├── legacy-path-retirement/
     │   └── SKILL.md
+    ├── humanizer/
+    │   ├── SKILL.md
+    │   ├── LICENSE
+    │   └── NOTICE.md
+    ├── impeccable/
+    │   ├── SKILL.md
+    │   ├── LICENSE
+    │   ├── NOTICE.md
+    │   ├── agents/openai.yaml
+    │   ├── reference/
+    │   └── scripts/
+    ├── local-ci-preflight/
+    │   ├── SKILL.md
+    │   ├── agents/openai.yaml
+    │   └── assets/
+    │       ├── AGENTS.local-validation.md
+    │       └── LOCAL_VALIDATION.template.md
+    ├── multi-role-repo-review/
+    │   ├── SKILL.md
+    │   └── agents/openai.yaml
     ├── multi-session-coordination/
     │   ├── SKILL.md
     │   └── references/
     │       ├── multi-session-coordination.md
     │       └── templates/active-work-record.md
+    ├── platform-documentation/
+    │   ├── SKILL.md
+    │   ├── agents/openai.yaml
+    │   ├── references/
+    │   └── scripts/
+    ├── production-api-integration/
+    │   └── SKILL.md
+    ├── production-architecture-review/
+    │   └── SKILL.md
+    ├── production-code-quality/
+    │   └── SKILL.md
+    ├── production-database-integrity/
+    │   └── SKILL.md
+    ├── production-devops-release/
+    │   └── SKILL.md
+    ├── production-documentation-onboarding/
+    │   └── SKILL.md
+    ├── production-pass-orchestrator/
+    │   └── SKILL.md
+    ├── production-performance-review/
+    │   └── SKILL.md
+    ├── production-readiness-report/
+    │   ├── SKILL.md
+    │   ├── agents/openai.yaml
+    │   ├── assets/report-template.md
+    │   ├── references/evidence-lanes.md
+    │   └── scripts/validate_readiness_report.py
+    ├── production-reliability-observability/
+    │   └── SKILL.md
+    ├── production-security-review/
+    │   └── SKILL.md
+    ├── production-testing-qa/
+    │   └── SKILL.md
+    ├── production-ux-accessibility/
+    │   └── SKILL.md
     ├── reference-doc-routing/
     │   ├── SKILL.md
     │   └── references/
@@ -554,6 +663,22 @@ skills/worktree-lifecycle/references/worktrees.md
     ├── task-graph-orchestration/
     │   ├── SKILL.md
     │   └── references/templates/task-graph.md
+    ├── taste-new-website/
+    │   ├── SKILL.md
+    │   ├── agents/openai.yaml
+    │   ├── LICENSE
+    │   └── NOTICE.md
+    ├── taste-redesign-website/
+    │   ├── SKILL.md
+    │   ├── agents/openai.yaml
+    │   ├── LICENSE
+    │   └── NOTICE.md
+    ├── technical-debt-auditor/
+    │   ├── SKILL.md
+    │   ├── agents/openai.yaml
+    │   ├── assets/
+    │   ├── references/
+    │   └── scripts/
     └── worktree-lifecycle/
         ├── agents/
         │   └── openai.yaml
@@ -633,7 +758,7 @@ See `CONTRIBUTING.md` for contribution guidance.
 
 ## License
 
-MIT © 2026 ArcanEdge AI. See [`LICENSE`](./LICENSE).
+Original playbook material: MIT © 2026 ArcanEdge AI. See [`LICENSE`](./LICENSE). Imported skills retain their upstream licenses and attribution; see [`THIRD_PARTY.md`](./THIRD_PARTY.md).
 
 ---
 

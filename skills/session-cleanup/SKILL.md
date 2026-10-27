@@ -37,27 +37,32 @@ Read the supplied methodology reference for the checks relevant to the current w
 ## Review sequence
 
 1. Establish the verified baseline and reconstruct the full work delta before editing. Determine the intended outcome, changed paths, ownership, and change classes. Include committed branch changes, staged/unstaged/untracked work, files, renames, configuration, dependencies, schemas/migrations, tests, docs, generated artifacts, and tooling.
-2. Inspect the methodology sections in the linked reference using this routing map. Apply all relevant checks and do not skip a section merely because the visible diff is small:
-   - 1: establish the integration baseline and reconstruct the complete committed and working-tree work delta.
-   - 2: search affected surfaces for debug debris, placeholders, temporary values, leaked local paths, credentials, unused code, and disabled checks.
-   - 3: identify abandoned implementations, duplicate helpers, obsolete types, stale flags, branch-only transitional paths, and speculative compatibility code.
-   - 4: minimize implementation surface by simplifying unnecessary layers, state, wrappers, configuration, dependencies, indirection, and meaningful duplication when the improvement is obvious, low-risk, and in scope.
-   - 5: review naming, structure, readability, comments, responsibility boundaries, and meaningful duplication in affected code.
-   - 6: inspect errors and edge cases wherever behavior, inputs, network calls, permissions, retries, or state transitions changed.
-   - 7: inspect data and state integrity wherever persistence, APIs, schemas, migrations, serialization, or state management changed; retain old-state handling only when a demonstrated compatibility requirement exists.
-   - 8: inspect touched security boundaries for secrets, auth, authorization, ownership, input handling, logs, dynamic execution, and file safety; this is not a full unrelated security audit.
-   - 9: inspect dependencies and configuration whenever packages, lockfiles, environment variables, build settings, or deployment configuration changed.
-   - 10: inspect actual loading, empty, error, success, disabled, navigation, responsive, keyboard, accessibility, focus, and mutation flows whenever UI changed; source inspection alone does not prove UI behavior.
-   - 11: retain E2E behavioral tests only; every created unit test is temporary, regardless of purpose, and none may remain in the completed change. Verify corresponding E2E assertions pass before removing them and exclusively used support code. Review failure and boundary coverage, weakened assertions, skipped tests, unrealistic fixtures, redundant coverage, and abandoned fixes; keep existing-suite migration within authorized scope.
-   - 12: select the smallest meaningful checks from the project's existing commands and run required affected gates; broaden only for changed behavior, repository requirements, or unresolved risk, preserving valid results.
-   - 13: check directly affected README, setup, environment, API, example, architecture, configuration, and user-facing documentation against reality.
-   - 14: resolve, remove, or classify work-delta-introduced TODO, FIXME, HACK, TEMP, XXX, workaround, and deferred-work markers.
-   - 15: verify status, secrets, editor/OS debris, generated files, binaries, duplicates, ignore rules, and investigation scripts for repository hygiene.
-   - 16: perform a fresh next-developer review for one obvious implementation path, clarity, misleading permanence, magic values, responsibilities, errors, and obvious maintainability debt.
-   - 17: before every additional cleanup change, ask: "Is this necessary to correctly complete, simplify, stabilize, or clean up the current work delta?" If no, leave it alone and record the unrelated issue separately.
+2. Read the methodology sections selected by the routing tables below. Apply every relevant check; a small visible diff is not a reason to skip an affected section.
 3. Remove or correct clear work-delta-introduced debris, defects, abandoned approaches, speculative compatibility code, and unnecessary complexity. Before each cleanup mutation, verify ownership and usages; preserve unrelated baseline behavior and record pre-existing problems separately. Re-review the resulting baseline comparison and status.
 4. Validate with the project's defined commands, starting with the smallest relevant checks and then the broader required gates. Record actual pass, fail, unrun, or uncertain outcomes and classify each failure or blocker as work-delta-introduced, pre-existing, environmental/tooling, or unknown when evidence is insufficient. A material changed behavior that cannot be validated cannot be called complete and clean.
 5. Report blockers and unresolved ownership or compatibility evidence plainly. Do not turn inability to inspect or validate into a success claim, and do not silently expand scope to make the report look clean.
+
+### Methodology routing
+
+For every work delta:
+
+| Sections | Required focus |
+| --- | --- |
+| 1 | Verify the baseline and reconstruct committed, staged, unstaged, and untracked changes. |
+| 2–5 | Find introduced debris, abandoned paths, speculative compatibility, unnecessary complexity, and code-quality defects. Verify ownership and usage before removal. |
+| 11–12 | Review test value and failure/boundary coverage; run required affected checks. Every created unit test is temporary. Carry required assertions into passing E2E coverage before removing it and exclusively used support code. Keep existing-suite migration scoped. |
+| 13–16 | Check affected docs against reality, classify deferred-work markers, inspect repository hygiene, and review the result from the next developer's perspective. |
+| 17 | Before each extra cleanup change, ask: "Is this necessary to correctly complete, simplify, stabilize, or clean up the current work delta?" Leave unrelated issues alone. |
+
+For affected behavior or boundaries:
+
+| Section | When to apply | Required focus |
+| --- | --- | --- |
+| 6 | Behavior, inputs, network calls, permissions, retries, or state transitions changed. | Errors, realistic edge cases, and partial failures. |
+| 7 | Persistence, APIs, schemas, migrations, serialization, or state management changed. | Data integrity and canonical state; old-state support requires demonstrated compatibility evidence. |
+| 8 | A security or file-safety boundary was touched. | Secrets, authentication, authorization, ownership, input handling, logs, dynamic execution, and file safety. Do not expand into an unrelated audit. |
+| 9 | Dependencies or configuration changed. | Packages, lockfiles, environment variables, build settings, and deployment configuration. |
+| 10 | UI behavior changed. | Actual loading, empty, error, success, disabled, navigation, responsive, keyboard, accessibility, focus, and mutation flows. Source inspection alone is insufficient. |
 
 ## Evidence and stopping rules
 

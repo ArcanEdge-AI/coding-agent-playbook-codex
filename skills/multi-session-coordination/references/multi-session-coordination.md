@@ -216,13 +216,12 @@ Do not tell agents only to “coordinate.” State the exact ownership, dependen
 
 ## Conflict Resolution
 
-Resolve conflicts in this order:
+Separate instruction authority from evidence of current behavior:
 
-1. Current repository instructions and authoritative project documentation
-2. Current code, tests, schemas, configuration, and runtime behavior
-3. Explicit user decisions
-4. Established shared contracts already used by the project
-5. The smallest safe change that preserves compatibility
+1. Follow the host's instruction hierarchy, then relevant scope and specificity within the same authority level. Preserve explicit user decisions within that hierarchy.
+2. Establish current behavior from code, tests, schemas, configuration, and runtime observations. These facts do not override an authorized target requirement.
+3. Check established shared contracts and supported consumers. Report any conflict with the requested change instead of silently preserving or discarding the contract.
+4. Choose the smallest safe change that satisfies the governing requirements and required compatibility.
 
 When two approaches are both plausible and the choice materially affects architecture, behavior, data, safety, release timing, or user-visible output, ask the user for the decision.
 

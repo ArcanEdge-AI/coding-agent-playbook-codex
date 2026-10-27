@@ -107,7 +107,7 @@ Before the final response, enumerate every task-created auxiliary permit. For ea
 9. Verify both that the path is absent and that `git worktree list --porcelain` no longer registers it.
 10. Mark the permit `removed` with evidence.
 
-Never use force removal, reset, clean, stash, broad recursive deletion, age, inactivity, or a clean status as the sole cleanup decision. If any check is unavailable or ambiguous, set the permit to `preserved` and report the exact missing evidence or ownership blocker.
+Do not use force removal, reset, clean, stash, or broad recursive deletion as cleanup shortcuts. Age, inactivity, or clean status alone does not establish permission or safety to remove a worktree. If any required check is unavailable or ambiguous, set the permit to `preserved` and report the exact missing evidence or ownership blocker.
 
 ## Final Task Contract
 

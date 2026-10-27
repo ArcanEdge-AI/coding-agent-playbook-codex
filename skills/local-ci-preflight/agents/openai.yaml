@@ -1,0 +1,4 @@
+interface:
+  display_name: "Local CI Preflight"
+  short_description: "Catch failures locally before GitHub Actions"
+  default_prompt: "Use $local-ci-preflight to map project checks and catch failures locally before pushing or starting GitHub Actions."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Production Readiness Report"
+  short_description: "Evidence-led production readiness validation"
+  default_prompt: "Use $production-readiness-report to run a fail-closed production readiness assessment and produce an evidence-backed client report."

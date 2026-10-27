@@ -146,13 +146,12 @@ Prefer the smallest safe coordination change. Do not allow independent redesigns
 
 ### 7. Resolve disagreements with primary evidence
 
-Use this order:
+Separate instruction authority from evidence of current behavior:
 
-1. repository instructions and authoritative project docs
-2. current code, tests, schemas, configuration, and runtime behavior
-3. explicit user decisions
-4. established shared contracts
-5. smallest safe compatible change
+1. Follow the host's instruction hierarchy, then relevant scope and specificity within the same authority level. Preserve explicit user decisions within that hierarchy.
+2. Establish current behavior from code, tests, schemas, configuration, and runtime observations. These facts do not override an authorized target requirement.
+3. Check established shared contracts and supported consumers. Report any conflict with the requested change instead of silently preserving or discarding the contract.
+4. Choose the smallest safe change that satisfies the governing requirements and required compatibility.
 
 Ask the user only when a remaining decision materially affects architecture, behavior, data, safety, release timing, or user-visible output.
 

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Technical Debt Auditor"
+  short_description: "Evidence-backed technical debt audits"
+  default_prompt: "Use $technical-debt-auditor to audit this repository for technical debt and produce a prioritized evidence-backed remediation plan."

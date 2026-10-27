@@ -40,7 +40,7 @@ Use exact file paths, identifiers, commits, PRs, run IDs, test counts, and evide
 
 Create a fresh chat with a self-contained context package. A fork carries prior history and is not a fresh handoff. Use this order:
 
-1. **Select the project safely:** List projects first and match the current repository by exact path. For a Git project, default to a worktree. Use an existing branch/ref only when it is the verified active scope; use working-tree state only when the handoff must include current uncommitted files; otherwise use the project's default branch. Never invent a branch.
+1. **Select the project safely:** List projects first and match the current repository by exact path. Use the host's supported default environment. Create a worktree only when the user explicitly requests one and the project is a Git repository. Specify a starting state only when the user requests it: current working-tree state or a verified branch/ref. Otherwise use the host's default starting state. Never invent a branch.
 2. **Create the thread:** Seed a fresh project thread with the complete context package and a clear next gate.
 3. **Handle asynchronous creation:** A create action may return a `clientThreadId` while setup is pending. Never pass it to a tool that requires a real `threadId`. Poll/list threads and identify the new one from its requested title, project, path, creation time, and summary. Avoid creating a duplicate while setup is in progress.
 4. **Title and open it:** Give the thread a short, unambiguous title, then navigate the app to that thread.

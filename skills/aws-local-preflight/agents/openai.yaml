@@ -1,0 +1,6 @@
+interface:
+  display_name: "AWS Local Preflight"
+  short_description: "Check AWS app flows locally with Moto Server"
+  default_prompt: "Use $aws-local-preflight to inspect AWS dependencies, extend the local validation contract, and check complete application flows with Moto Server before cloud execution."
+policy:
+  allow_implicit_invocation: true

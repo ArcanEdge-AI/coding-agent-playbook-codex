@@ -1,0 +1,4 @@
+interface:
+  display_name: "Platform Documentation"
+  short_description: "Map platforms and maintain docs for every audience"
+  default_prompt: "Use $platform-documentation to map this platform and generate or correct documentation for users, admins, and developers."
