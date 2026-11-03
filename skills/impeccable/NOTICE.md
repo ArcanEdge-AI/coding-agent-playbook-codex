@@ -10,10 +10,18 @@ The `skill/reference/ios.md` and `skill/reference/android.md` platform reference
 **Original license:** MIT
 **Author:** ehmo
 
+
 ## Codex Playbook adaptation
 
-Imported from the locally installed Impeccable 4.5.0 skill with engine 0.1.11. The local installation did not record an upstream source commit. The original design guidance remains Paul Bakaus's work.
+The skill, references, and scripts come from the Codex-compatible package in
+[Impeccable Skill 4.8.0](https://github.com/pbakaus/impeccable/releases/tag/skill-v4.8.0),
+commit `414603bf14c7a344edb466bb1f85690c77ce8b7d`.
 
-Modified files carry a Codex Playbook adaptation notice. Changes adapt installation paths, helper routing, and host authority to this Codex playbook. The engine launchers retain their upstream release source and engine version. Installing this skill does not run the launchers or install an engine binary.
+Modified Markdown files carry a Codex Playbook adaptation notice. The changes
+resolve the installed skill path, preserve host permissions, and map the
+upstream helper contracts to the playbook's existing roles. The upstream
+launchers and checksum manifest are included for engine 0.1.18. The installer
+copies the skill package. Engine acquisition occurs through the launcher on use.
 
-The bundled modern-screenshot browser library is separately MIT-licensed; see LICENSE.modern-screenshot. Platform design references retain the upstream MIT notice; see LICENSE.platform-design-skills.
+The modern-screenshot library and platform design guidance retain their MIT
+notices in LICENSE.modern-screenshot and LICENSE.platform-design-skills.

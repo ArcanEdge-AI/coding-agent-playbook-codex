@@ -59,6 +59,7 @@ Use full mode for this install or update, even if an older installation exists.
 Use support-only mode only if I explicitly request it.
 Preserve instructions outside the managed section and back up existing files before replacing them.
 Install the global instructions, self-contained skills, and supported custom subagents.
+Check the official releases for Impeccable, Humanizer, and Taste Skill before installing or updating them.
 Include Intuitive Software Design from the Codex plugin marketplace; reuse the maintained marketplace installation when available.
 Report the installed files, backups, preservation warnings, and validation results.
 ```
@@ -91,7 +92,9 @@ It installs global instructions, self-contained reusable skills, and custom suba
 
 ### Agent install
 
-Ask your coding agent to install the repo URL and follow `INSTALL.md`. Normal installs and updates use full mode.
+Ask your coding agent to install the repo URL and follow `INSTALL.md`. Normal installs and updates use full mode and check the latest stable releases of Impeccable, Humanizer, and Taste Skill. [Upstream refresh instructions](INSTALL.md#refresh-third-party-skills)
+
+For a manual install, complete the same upstream refresh after cloning and run the installer commands from the prepared checkout.
 
 ### Manual install: macOS / Linux / WSL
 
@@ -564,7 +567,11 @@ skills/worktree-lifecycle/references/worktrees.md
     ├── design-taste-frontend/
     │   ├── SKILL.md
     │   ├── LICENSE
-    │   └── NOTICE.md
+    │   ├── NOTICE.md
+    │   ├── assets/
+    │   ├── library/
+    │   ├── references/
+    │   └── scripts/
     ├── feature-branch-lifecycle/
     │   ├── SKILL.md
     │   └── references/branching-rule.md
@@ -577,7 +584,8 @@ skills/worktree-lifecycle/references/worktrees.md
     ├── humanizer/
     │   ├── SKILL.md
     │   ├── LICENSE
-    │   └── NOTICE.md
+    │   ├── NOTICE.md
+    │   └── agents/openai.yaml
     ├── impeccable/
     │   ├── SKILL.md
     │   ├── LICENSE

@@ -113,7 +113,7 @@ The installer also includes these self-contained workflow packages under the sam
 
 Their supporting files, licenses, and notices are managed and copied with each package. See [third-party attribution](THIRD_PARTY.md). The Taste workflows require the sibling `design-taste-frontend` package; normal installs include it. Impeccable's `reference/` directory is intentional and validated alongside the other skills' `references/` directories.
 
-Skill installation does not invoke Impeccable, download its engine, configure hooks, start a browser, or launch helpers. Its upstream launchers can reuse or fetch engine 0.1.11 at first use under the invoking task's permissions. The four upstream helper contracts are mapped to the existing Codex roles through bundled Markdown references; no additional global agent profiles are installed. The optional documentation and audit Python helpers require Python 3.10 or newer.
+The installer copies Impeccable's skill and launchers. The launcher can fetch the engine associated with that skill release at first use under the invoking task's permissions. The four upstream helper contracts map to the existing Codex roles through bundled Markdown references. Taste's browser inspector requires Node 22 and Chrome, Edge, or Chromium. The optional documentation and audit Python helpers require Python 3.10 or newer.
 
 ### Companion marketplace plugin
 
@@ -178,9 +178,24 @@ Support-only install:
 - still copies self-contained skills and custom agent definitions
 - still updates the managed-file manifest and safely retires unchanged files removed from later playbook releases
 
+## Refresh Third-Party Skills
+
+For each install or update, check the official release channels below before running the installer. Use the newest published stable skill release from each maintainer. The versions in [THIRD_PARTY.md](THIRD_PARTY.md) identify the copies in this checkout.
+
+| Installed skill | Official release channel | Package to use |
+| --- | --- | --- |
+| `impeccable` | [Impeccable releases](https://github.com/pbakaus/impeccable/releases) | Select the newest stable `skill-v*` release. Use its Codex-compatible skill package and matching launchers and engine checksum manifest. |
+| `humanizer` | [Humanizer releases](https://github.com/blader/humanizer/releases) | Use the stable release's `SKILL.md`, `agents/openai.yaml`, and license. |
+| `design-taste-frontend` | [Taste Skill releases](https://github.com/Leonxlnx/taste-skill/releases) | Use the stable release's `design-taste-frontend` skill, including its scripts, references, assets, data, and license. |
+
+1. Resolve each stable release tag to its commit. Verify published asset checksums where available. Reuse the bundled package when its recorded release and commit match.
+2. Stage any newer packages in a temporary playbook checkout. Preserve their licenses and notices, record their source commits, and carry forward the playbook's Codex path and role adaptations as applicable. Keep the upstream engine and launcher from the selected Impeccable release together.
+3. Validate changed packages in an isolated install. When Taste changes, check both `taste-new-website` and `taste-redesign-website` against the new package's commands and references. Exercise the direction draw, source lint, and browser inspector, including separate before and after outputs for redesigns. Keep both workflows' approval and preservation requirements.
+4. Run the canonical installer from the validated checkout. Report the versions installed. If a release check or compatibility check fails, report the specific failure before changing user-level files. Use the bundled copies for an offline or pinned install when the user explicitly chooses that mode.
+
 ## Human Install
 
-Clone the repository and run the standard-library Python installer. It requires Python 3.8 or newer and no third-party packages. The PowerShell and Bash files are thin compatibility launchers that locate Python and run the same implementation.
+Clone the repository, complete [the upstream refresh](#refresh-third-party-skills), then run the standard-library Python installer from the prepared checkout. It requires Python 3.8 or newer and no third-party packages. The PowerShell and Bash files locate Python and run the same implementation. The commands copy the packages in the prepared checkout.
 
 ### macOS / Linux / WSL
 
@@ -220,9 +235,10 @@ When an AI coding agent is asked to install this repo, it should:
 4. Inspect existing target files before writing.
 5. Back up any existing file before changing it.
 6. Use full install for both installation and update unless the user explicitly asks for support-only mode. Existing global instructions, markers, or support files are not permission to change modes.
-7. Run `install/install.py` in the selected mode. Use the canonical installer rather than copying files manually; it manages marked instructions, backups, the manifest, retirement, and validation.
-8. Validate the installed files.
-9. Report exactly what changed, what was skipped, and where backups were written.
+7. Complete the [upstream refresh](#refresh-third-party-skills) in the temporary checkout.
+8. Run `install/install.py` in the selected mode. It manages marked instructions, backups, the manifest, retirement, and validation.
+9. Validate the installed files.
+10. Report the installed versions, other changes, skips, and backup locations.
 
 Do not modify arbitrary repositories during installation. Only use a temporary clone of this repository and user-level Codex configuration locations.
 

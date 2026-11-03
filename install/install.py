@@ -32,8 +32,8 @@ APPROVED_MODEL_EFFORTS = {
     ("gpt-6-astra", "xhigh"),
 }
 RESOURCE_PATTERN = re.compile(
-    r"(?<![A-Za-z0-9_./-])(?:<skill-(?:base-)?dir>/)?"
-    r"(?P<path>(?:references|reference|scripts|assets|agents)/[A-Za-z0-9._/-]+)"
+    r"(?<![A-Za-z0-9_./-])(?:<skill(?:-(?:base-)?dir)?>/)?"
+    r"(?P<path>(?:references|reference|scripts|assets|agents|library)/[A-Za-z0-9._/-]+)"
 )
 
 
