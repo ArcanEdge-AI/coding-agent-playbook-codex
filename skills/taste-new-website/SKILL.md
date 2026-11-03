@@ -3,7 +3,7 @@ name: taste-new-website
 description: Use when the user wants Taste's staged workflow for a new website, including brief questions or project autofill, design approval, a Next.js page, and written design audits.
 ---
 
-Run the new-website workflow from the Taste Skill prompt guide. Use the installed `design-taste-frontend` skill as the source of design rules for this task. Resolve the sibling `design-taste-frontend/SKILL.md` beside this installed skill. If the dependency is missing, report it before starting the design workflow. Follow governing instructions and the user's project constraints.
+Run the new-website workflow from the Taste Skill prompt guide. Read the sibling [design-taste-frontend skill](../design-taste-frontend/SKILL.md) for the installed Taste release's design rules and commands. Resolve `<skill>` in those commands to that installed skill's folder, and run them from the project root. If the dependency is missing, report it before starting. Follow governing instructions and the user's project constraints.
 
 ## Collect the brief
 
@@ -29,20 +29,20 @@ Once intake is complete, show the filled brief with any assumptions, then enter 
 
 ## Step 1: Design read
 
-State the design direction in one sentence. State DESIGN_VARIANCE, MOTION_INTENSITY, and VISUAL_DENSITY, with a one-line explanation for each value.
+Use Taste's “Read the brief and the project,” “Write the argument,” and “Draw the direction” steps. Deal options with the sibling skill's [draw command](../design-taste-frontend/scripts/draw.mjs) and `--options 3`, using the brief's sector and section roles. Present the proposed option ID, a one-sentence design direction, and why it fits the audience and content.
 
 Stop and request the user's approval of this direction. Do not create or edit the website before that approval. If the user changes the brief or direction, incorporate the change before proceeding.
 
 ## Step 2: Build after approval
 
-Build one Next.js page with at least eight sections that fit the product. Use at least four different layout families across the page. Use real images: an available, authorized image-generation tool first, then seeded Picsum images if needed. Keep one consistent theme across the whole page.
+Commit the approved option with the same draw arguments and `--direction <chosen id>` in place of `--options`. Build one Next.js page with at least eight sections that fit the product and at least four layout families. Follow the resulting direction sheet and Taste's “Build it, still” and “Move” steps. Use project imagery or authorized, credited assets according to Taste's imagery guidance. Keep one consistent theme across the page.
 
 ## Step 3: Verify
 
 Report each audit in writing:
 
 - Dash audit: zero U+2014 em dashes or U+2013 en dashes in the produced content.
-- Taste Pre-Flight Check, Section 14: mark every item Pass or Fail with a one-line justification tied to observed evidence.
+- Follow Taste's “Gate” and “Look” steps. Lint the source and inspect the production build at the default 1440, 768, and 390 pixel widths. Run the scene check when the page uses scroll scenes. Open the screenshots, write the critique using Taste's rubric, and record inspector failures or warnings and their disposition. Repeat affected checks after fixes and after adding motion.
 - Section layout repetition: list the layout family of every section.
 - Hero discipline: check headline line count, subtext word count, and whether the primary CTA is visible without scrolling.
 

@@ -16,7 +16,7 @@ Declare server-side template extensions under **`detector.extensions`** when the
 
 Manual `<skill-base-dir>/scripts/impeccable detect` scans use the same project filter config by default: `detector.ignoreRules`, `detector.ignoreFiles`, `detector.ignoreValues`, and `detector.designSystem.enabled`. `hook.enabled` only controls automatic hook execution, not manual CLI scans. Use `<skill-base-dir>/scripts/impeccable detect --no-config ...` for a raw detector run that ignores project config/context. Use `<skill-base-dir>/scripts/impeccable ignores ...` for direct CLI management of the same detector ignores.
 
-The Codex project hook configuration is `.codex/hooks.json` when supported by the host. Preserve existing entries and the host's trust or approval requirements. Installing this skill does not create a hook configuration.
+The Codex project hook configuration is `.codex/hooks.json` when supported by the host. Engine 0.1.18 can also detect an existing user-level Codex hook. Inspection of that hook does not authorize changing it. Preserve existing entries and the host's trust or approval requirements. Installing this skill does not create a hook configuration.
 
 ## Routing
 
@@ -62,7 +62,7 @@ Prefer the narrowest exception:
 
 - If the finding line shows an `ignore-value <rule> <value>` pair, pass it to `impeccable hooks ignore-value` with your `--reason`. This writes shared `.impeccable/config.json` by default.
 - For value-specific findings such as `overused-font` and `bounce-easing`, use `ignore-value` for the specific value. Do not use `ignore-rule overused-font` for a specific font.
-- If the finding has no value-specific command, such as `side-tab`, scope that one rule to the file: `ignore-value <id> "*" --file <path>`. Run `npx impeccable detect <path>` first to see what actually fires there.
+- If the finding has no value-specific command, such as `side-tab`, scope that one rule to the file: `ignore-value <id> "*" --file <path>`. Run `<skill-base-dir>/scripts/impeccable detect <path>` first to see what actually fires there.
 - Reach for `ignore-file <path>` only when the whole file is out of scope for design review: a fixture, a generated artifact, a deliberate slop demo. It silences every rule for that file permanently, including rules that have not been written yet. A real UI surface with one noisy rule wants the file-scoped value ignore above.
 - Use `ignore-rule <id>` only when the user asks to suppress that whole rule across the project. For broad overused-font suppression, use `ignore-rule overused-font --all-values` only when the user asks to ignore overused fonts generally.
 - Prefer config ignores (the commands above) by default; they keep suppressions in one reviewable place. Reach for an inline comment only when the waiver must travel with a single file that leaves the repo (a generated/exported standalone document, an emailed HTML file). The supported marker is `impeccable-disable <rule>` (whole file) or `impeccable-disable-line` / `impeccable-disable-next-line` (one line), in any comment syntax, with an optional reason after `:` or `--`. The detector honors it by default; `--no-inline-ignores` or `--no-config` bypasses it.

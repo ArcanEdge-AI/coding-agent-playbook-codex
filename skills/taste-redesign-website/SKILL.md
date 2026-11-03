@@ -3,7 +3,7 @@ name: taste-redesign-website
 description: Use when the user wants Taste's staged workflow to redesign an existing website, including brief questions or project autofill, a site audit, an approved modernization plan, protected content, and written design audits.
 ---
 
-Run the existing-website workflow from the Taste Skill prompt guide. Use the installed `design-taste-frontend` skill as the source of design rules for this task. Resolve the sibling `design-taste-frontend/SKILL.md` beside this installed skill. If the dependency is missing, report it before starting the design workflow. Follow governing instructions and the user's project constraints.
+Run the existing-website workflow from the Taste Skill prompt guide. Read the sibling [design-taste-frontend skill](../design-taste-frontend/SKILL.md) for the installed Taste release's design rules and commands, including its existing-page special case. Resolve `<skill>` in those commands to that installed skill's folder, and run them from the project root. If the dependency is missing, report it before starting. Follow governing instructions and the user's project constraints.
 
 ## Collect the brief
 
@@ -29,33 +29,33 @@ Once intake is complete, show the filled brief with any assumptions, then enter 
 
 ## Step 1: Audit the existing site
 
-Run the Taste Section 11.B audit and report it in writing:
+Follow Taste's “Record the before” step. Lint the existing source and run the sibling skill's [inspector](../design-taste-frontend/scripts/inspect.mjs) against the running site with `--out .taste-skill/before`. Open the baseline screenshots and report:
 
 - Current brand tokens: primary and accent colors, typography stack, and radii.
 - Information architecture: page tree, navigation, and conversion paths.
 - Patterns to preserve: signature interactions, recognizable hero treatment, and copy voice.
 - Patterns to retire: generic design patterns, broken layouts, and dead links.
-- Current DESIGN_VARIANCE, MOTION_INTENSITY, and VISUAL_DENSITY readings.
+- Baseline measurements and the most important findings from Taste's critique rubric.
 - SEO baseline: relevant pages, titles, and anchors; state which ranking information is unverified.
 
-Stop and request the user's approval before proposing the next stage. Keep this stage read-only.
+Stop and request the user's approval before proposing the next stage. Keep website source unchanged and write audit evidence separately.
 
 ## Step 2: Propose the mode after audit approval
 
-Declare Preserve, Overhaul, or Greenfield-with-content-preserved. List the modernization levers from Taste Section 11.D in priority order. Identify any proposed exception to the preservation rules below so the user can approve that specific change.
+Declare Preserve, Overhaul, or Greenfield-with-content-preserved. Start with type, then follow Taste's order through colour, layout, states, and stock components. Use Taste's direction options where needed, passing `--keep` for palette or type the brand fixes. State the proposed option ID if drawn. Identify any proposed exception to the preservation rules below so the user can approve that specific change.
 
 Stop and request the user's approval of this plan. Audit approval alone does not approve implementation.
 
 ## Step 3: Implement after plan approval
 
-Apply the approved plan. Preserve URL structure, primary navigation labels, form field names, brand logo, and legal copy unless the user explicitly approves a particular change. Preserve the brief's protected headings and anchors. Do not infer permission to change these from a general choice of Overhaul.
+Apply the approved plan in the existing stack. When a direction was approved, commit it with `--direction <chosen id>` and use the resulting sheet. Preserve URL structure, primary navigation labels, form field names, brand logo, and legal copy unless the user explicitly approves a particular change. Preserve the brief's protected headings and anchors. Do not infer permission to change these from a general choice of Overhaul.
 
 ## Step 4: Verify
 
 Report each audit in writing:
 
 - Dash audit: zero U+2014 em dashes or U+2013 en dashes in the produced content.
-- Taste Pre-Flight Check, Section 14: mark every item Pass or Fail with a one-line justification tied to observed evidence.
+- Follow Taste's “Gate,” “Look,” and “Prove it” steps. Lint the changed source and inspect the production build into `.taste-skill/after` at the same widths as the baseline. Run the scene check when the page uses scroll scenes. Compare screenshots and measurements at each width, report inspector failures or warnings and their disposition, and exercise the existing links, forms, and menus.
 - Preservation audit: list every changed URL, navigation label, form field, and anchor. The list must be empty except for explicitly approved changes. Also check protected headings, the brand logo, and legal copy.
 - Brand fidelity audit: confirm the existing accent color, typography stack, and logo treatment survived, or identify each explicitly approved exception.
 
