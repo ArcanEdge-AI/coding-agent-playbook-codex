@@ -18,4 +18,4 @@ The production collection includes twelve workflows migrated from the existing C
 
 The [Intuitive Software Design companion](plugins/README.md) is the maintained marketplace release published by ArcanEdge AI under Apache-2.0. Its skills are not vendored into this repository. Marketplace installation retains its own license, notices, and artwork terms.
 
-The versions above identify the bundled copies. Follow the [upstream refresh instructions](INSTALL.md#refresh-third-party-skills) for each install or update.
+The versions above identify the bundled copies. The installer checks the official release channels on each run and records the source of a refreshed package in its installed `NOTICE.md`. See [release refresh and offline options](INSTALL.md#refresh-third-party-skills).

@@ -1,7 +1,8 @@
 param(
   [switch]$Full,
   [switch]$SupportOnly,
-  [switch]$DryRun
+  [switch]$DryRun,
+  [switch]$BundledSkills
 )
 
 $ErrorActionPreference = "Stop"
@@ -15,6 +16,7 @@ $InstallerArgs = @($Installer)
 if ($Full) { $InstallerArgs += "--full" }
 if ($SupportOnly) { $InstallerArgs += "--support-only" }
 if ($DryRun) { $InstallerArgs += "--dry-run" }
+if ($BundledSkills) { $InstallerArgs += "--bundled-skills" }
 
 $Launchers = @(
   @{ Command = "py"; Prefix = @("-3") },
