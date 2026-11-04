@@ -135,7 +135,7 @@ Full install:
 
 The global instruction body is always installed inside one clearly marked Coding Agent Playbook — Codex Edition section. Existing content outside that section is preserved. Re-running a full install replaces the existing marked section instead of appending a duplicate.
 
-After a successful run, the installer records every managed support-file path and source SHA-256 in `$CODEX_HOME/.coding-agent-playbook-codex-managed-files.tsv`.
+After a successful run, the installer records every managed support-file path and source SHA-256 in `$CODEX_HOME/.coding-agent-playbook-codex-managed-files.tsv`. For refreshed skills the source is the staged release package.
 
 | Target condition | Installer action |
 | --- | --- |
@@ -180,7 +180,7 @@ Support-only install:
 
 ## Refresh Third-Party Skills
 
-For each install or update, check the official release channels below before running the installer. Use the newest published stable skill release from each maintainer. The versions in [THIRD_PARTY.md](THIRD_PARTY.md) identify the copies in this checkout.
+The installer checks the official release channels on every full or support-only run, including `--dry-run`. It resolves each stable release tag to its commit, reuses the bundled copy when the release and commit match, and downloads a different release into a temporary directory. It reports the selected tags and commits. The versions in [THIRD_PARTY.md](THIRD_PARTY.md) identify the copies in this checkout.
 
 | Installed skill | Official release channel | Package to use |
 | --- | --- | --- |
@@ -188,14 +188,13 @@ For each install or update, check the official release channels below before run
 | `humanizer` | [Humanizer releases](https://github.com/blader/humanizer/releases) | Use the stable release's `SKILL.md`, `agents/openai.yaml`, and license. |
 | `design-taste-frontend` | [Taste Skill releases](https://github.com/Leonxlnx/taste-skill/releases) | Use the stable release's `design-taste-frontend` skill, including its scripts, references, assets, data, and license. |
 
-1. Resolve each stable release tag to its commit. Verify published asset checksums where available. Reuse the bundled package when its recorded release and commit match.
-2. Stage any newer packages in a temporary playbook checkout. Preserve their licenses and notices, record their source commits, and carry forward the playbook's Codex path and role adaptations as applicable. Keep the upstream engine and launcher from the selected Impeccable release together.
-3. Validate changed packages in an isolated install. When Taste changes, check both `taste-new-website` and `taste-redesign-website` against the new package's commands and references. Exercise the direction draw, source lint, and browser inspector, including separate before and after outputs for redesigns. Keep both workflows' approval and preservation requirements.
-4. Run the canonical installer from the validated checkout. Report the versions installed. If a release check or compatibility check fails, report the specific failure before changing user-level files. Use the bundled copies for an offline or pinned install when the user explicitly chooses that mode.
+The installer verifies the Impeccable archive against GitHub's published SHA-256 and keeps the engine checksum manifest with its matching launchers. Humanizer and Taste use source archives from the resolved commits. The installer retains licenses and notices, applies the Codex adaptations, and checks the resources and command options used by both Taste workflows before writing user files. Node and a browser are needed when running the Taste inspector, while the installer checks compatibility without running downloaded scripts.
+
+Release lookup, download, or compatibility failures stop the install before user files are changed. For a pinned or offline install, add `--bundled-skills` (`-BundledSkills` with the PowerShell launcher). That mode uses the versions in this checkout and skips GitHub requests.
 
 ## Human Install
 
-Clone the repository, complete [the upstream refresh](#refresh-third-party-skills), then run the standard-library Python installer from the prepared checkout. It requires Python 3.8 or newer and no third-party packages. The PowerShell and Bash files locate Python and run the same implementation. The commands copy the packages in the prepared checkout.
+Clone the repository and run the standard-library Python installer. It requires Python 3.8 or newer and no third-party packages. The PowerShell and Bash launchers run the same installer. It [checks for current stable skill releases](#refresh-third-party-skills) by default.
 
 ### macOS / Linux / WSL
 
@@ -235,10 +234,9 @@ When an AI coding agent is asked to install this repo, it should:
 4. Inspect existing target files before writing.
 5. Back up any existing file before changing it.
 6. Use full install for both installation and update unless the user explicitly asks for support-only mode. Existing global instructions, markers, or support files are not permission to change modes.
-7. Complete the [upstream refresh](#refresh-third-party-skills) in the temporary checkout.
-8. Run `install/install.py` in the selected mode. It manages marked instructions, backups, the manifest, retirement, and validation.
-9. Validate the installed files.
-10. Report the installed versions, other changes, skips, and backup locations.
+7. Run `install/install.py` in the selected mode. It checks the official skill releases and manages marked instructions, backups, the manifest, retirement, and validation.
+8. Validate the installed files.
+9. Report the installed versions, other changes, skips, and backup locations.
 
 Do not modify arbitrary repositories during installation. Only use a temporary clone of this repository and user-level Codex configuration locations.
 
@@ -281,7 +279,7 @@ After installation, verify:
 - Each `SKILL.md` has `name` and `description` frontmatter.
 - Every local resource path referenced by a skill resolves inside that skill package.
 - TOML agent files are parseable if a TOML parser is available.
-- Every current manifest entry matches its repository source SHA-256.
+- Every current manifest entry matches its source SHA-256, including staged release files.
 - Every formerly managed path was either absent, backed up and retired unchanged, or preserved with an explicit customization warning.
 
 ## Uninstall

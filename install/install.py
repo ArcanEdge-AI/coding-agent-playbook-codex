@@ -12,6 +12,7 @@ import sys
 from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path, PurePosixPath
+from tempfile import TemporaryDirectory
 from typing import List, Optional
 
 try:
@@ -49,7 +50,7 @@ class ManifestEntry:
 
 
 class Installer:
-    def __init__(self, mode: str, dry_run: bool) -> None:
+    def __init__(self, mode: str, dry_run: bool, skills_source: Optional[Path] = None) -> None:
         self.mode = mode
         self.dry_run = dry_run
         self.script_dir = Path(__file__).resolve().parent
@@ -65,16 +66,17 @@ class Installer:
         self.global_instructions = self.repo_root / "custom-instructions" / "global-coding-agent-instructions.md"
         self.pointer_source = self.script_dir / "support-only-pointer.md"
         self.target_agents_md = self.codex_home / "AGENTS.md"
+        self.skills_source = skills_source if skills_source is not None else self.repo_root / "skills"
         self.managed_roots = {
             "agents": (self.repo_root / "agents", self.codex_home / "agents"),
-            "skills": (self.repo_root / "skills", self.user_skills_home),
+            "skills": (self.skills_source, self.user_skills_home),
         }
         self.destination_roots = {
             name: destination for name, (_, destination) in self.managed_roots.items()
         }
         # Recognize the former loose-reference destination only for safe migration.
         self.destination_roots["references"] = self.codex_home / "references"
-        self.playbook_skill_names = sorted(path.name for path in (self.repo_root / "skills").iterdir() if path.is_dir())
+        self.playbook_skill_names = sorted(path.name for path in self.skills_source.iterdir() if path.is_dir())
         self.playbook_agent_names = sorted(path.name for path in (self.repo_root / "agents").glob("*.toml"))
 
     def say(self, message: str = "") -> None:
@@ -108,13 +110,6 @@ class Installer:
         self.say(f"Installing {destination}")
         destination.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(source, destination)
-
-    def copy_tree(self, source_root: Path, destination_root: Path) -> None:
-        if not source_root.is_dir():
-            self.say(f"Skipping missing source directory: {source_root}")
-            return
-        for source in sorted(path for path in source_root.rglob("*") if path.is_file()):
-            self.copy_file(source, destination_root / source.relative_to(source_root))
 
     def safe_relative_path(self, value: str) -> PurePosixPath:
         if not value or any(character in value for character in "\t\r\n"):
@@ -185,14 +180,14 @@ class Installer:
 
     def verify_managed_files(self, entries: list[ManifestEntry]) -> None:
         if self.dry_run:
-            self.say(f"[dry-run] Would verify {len(entries)} managed files against repository SHA-256 hashes.")
+            self.say(f"[dry-run] Would verify {len(entries)} managed files against source SHA-256 hashes.")
             return
         for entry in entries:
             destination = self.destination_for(entry)
             if not destination.is_file():
                 raise FileNotFoundError(f"Managed file was not installed: {destination}")
             if self.sha256(destination) != entry.digest:
-                raise ValueError(f"Managed file does not match the repository source: {destination}")
+                raise ValueError(f"Managed file does not match its source: {destination}")
         self.say(f"OK managed-file content: {len(entries)}/{len(entries)} exact SHA-256 matches")
 
     def retire_stale_files(
@@ -294,6 +289,33 @@ class Installer:
             checked += 1
         self.say(f"OK agent profiles: {checked} TOML files use approved task-based routes")
 
+    def validate_taste_workflows(self) -> None:
+        taste = self.skills_source / "design-taste-frontend"
+        guide = (taste / "SKILL.md").read_text(encoding="utf-8")
+        for step in ("Read the brief and the project", "Write the argument", "Draw the direction",
+                     "Build it, still", "Gate", "Look", "Move", "Record the before", "Prove it"):
+            if step not in guide:
+                raise ValueError(f"Taste release does not document the workflow step {step!r}")
+        for script, flags in {
+            "draw.mjs": ("sector", "sections", "options", "direction", "keep"),
+            "lint.mjs": (),
+            "inspect.mjs": ("out", "widths"),
+            "scenes.mjs": ("out",),
+        }.items():
+            text = (taste / "scripts" / script).read_text(encoding="utf-8")
+            if not text.strip():
+                raise ValueError(f"Taste workflow script is empty: {script}")
+            for flag in flags:
+                if not re.search(rf"['\"]{flag}['\"]", text):
+                    raise ValueError(f"Taste release lacks the expected --{flag} option in {script}")
+        for name in ("taste-new-website", "taste-redesign-website"):
+            workflow = self.skills_source / name / "SKILL.md"
+            for relative in re.findall(r"\]\(\.\./design-taste-frontend/([^\s)]+)\)", workflow.read_text(encoding="utf-8")):
+                target = taste.joinpath(*self.safe_relative_path(relative).parts).resolve()
+                if taste.resolve() not in target.parents or not target.is_file():
+                    raise ValueError(f"{name} references an unavailable Taste resource: {relative}")
+        self.say("OK Taste workflow resources: new website and redesign")
+
     def add_or_replace_section(self, target: Path, title: str, body: str) -> None:
         raw = target.read_bytes() if target.is_file() else b""
         newline = "\r\n" if b"\r\n" in raw else "\n"
@@ -343,7 +365,8 @@ class Installer:
             if not required.is_file():
                 raise FileNotFoundError(f"Missing installer source: {required}")
 
-        self.validate_skill_references(self.repo_root / "skills")
+        self.validate_skill_references(self.skills_source)
+        self.validate_taste_workflows()
         self.validate_agents(self.repo_root / "agents")
         current = self.build_manifest()
         previous_manifest_path = self.manifest_path
@@ -351,6 +374,7 @@ class Installer:
             previous_manifest_path = self.legacy_manifest_path
             self.say(f"Migrating legacy managed-file manifest: {self.legacy_manifest_path}")
         previous = self.read_manifest(previous_manifest_path)
+        files = [(self.managed_roots[entry.root][0] / entry.path, self.destination_for(entry)) for entry in current]
 
         if (self.codex_home / "AGENTS.override.md").is_file():
             self.say("Notice: AGENTS.override.md exists and may override AGENTS.md")
@@ -363,8 +387,8 @@ class Installer:
             title = "Global Reference Documents and Subagent Support"
         self.add_or_replace_section(self.target_agents_md, title, body)
 
-        for source_root, destination_root in self.managed_roots.values():
-            self.copy_tree(source_root, destination_root)
+        for source, destination in files:
+            self.copy_file(source, destination)
         self.verify_managed_files(current)
         if self.dry_run:
             self.say(f"[dry-run] Would validate installed skill-local references under {self.user_skills_home}")
@@ -390,6 +414,7 @@ def parse_args() -> argparse.Namespace:
     mode.add_argument("--full", action="store_true", help="Install full global instructions (default).")
     mode.add_argument("--support-only", action="store_true", help="Install the support pointer, skills, and agent profiles without the full global instructions.")
     parser.add_argument("--dry-run", action="store_true", help="Report changes without writing them.")
+    parser.add_argument("--bundled-skills", action="store_true", help="Use the bundled third-party versions without contacting GitHub.")
     return parser.parse_args()
 
 
@@ -400,7 +425,19 @@ def main() -> int:
     args = parse_args()
     mode = "support-only" if args.support_only else "full"
     try:
-        Installer(mode=mode, dry_run=args.dry_run).run()
+        if args.bundled_skills:
+            print("Third-party skills: using the bundled releases listed in THIRD_PARTY.md.")
+            Installer(mode=mode, dry_run=args.dry_run).run()
+        else:
+            # The checkout can be read-only. Keep release staging and bytecode out of it.
+            sys.dont_write_bytecode = True
+            from skill_releases import stage_skills
+
+            bundled = Path(__file__).resolve().parent.parent / "skills"
+            with TemporaryDirectory(prefix="codex-playbook-skills-") as temporary:
+                staged = Path(temporary)
+                stage_skills(bundled, staged)
+                Installer(mode=mode, dry_run=args.dry_run, skills_source=staged).run()
     except (OSError, ValueError) as error:
         print(f"ERROR: {error}", file=sys.stderr)
         return 1
