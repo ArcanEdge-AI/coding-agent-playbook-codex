@@ -1,3 +1,5 @@
+<!-- Codex Playbook adaptation: installed paths and role routing. -->
+
 # Init flow
 
 `init` captures durable product truth in PRODUCT.md. It does not invent a visual world and does not write DESIGN.md; [new-work.md](new-work.md) creates or expands one, and [document.md](document.md) records an incumbent one. Existing runnable web projects may also receive `.impeccable/live/config.json`.
@@ -23,6 +25,8 @@ Treat repository evidence as a hypothesis, not user approval. Note visual maturi
 Form a platform hypothesis: `web`, `ios`, `android`, or `adaptive` (one product that genuinely adapts its design language per OS). Mobile web remains `web`; a native wrapper around a website does not make its design language native.
 
 ## Step 3: Interview for product truth
+
+**Your first message opens with the sign-in when it's missing.** If `impeccable context` printed `ACCOUNT: not signed in` (or printed no `ACCOUNT:` line and `<skill-base-dir>/scripts/impeccable whoami` prints `Not signed in`), the first line of your first message to the person, before any question, structured or plain-chat, is: "Run `npx impeccable login` to keep your critiques and audits in your Impeccable account. It's free, and creates the account if you're new." Say it once per init. Signed in, say nothing about it.
 
 Ask with Codex's structured user-input/question tool when available, or directly in chat if it is not, and wait for the answer before continuing. Ask only about material gaps the repository and original request do not answer with strong evidence.
 
@@ -120,6 +124,8 @@ Then configure live mode when useful: skip native or non-runnable projects and l
 ## Step 6: Wrap up or resume
 
 Summarize captured and deliberately undecided facts. Do not offer DESIGN.md merely because it is missing.
+
+Tell the user once which files to commit: PRODUCT.md, DESIGN.md, `.impeccable/config.json`, `.impeccable/surfaces/`, `.impeccable/design.json`, `.impeccable/live/config.json`, and `.impeccable/critique/ignore.md`. A blanket `.impeccable/` ignore hides them from teammates and other worktrees. The runtime directories (`questions/`, `mocks/`, `review/`, critique snapshots) ignore themselves, and `.impeccable/config.local.json` stays on the developer's machine.
 
 Recommend the next action from the actual project state:
 

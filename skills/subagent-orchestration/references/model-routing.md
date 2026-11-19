@@ -6,18 +6,20 @@ Use subagents sparingly, only when a bounded assignment's concrete benefit outwe
 
 Optimize for the total cost of an accepted result: input and reasoning tokens, repeated context, retries, corrections, coordination, and verification. A lower token price or a higher reasoning setting does not establish better value. Choose sufficient capability upfront without a mandatory cheap attempt first. Use comparable task evidence when available; do not invent savings or run paid comparisons without authority.
 
-| Task | Model | Reasoning setting |
+Use these default routes when no authorized per-task model and reasoning effort were specified.
+
+| Task | Default model | Reasoning setting |
 | --- | --- | --- |
-| Narrow lookup, extraction, file mapping, log summaries | `gpt-6.1-sol` | Light |
-| Clear implementation, local fixes, bounded planning or straightforward review | `gpt-6.1-sol` | Medium |
-| Coupled changes, difficult debugging, substantial review, conflicting evidence | `gpt-6.1-sol` | High |
-| Hard architecture questions, persistent debugging, complex cross-system reasoning | `gpt-6-astra` | Extra High only |
+| Source lookup, file mapping, log summaries, rerunning a known check | `gpt-6.2-sol` | Light |
+| Bounded planning, implementation, choosing checks, or diagnosing a reproducible failure | `gpt-6.2-sol` | Medium |
+| Coupled changes, difficult debugging, substantial review, or conflicting evidence | `gpt-6.2-sol` | High |
+| Hard architecture questions, persistent debugging, complex cross-system reasoning | `gpt-6-astra` | Extra High |
 
 Light is the app's reasoning label; use `low` for `model_reasoning_effort` in TOML and supported launch fields. Medium, High, and Extra High use `medium`, `high`, and `xhigh`. Do not write `light` as a configuration value.
 
 High-impact judgments remain with the main agent even when a helper contributes evidence.
 
-These are approved policy choices, not a measured performance ranking for every repository. Change them only through an explicit policy decision. Do not substitute a different generation merely because it is newer or available.
+The user or an authorized maintainer may select an exact model and reasoning effort for one assignment within actual host, organization, and spending limits. That selection applies to that assignment. Changing the shipped defaults requires a separate policy decision. Model availability alone grants no authority to substitute or increase cost.
 
 ## Profile Defaults and Effective Settings
 
@@ -25,17 +27,17 @@ Each role has one profile with an explicit default:
 
 | Profile | Default model | Reasoning | Typical delegated scope |
 | --- | --- | --- | --- |
-| `docs` | `gpt-6.1-sol` | Light | Focused source lookup and extraction. |
-| `planner` | `gpt-6.1-sol` | Medium | Bounded planning and real dependencies. |
-| `engineer` | `gpt-6.1-sol` | Medium | Clear, isolated implementation. |
-| `tester` | `gpt-6.1-sol` | Light | Focused log analysis and known-check reproduction. |
-| `reviewer` | `gpt-6.1-sol` | High | Substantial bounded review. |
+| `docs` | `gpt-6.2-sol` | Light | Locate an authoritative source and extract the relevant facts. |
+| `planner` | `gpt-6.2-sol` | Medium | Identify dependencies and decide how to verify a bounded change. |
+| `engineer` | `gpt-6.2-sol` | Medium | Trace the affected code and implement a scoped change. |
+| `tester` | `gpt-6.2-sol` | Medium | Choose a check and determine whether a failure comes from the product, the test, or its setup. |
+| `reviewer` | `gpt-6.2-sol` | High | Trace consequences across callers and weigh conflicting evidence before reporting a defect. |
 
-The task table controls selection. For example, difficult root-cause analysis assigned to a tester requires a stronger route than its default, while a straightforward review may use GPT-6.1 Sol/Medium. Do not create model-specific copies of the roles.
+Apply an authorized per-task selection first. Otherwise use the task table to match effort to the work. For example, rerunning a known check fits Light. Tracing an intermittent failure across services can justify High. Keep one bundled profile per role.
 
 On hosts using Codex custom-agent files, explicit `model` and `model_reasoning_effort` values in the file can override spawn arguments. Verify precedence before dispatch. Use a matching profile, or a supported explicit launch that carries the relevant role instructions, scope, and safeguards without a conflicting profile override. Never assume passing a different model alongside a fixed profile changes the effective model.
 
-Use the host's actual fields and controls to establish the effective model and reasoning effort. If the host cannot establish the requested route, keep the work with the main agent or report an unmet independent-verification gate.
+After dispatch, verify the actual child model and reasoning effort from trustworthy runtime metadata or an equivalent host receipt before substantive work or acceptance. Requested launch arguments, a profile name, and the child's self-description are insufficient evidence. If the route differs or cannot be verified, stop that assignment. Root can perform independent authorized work or make an authorized reassignment within the remaining allowance. A specifically requested opinion or required independent check remains outstanding until an eligible reviewer supplies it.
 
 Reading a role perspective does not change the main agent's model, reasoning, permissions, or ownership and does not count as independent verification. Preserve the main agent's user-selected settings; recommend a change when useful and let the user select it.
 
@@ -46,7 +48,7 @@ Reading a role perspective does not change the main agent's model, reasoning, pe
 3. Use direct root-to-helper assignments. Helpers do not spawn descendants or broaden their inputs, access, scope, permissions, or ownership.
 4. Dispatch only ready work within available capacity. Serialize conflicts and do not queue speculative helpers.
 5. Before retrying or reassigning, identify what failed and what will change. Reuse accepted evidence. Avoid chains of attempts that repeat the same misunderstanding.
-6. Only the main agent may select a different approved helper route, based on the task evidence and within the existing finite allowance. Obtain specific approval before a material cost expansion. Keep parent and peer settings unchanged.
+6. Only root may reassign within the selection and finite allowance authorized for the task. Honor an explicitly selected route. Obtain specific approval immediately before a material cost expansion. Keep parent and peer settings unchanged.
 
 ## Keep With the Main Agent
 
@@ -69,15 +71,15 @@ A supporting subagent may gather evidence for these areas, but the main agent mu
 
 A subagent must stop and report when:
 
-- requirements are materially ambiguous
-- primary evidence conflicts
+- a necessary fact or user-owned choice remains unresolved after checking available evidence
+- conflicting evidence materially prevents the assigned conclusion
 - the task exceeds its assigned scope
 - the conclusion cannot be independently verified
 - the work becomes security-sensitive, destructive, or production-impacting
-- the task requires architectural or cross-system judgment
+- a consequential architectural or cross-system decision exceeds the assigned review or implementation authority
 - the host cannot establish the selected model and reasoning effort
 
-Helpers return evidence and a blocker when a task or route is unsuitable. They may not change their own execution settings or silently fall back to inherited settings. The main agent decides whether to complete directly, correct the assignment, or use another approved route within the existing execution and cost authority.
+Helpers return evidence and a blocker when a task or route is unsuitable. They may not change their own execution settings or silently fall back to inherited settings. The main agent decides whether an in-scope correction, reassignment, or direct contribution is possible within existing authority.
 
 ## Reporting and Follow-up Messages
 
@@ -95,7 +97,7 @@ The task-reporting call above is allowed only when separately authorized and int
 Incorrect:
 
 ```text
-send_message_to_thread({ threadId: parentId, prompt: "...", model: "gpt-6.1-sol", thinking: "high" })
+send_message_to_thread({ threadId: parentId, prompt: "...", model: "<child model>", thinking: "<child effort>" })
 ```
 
 The incorrect form can override the destination task's model or reasoning settings.
@@ -131,4 +133,4 @@ Before accepting delegated work, confirm:
 
 ## Capability References
 
-For host behavior, consult the current [custom-agent precedence documentation](https://learn.chatgpt.com/docs/agent-configuration/subagents#custom-agents), [model and reasoning labels](https://learn.chatgpt.com/docs/models#pick-a-reasoning-effort), [GPT-6.1 Sol model specification](https://developers.openai.com/api/docs/models/gpt-6.1-sol), and [configuration values](https://learn.chatgpt.com/docs/config-file/config-reference). These explain capabilities; availability alone does not expand this playbook's approved routes.
+Check model availability and authority on the host where the helper will run. See OpenAI’s [custom-agent precedence documentation](https://learn.chatgpt.com/docs/agent-configuration/subagents#custom-agents), [model and reasoning labels](https://learn.chatgpt.com/docs/models#pick-a-reasoning-effort), [GPT-6.2 prompting guide](https://learn.chatgpt.com/guides/prompting-gpt-6-2-astra), and [configuration values](https://learn.chatgpt.com/docs/config-file/config-reference).

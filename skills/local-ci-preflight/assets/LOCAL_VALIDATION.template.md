@@ -36,7 +36,7 @@ Names below describe the contract, not scripts that already exist. Adapt the pro
 
 Normal sequence: Fast -> Build -> applicable Local E2E / CI parity / Native profiles. Stop dependent expensive checks after a prerequisite fails. Never invoke remote acceptance, deployment or publication from the local umbrella command.
 
-Preserve existing required checks. Map still-required assertions before changing coverage. Newly retained behavioral tests follow the governing E2E policy; a happy-path smoke is insufficient replacement for important failure coverage.
+Preserve existing required checks. For each proposed case, identify a credible wrong result that the remaining checks would accept. Use E2E by default. Record a lasting focused exception only if explicit repository policy permits it for a specified rule impractical to cover adequately at a supported entry point. This template grants no exception. Preserve still-required assertions, including meaningful failures and boundaries.
 
 ## Select checks by changed surface
 

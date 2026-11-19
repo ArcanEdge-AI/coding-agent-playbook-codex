@@ -1,5 +1,3 @@
-<!-- Codex Playbook adaptation: reference whitespace normalized; upstream Apache-2.0 license retained. -->
-
 # Extract Flow
 
 Identify reusable patterns, components, and design tokens, then extract and consolidate them into the design system for systematic reuse.
@@ -68,3 +66,4 @@ Update design system documentation:
 - Skip proper TypeScript types or prop documentation
 - Create tokens for every single value (tokens should have semantic meaning)
 - Extract things that differ in intent (two buttons that look similar but serve different purposes should stay separate)
+

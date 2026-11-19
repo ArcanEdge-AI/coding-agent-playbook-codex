@@ -50,7 +50,7 @@ For every work delta:
 | --- | --- |
 | 1 | Verify the baseline and reconstruct committed, staged, unstaged, and untracked changes. |
 | 2–5 | Find introduced debris, abandoned paths, speculative compatibility, unnecessary complexity, and code-quality defects. Verify ownership and usage before removal. |
-| 11–12 | Review test value and failure/boundary coverage; run required affected checks. Every created unit test is temporary. Carry required assertions into passing E2E coverage before removing it and exclusively used support code. Keep existing-suite migration scoped. |
+| 11–12 | Run required affected checks. Retain E2E cases by default. Verify any lasting focused test has an explicit repository exception for a specified rule impractical to cover at a supported entry point. Remove task-created diagnostics and exclusive support once required coverage passes. |
 | 13–16 | Check affected docs against reality, classify deferred-work markers, inspect repository hygiene, and review the result from the next developer's perspective. |
 | 17 | Before each extra cleanup change, ask: "Is this necessary to correctly complete, simplify, stabilize, or clean up the current work delta?" Leave unrelated issues alone. |
 

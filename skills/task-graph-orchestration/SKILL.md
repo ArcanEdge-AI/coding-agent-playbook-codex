@@ -1,6 +1,6 @@
 ---
 name: task-graph-orchestration
-description: Use for complex coding tasks with several independent work items, real dependencies, broad file or repository scope, layered consolidation, separate implementation and verification paths, or an approval-gated irreversible action. Records an instruction-only dependency graph, executes ready work, combines accepted results, and repeats only invalidated work. Skip for small or genuinely linear tasks.
+description: Plan work whose handoffs, conflicting writes, approval gates, or verification dependencies affect what can proceed or must be rechecked. Keep linear work lightweight, including mechanical changes across many files.
 ---
 
 # Task Graph Orchestration
@@ -9,7 +9,7 @@ Use the task record to show bounded outcomes and their real dependencies. Do not
 
 ## Decide Whether to Use a Formal Graph
 
-Use a formal graph when the task has substantial fan-out, several real dependencies, broad audit or transformation scope, layered consolidation, separate implementation and verification paths, or an approval-gated action.
+Use a formal graph when handoffs, conflicting writes, layered consolidation, or separate verification and approval gates affect what can proceed or which work a failure invalidates. File count alone is insufficient. A two-file migration can need a graph if the rollout order matters.
 
 Skip formal graph mode when the task is small, genuinely linear, dominated by one coherent design judgment, limited to tightly coupled writes, or cheaper to execute than to maintain as a graph. Skipping graph mode does not waive relevant skills or verification, and graph mode does not require delegation.
 
@@ -82,7 +82,7 @@ Before completion, reconcile node states, required approval gates, helper assign
 
 ## Enforce Approval Gates
 
-Complete safe inspection, reversible preparation, and validation before a gate when useful. Immediately before the gated action, present the exact target, scope, consequences, material cost, audience, and recovery path when one exists. Approval for a plan or earlier node does not authorize a broader action.
+Complete safe inspection, reversible preparation, and validation before a gate when useful. Check whether an explicit request or still-valid approval covers the exact target, scope, consequences, audience, and material cost. Ask at the gated action if authority is missing or a binding rule calls for a separate confirmation. Keep independent work moving. Any expansion requires authority for the new scope.
 
 ## Respect Instruction-Only Limits
 

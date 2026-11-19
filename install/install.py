@@ -27,14 +27,14 @@ LEGACY_START_MARKER = "<!-- codex-agent-playbook:start -->"
 LEGACY_END_MARKER = "<!-- codex-agent-playbook:end -->"
 MANIFEST_HEADER = "# coding-agent-playbook-codex managed files v1"
 APPROVED_MODEL_EFFORTS = {
-    ("gpt-6.1-sol", "low"),
-    ("gpt-6.1-sol", "medium"),
-    ("gpt-6.1-sol", "high"),
+    ("gpt-6.2-sol", "low"),
+    ("gpt-6.2-sol", "medium"),
+    ("gpt-6.2-sol", "high"),
     ("gpt-6-astra", "xhigh"),
 }
 RESOURCE_PATTERN = re.compile(
     r"(?<![A-Za-z0-9_./-])(?:<skill(?:-(?:base-)?dir)?>/)?"
-    r"(?P<path>(?:references|reference|scripts|assets|agents|library)/[A-Za-z0-9._/-]+)"
+    r"(?P<path>(?:references|reference|scripts|assets|agents|library)/(?:[A-Za-z0-9._/*-]|<[a-zA-Z][\w-]*>)+)"
 )
 
 
@@ -253,16 +253,24 @@ class Installer:
             skill_root = (skills_root / name).resolve()
             if not skill_root.is_dir():
                 raise FileNotFoundError(f"Missing skill package: {skill_root}")
-            for markdown in sorted(skill_root.rglob("*.md")):
+            # Older releases and local additions can leave other Markdown in the destination.
+            source_package = self.skills_source / name
+            for source in sorted(source_package.rglob("*.md")):
+                markdown = skill_root / source.relative_to(source_package)
                 text = markdown.read_text(encoding="utf-8")
                 for match in RESOURCE_PATTERN.finditer(text):
                     relative_text = match.group("path").rstrip(".,:;")
-                    relative = self.safe_relative_path(relative_text)
-                    resolved = skill_root.joinpath(*relative.parts).resolve()
-                    if skill_root not in resolved.parents:
-                        raise ValueError(f"Skill resource reference escapes package {name!r}: {relative_text}")
-                    if not resolved.is_file():
+                    pattern = re.sub(r"<[a-zA-Z][\w-]*>", "*", relative_text)
+                    relative = self.safe_relative_path(pattern)
+                    targets = list(skill_root.glob(pattern)) if "*" in pattern else [skill_root / relative]
+                    if not targets:
                         raise FileNotFoundError(f"Missing skill resource referenced by {markdown}: {relative_text}")
+                    for target in targets:
+                        resolved = target.resolve()
+                        if skill_root not in resolved.parents:
+                            raise ValueError(f"Skill resource reference escapes package {name!r}: {relative_text}")
+                        if not (resolved.is_file() or (not relative.suffix and resolved.is_dir())):
+                            raise FileNotFoundError(f"Missing skill resource referenced by {markdown}: {relative_text}")
                     checked += 1
         self.say(f"OK skill-local references: {checked} resolved paths")
 
@@ -291,26 +299,23 @@ class Installer:
 
     def validate_taste_workflows(self) -> None:
         taste = self.skills_source / "design-taste-frontend"
-        guide = (taste / "SKILL.md").read_text(encoding="utf-8")
-        for step in ("Read the brief and the project", "Write the argument", "Draw the direction",
-                     "Build it, still", "Gate", "Look", "Move", "Record the before", "Prove it"):
-            if step not in guide:
-                raise ValueError(f"Taste release does not document the workflow step {step!r}")
-        for script, flags in {
-            "draw.mjs": ("sector", "sections", "options", "direction", "keep"),
-            "lint.mjs": (),
-            "inspect.mjs": ("out", "widths"),
-            "scenes.mjs": ("out",),
+        for script, options in {
+            "scripts/start.mjs": ("deal", "css", "brand", "page", "trade", "palette", "type", "history", "no-recent"),
+            "assets/layout/deal.mjs": ("type", "has", "history"),
+            "scripts/gate.mjs": ("start", "kind", "category", "primary", "root"),
+            "scripts/copy-lint.mjs": ("kind",),
+            "scripts/consistency.mjs": ("widths", "profile", "out"),
+            "assets/layout/check.mjs": ("url", "sizes"),
+            "scripts/shoot.mjs": ("url", "w", "h", "out", "profile"),
         }.items():
-            text = (taste / "scripts" / script).read_text(encoding="utf-8")
-            if not text.strip():
-                raise ValueError(f"Taste workflow script is empty: {script}")
-            for flag in flags:
-                if not re.search(rf"['\"]{flag}['\"]", text):
-                    raise ValueError(f"Taste release lacks the expected --{flag} option in {script}")
+            text = (taste / script).read_text(encoding="utf-8")
+            for option in options:
+                if not re.search(rf"""['"](?:--)?{re.escape(option)}['"]""", text):
+                    raise ValueError(f"Taste release lacks the expected {option!r} argument in {script}")
         for name in ("taste-new-website", "taste-redesign-website"):
             workflow = self.skills_source / name / "SKILL.md"
-            for relative in re.findall(r"\]\(\.\./design-taste-frontend/([^\s)]+)\)", workflow.read_text(encoding="utf-8")):
+            links = r"(?:\]\(\.\./design-taste-frontend/|<taste>/)([A-Za-z0-9_./-]+)"
+            for relative in re.findall(links, workflow.read_text(encoding="utf-8")):
                 target = taste.joinpath(*self.safe_relative_path(relative).parts).resolve()
                 if taste.resolve() not in target.parents or not target.is_file():
                     raise ValueError(f"{name} references an unavailable Taste resource: {relative}")

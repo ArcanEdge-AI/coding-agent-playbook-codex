@@ -153,7 +153,7 @@ Separate instruction authority from evidence of current behavior:
 3. Check established shared contracts and supported consumers. Report any conflict with the requested change instead of silently preserving or discarding the contract.
 4. Choose the smallest safe change that satisfies the governing requirements and required compatibility.
 
-Ask the user only when a remaining decision materially affects architecture, behavior, data, safety, release timing, or user-visible output.
+Reuse applicable decisions and resolve factual questions from project evidence. Ask when an essential fact remains unavailable, materially different outcomes require the user's choice, or an action still lacks authority. Hold the dependent action and continue independent work.
 
 ### 8. Produce copy-ready thread instructions
 
@@ -183,7 +183,7 @@ Require validation appropriate to the combined blast radius, including when rele
 - build validation
 - final combined diff review
 
-Retain E2E behavioral tests only. Every unit test created by any owner is temporary, regardless of purpose; none may remain in a completed change. Require each owner to remove them and exclusively used support code after corresponding E2E assertions pass, preserving failure and boundary coverage. Keep migration of existing non-E2E suites within authorized scope and preserve required repository gates.
+Check for duplicate cases across owners. Each proposed case must expose a credible wrong result the combined checks would miss. Retain E2E behavioral tests by default. A lasting focused exception requires explicit repository policy for a specified rule impractical to verify adequately at a supported entry point. Each owner removes task-created diagnostics and their exclusive support after required assertions have passing coverage. Preserve existing tests and mandatory gates.
 
 The main agent must inspect the combined result before declaring the work compatible.
 
@@ -210,7 +210,7 @@ Stop and report the limitation when:
 
 - the current project or repository cannot be identified safely
 - relevant work is inaccessible and repository evidence cannot compensate
-- destructive, production-impacting, or sensitive changes require approval
-- two plausible resolutions materially affect architecture or behavior and primary evidence does not resolve them
+- a destructive, production-impacting, or sensitive action still lacks applicable authorization or a separate required sign-off
+- primary evidence and prior decisions leave materially different user outcomes that require the user's choice
 
 Do not implement code unless the user explicitly requests implementation. The default role of this skill is coordination, conflict detection, sequencing, and integration planning.

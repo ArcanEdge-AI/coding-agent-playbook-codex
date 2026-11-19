@@ -80,6 +80,8 @@ I already added the global custom instructions manually. Follow INSTALL.md, but 
 
 The main agent understands the request, inspects the affected flow, implements the smallest complete solution, and verifies the result. It applies relevant skills and can consult a planner, engineer, reviewer, tester, or docs perspective directly when that helps answer a concrete question.
 
+An assessment request calls for inspection and an answer. An implementation request lets the agent choose the method, reuse prior decisions, and verify the result. If a required approval or material product decision is missing, it holds the affected action and continues independent work.
+
 The main agent retains design judgment, task authority, implementation, integration, and final acceptance. Changing perspective preserves its model and reasoning settings and does not require another agent or a separate report. Required independent verification remains a separate obligation.
 
 Use subagents sparingly. Delegate only when a bounded assignment provides independent evidence, parallel progress, or context reduction worth the added coordination and review effort, or a governing requirement calls for independent assistance. Choose an approved model and reasoning effort for the actual task, and inspect the returned evidence.
@@ -144,11 +146,17 @@ Copy this template into individual projects as a starting point:
 skills/reference-doc-routing/references/templates/repository-AGENTS.md
 ```
 
-Then fill in the actual build commands, test commands, architecture rules, generated-file rules, and release expectations for that repository.
+Keep the rules contributors could otherwise miss, such as a required release check. Link to build and test commands where the project already maintains them.
 
 For validation before remote CI, use [Local CI Preflight](skills/local-ci-preflight/SKILL.md). Adapt its [local validation contract](skills/local-ci-preflight/assets/LOCAL_VALIDATION.template.md) to inspected project commands, and merge its [portable agent snippet](skills/local-ci-preflight/assets/AGENTS.local-validation.md) only where equivalent routing is not already present. The supplied contract is intentionally `NOT_CONFIGURED`, not evidence of a passing check.
 
 Run cheap checks before dependent builds and complete affected E2E/native profiles. Reuse existing scripts and runtime ownership; optional workflow emulation is not a required framework migration. Local success does not replace authentic remote acceptance or authorize a push, deployment, or paid run.
+
+### Prompting GPT-6.2 Sol and Astra
+
+Describe the change and what you’ll look for when you try it. Choose reasoning effort for the depth of the investigation. A one-paragraph diagnosis can still require tracing a failure across several services. When independent questions would benefit from parallel work, tell Codex it may delegate them. [OpenAI’s guide to prompting GPT-6.2 in Codex](https://learn.chatgpt.com/guides/prompting-gpt-6-2-astra)
+
+> Make the filter panel match the attached mobile mockup. At 360 pixels wide, I should be able to apply two filters, reopen the panel, and see both selections.
 
 ---
 
@@ -268,13 +276,9 @@ Support-only mode avoids duplicating the full instruction file and installs only
 
 Understand the whole affected flow and improve the existing implementation by default. A substantial replacement needs evidence of a significant benefit that justifies implementation, migration, verification, and maintenance costs. Preserve suitable components; another possible design or alpha status is not a reason to rebuild.
 
-Retain only end-to-end (E2E) behavioral tests through complete supported UI, API, or CLI flows. Treat every created unit test as temporary, regardless of purpose:
+Start with zero new permanent tests. Use existing checks and keep end-to-end (E2E) coverage through supported UI, API, or CLI flows as the default. For each proposed case, identify the requirement and a credible wrong result the other checks would accept. A repository can expressly allow a lasting focused test for a specified rule that is impractical to exercise adequately through a supported entry point.
 
-1. Carry its still-required assertions, meaningful failures, and boundary cases into passing E2E coverage. A mocked component check or happy path alone is insufficient.
-2. Remove the created unit tests and their exclusively used support code before completion.
-3. If replacement coverage or cleanup is incomplete, report unfinished work. Do not declare completion.
-
-Reuse existing E2E coverage and valid results. Build, lint, type checking, required repository gates, supported contracts, and data-preservation safeguards still apply. Migrate existing non-E2E suites only within authorized scope, after replacement coverage passes; do not bulk-delete them.
+When a check fails, verify the expected behavior against the contract and try the failing case. Fix a demonstrated product defect. If a new optional harness makes an invalid assumption, correct or discard it and verify the intended requirement. Give a setup failure one evidence-based correction before leaving that approach. Preserve user tests, mandatory gates, and working production code.
 
 Write instructions with STE-inspired clarity: direct actions, explicit actors and conditions, and consistent terms. Preserve technical identifiers and consequential exceptions. This is not formal ASD-STE100 compliance and does not impose a restricted dictionary or sentence-length limit.
 
@@ -318,20 +322,9 @@ For direct use, read the relevant `agents/<role>.toml` and apply its **Role pers
 
 The profile's launch settings and **Delegated use** section apply only to actual subagents. A reviewer or tester perspective applied to your own work is self-review, not required independent verification.
 
-Select the model and reasoning effort by the actual task, including for retries and replacements. Optimize total completion cost, including tokens, repeated context, corrections, and verification. A low token price alone does not establish efficiency, and a cheap failed attempt is not a prerequisite for using a capable model.
+All five bundled profiles default to GPT-6.2 Sol. Each has a reasoning effort suited to its usual work. The main agent selects the route for the actual assignment. A user or authorized maintainer can specify an exact model and effort for one task within host, organization, and spending limits. A profile may override launch arguments, so verify what actually ran. [Task routes and role defaults](skills/subagent-orchestration/references/model-routing.md)
 
-| Work | Model and reasoning |
-| --- | --- |
-| Narrow lookup, extraction, file mapping, log summaries | GPT-6.1 Sol / Light |
-| Clear implementation, local fixes, bounded planning or straightforward review | GPT-6.1 Sol / Medium |
-| Coupled changes, difficult debugging, substantial review, conflicting evidence | GPT-6.1 Sol / High |
-| Hard architecture questions, persistent debugging, complex cross-system reasoning | GPT-6 Astra / Extra High only |
-
-The app's Light reasoning label uses `low` in TOML; Medium, High, and Extra High use `medium`, `high`, and `xhigh`. High-impact decisions stay with the main agent. Its user-selected model and reasoning remain unchanged unless the user selects otherwise.
-
-Subagents report through team collaboration messaging or a normal final return. They must not alter parent or peer model settings. Any separately authorized task report must omit destination model and reasoning overrides; see `skills/subagent-orchestration/references/model-routing.md` for the execution/reporting boundary.
-
-Each role has one profile with an explicit GPT-6.1 Sol starting default: Docs and Tester use Light, Planner and Engineer use Medium, and Reviewer uses High. Task needs take precedence over those defaults. A custom profile can override spawn arguments, so use a matching profile or a supported explicit route with the same role guidance and safeguards. Verify the effective model and reasoning effort; report unsupported routing rather than silently substituting or inheriting settings. Consult `skills/subagent-orchestration/references/model-routing.md` for selection and acceptance rules. When updating from the retired duplicate profiles, follow the [profile migration note](INSTALL.md#retired-profile-aliases).
+Helpers report through team messaging or a normal final return and preserve parent and peer settings. An explicitly requested independent reviewer can inspect the entire candidate within the assigned review questions. The main agent owns acceptance and delivery. For the retired duplicate profiles, see the [migration note](INSTALL.md#retired-profile-aliases).
 
 The delegation rule is simple:
 
@@ -514,6 +507,7 @@ See:
 
 ```text
 skills/reference-doc-routing/references/engineering-design.md
+skills/reference-doc-routing/references/runtime-resources.md
 skills/subagent-orchestration/references/model-routing.md
 skills/reference-doc-routing/references/reference-doc-routing.md
 skills/subagent-orchestration/references/subagents.md
@@ -649,6 +643,7 @@ skills/worktree-lifecycle/references/worktrees.md
     │       ├── README.md
     │       ├── engineering-design.md
     │       ├── reference-doc-routing.md
+    │       ├── runtime-resources.md
     │       └── templates/
     │           ├── api-contracts.md
     │           ├── architecture.md

@@ -142,7 +142,7 @@ def adapt_impeccable(package: Path, bundled: Path) -> None:
             adapted = adapted.replace('"assets/plates/sky.png"', '"./assets/plates/sky.png"')
         if markdown == package / "SKILL.md":
             frontmatter, body = adapted.split("\n---\n", 1)
-            adapted = (f"{frontmatter}\n---\n\n{notice}## Codex Playbook integration\n\n{integration}\n\n"
+            adapted = (f"{frontmatter}\n---\n\n{notice}## Codex integration\n\n{integration}\n\n## Using the skill\n\n"
                        "Use these role mappings and host approval rules throughout the upstream recipes. "
                        "Resolve `<skill-base-dir>` to the folder containing this file. "
                        "Invoke the launcher through `sh` on POSIX if needed.\n\n" + body.lstrip())
@@ -153,33 +153,23 @@ def adapt_impeccable(package: Path, bundled: Path) -> None:
 
 
 def adapt_taste(package: Path) -> None:
-    # Upstream examples refer to generated project assets and an optional scene catalogue.
-    examples = {
-        "README.md": {"scripts/lib/ ": "helper modules ", "`assets/credits.json`": "`./assets/credits.json`"},
-        "SKILL.md": {
-            "`<skill>/assets/scenes/`": "the scene files beside `<skill>/assets/scenes/stage.js`",
-            "`assets/scenes/demo/<id>.html` is a working example of each.": "Open the matching demo if the installed catalogue supplies one.",
-            "| `assets/scenes/` |": "| `assets/scenes/stage.js` and `assets/scenes/stage.css` |",
-        },
-        "references/imagery.md": {f"assets/{path}": f"./assets/{path}" for path in (
-            "credits.json", "fig-engraving.jpg", "river-poster.jpg", "river.webm"
-        )},
-        "references/motion.md": {"`assets/scenes/`": "the shared `assets/scenes/stage.js` and `assets/scenes/stage.css`"},
-        "references/scenes.md": {
-            "; `assets/scenes/demo/<id>.html` is a complete working page to read beside it.":
-                ". Read the matching demo if the installed catalogue supplies one.",
-        },
-    }
-    for relative, replacements in examples.items():
-        file = package / relative
-        if not file.is_file():
-            continue
+    # These examples name project inputs or files generated in the website.
+    project_assets = re.compile(
+        r"(?<![A-Za-z0-9_./-])assets/(?:img/|client/|icons/<id>\.svg|ui/icons/x\.svg|"
+        r"objects/product-render/specs/my-bike\.json)"
+    )
+    for file in package.rglob("*.md"):
         text = file.read_text(encoding="utf-8")
-        for old, new in replacements.items():
-            text = re.sub(r"(?<!\./)" + re.escape(old), lambda _: new, text)
-        if not (package / "library/scenes.json").is_file():
-            text = text.replace("`library/scenes.json`", "`scenes.json` in the optional scene library")
-        file.write_bytes(text.encode("utf-8"))
+        adapted = project_assets.sub(r"./\g<0>", text)
+        if file == package / "SKILL.md":
+            header, body = adapted.split("\n---\n", 1)
+            header = re.sub(r"(?m)^hooks:[^\n]*(?:\n[ \t]+[^\n]*)*\n?", "", header).rstrip()
+            body = re.sub(r" \(in Claude Code it also runs when you finish;[^)]*\)", "", body)
+            adapted = header + "\n---\n\nRun the finish gate explicitly in Codex.\n\n" + body.lstrip()
+        elif file == package / "references/gate.md":
+            adapted = re.sub(r"(?ms)^## As a hook\s*\n.*?(?=^## |\Z)", "", adapted).rstrip() + "\n"
+        if adapted != text:
+            file.write_bytes(adapted.encode("utf-8"))
 
 
 def fetch_package(name: str, repo: str, release: dict, commit: str, bundled: Path, package: Path) -> None:
@@ -222,8 +212,10 @@ def fetch_package(name: str, repo: str, release: dict, commit: str, bundled: Pat
             require_files(package, "SKILL.md")
             adapt_taste(package)
     validate_skill(package)
-    with (package / "NOTICE.md").open("a", encoding="utf-8", newline="\n") as notice:
-        notice.write(f"\n\n## Codex Playbook installation source\n\n[{tag}]({release_url}), commit `{commit}`.\n")
+    notice_file = package / "NOTICE.md"
+    heading = "\n\n## Codex Playbook installation source" if notice_file.is_file() else "# Source and attribution"
+    with notice_file.open("a", encoding="utf-8", newline="\n") as notice:
+        notice.write(f"{heading}\n\n[{tag}]({release_url}), commit `{commit}`.\n")
         if name != "humanizer":
             notice.write("The playbook adapts the upstream Markdown for Codex installation and workflow compatibility.\n")
 

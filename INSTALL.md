@@ -75,6 +75,7 @@ $CODEX_HOME/skills/
     references/
       README.md
       engineering-design.md
+      runtime-resources.md
       reference-doc-routing.md
       templates/
         *.md
@@ -113,7 +114,7 @@ The installer also includes these self-contained workflow packages under the sam
 
 Their supporting files, licenses, and notices are managed and copied with each package. See [third-party attribution](THIRD_PARTY.md). The Taste workflows require the sibling `design-taste-frontend` package; normal installs include it. Impeccable's `reference/` directory is intentional and validated alongside the other skills' `references/` directories.
 
-The installer copies Impeccable's skill and launchers. The launcher can fetch the engine associated with that skill release at first use under the invoking task's permissions. The four upstream helper contracts map to the existing Codex roles through bundled Markdown references. Taste's browser inspector requires Node 22 and Chrome, Edge, or Chromium. The optional documentation and audit Python helpers require Python 3.10 or newer.
+The installer copies Impeccable's skill and launchers. The launcher can fetch the engine associated with that skill release at first use under the invoking task's permissions. The four upstream helper contracts map to the existing Codex roles through bundled Markdown references. Both Taste workflows use Node 22 and a local Chromium-based browser for responsive checks and screenshots. Set `CHROME_PATH` to the browser executable if it is outside the search paths. The optional documentation and audit Python helpers require Python 3.10 or newer.
 
 ### Companion marketplace plugin
 
@@ -163,7 +164,7 @@ Preserve and report a customized, malformed, or ambiguous block instead of delet
 
 ### Retired profile aliases
 
-The duplicate `*-luna.toml` profiles have been removed. Use `planner`, `engineer`, `reviewer`, `tester`, and `docs`; these profiles now carry reusable role perspectives and explicit task-appropriate defaults. See the [routing policy](skills/subagent-orchestration/references/model-routing.md) for approved model/effort pairs and profile precedence. Update any custom prompts or configuration that select a corresponding `*_luna` name or `*-luna.toml` path to use the standard role name or file.
+The duplicate `*-luna.toml` profiles have been removed. Use `planner`, `engineer`, `reviewer`, `tester`, and `docs`. Update custom prompts or configuration that still select a corresponding `*_luna` name or `*-luna.toml` path. Each standard profile supplies a reusable role perspective and a default model and effort. For per-task selection and profile precedence, see the [routing policy](skills/subagent-orchestration/references/model-routing.md).
 
 The existing manifest cleanup backs up and retires unchanged managed copies during an update. Customized or unlisted copies remain for manual review. The installer does not rewrite custom prompts or configuration; review those references before removing a preserved copy.
 
@@ -188,9 +189,17 @@ The installer checks the official release channels on every full or support-only
 | `humanizer` | [Humanizer releases](https://github.com/blader/humanizer/releases) | Use the stable release's `SKILL.md`, `agents/openai.yaml`, and license. |
 | `design-taste-frontend` | [Taste Skill releases](https://github.com/Leonxlnx/taste-skill/releases) | Use the stable release's `design-taste-frontend` skill, including its scripts, references, assets, data, and license. |
 
-The installer verifies the Impeccable archive against GitHub's published SHA-256 and keeps the engine checksum manifest with its matching launchers. Humanizer and Taste use source archives from the resolved commits. The installer retains licenses and notices, applies the Codex adaptations, and checks the resources and command options used by both Taste workflows before writing user files. Node and a browser are needed when running the Taste inspector, while the installer checks compatibility without running downloaded scripts.
+The installer verifies the Impeccable archive against GitHub's published SHA-256 and keeps the engine checksum manifest with its matching launchers. Humanizer and Taste use source archives from the resolved commits. The installer retains licenses and notices, applies the Codex adaptations, and checks the resources and command options used by both Taste workflows before writing user files. The new-site workflow deals a direction and runs the finish gate. The redesign workflow also captures the existing page for comparison at the same viewport sizes. The installer checks these tools without executing downloaded scripts.
 
 Release lookup, download, or compatibility failures stop the install before user files are changed. For a pinned or offline install, add `--bundled-skills` (`-BundledSkills` with the PowerShell launcher). That mode uses the versions in this checkout and skips GitHub requests.
+
+### Restore a previous bundled release
+
+Reverting a playbook change restores the repository files. To restore an existing installation to the exact versions in an earlier checkout, use its bundled skills. Normal installs resolve current releases from GitHub.
+
+1. Make a backup directory outside your configured skills directory. For a return to [PR #12](https://github.com/ArcanEdge-AI/coding-agent-playbook-codex/pull/12), move the installed `design-taste-frontend`, `humanizer`, and `impeccable` folders into that backup. This preserves local additions and keeps the older installer from scanning files added by the newer releases.
+2. From a checkout of the previous revision, run `python install/install.py --full --bundled-skills` with the same `CODEX_HOME` and skills directory. Use `--support-only` if that was your previous mode. The PR #12 revision is `9b717d696274a80028489dafca3647aa3d17db79`.
+3. Verify the reported managed-file check and start a new Codex session. Recover any personal additions you need from the backup.
 
 ## Human Install
 
@@ -247,6 +256,7 @@ After installation, verify:
 - `$CODEX_HOME/AGENTS.md` exists or was intentionally left as a pointer-only file.
 - `$CODEX_HOME/.coding-agent-playbook-codex-managed-files.tsv` exists and lists every current managed support file once.
 - `$CODEX_HOME/skills/reference-doc-routing/references/engineering-design.md` exists.
+- `$CODEX_HOME/skills/reference-doc-routing/references/runtime-resources.md` exists.
 - `$CODEX_HOME/skills/reference-doc-routing/references/templates/repository-AGENTS.md` exists.
 - `$CODEX_HOME/skills/reference-doc-routing/references/reference-doc-routing.md` exists.
 - `$CODEX_HOME/skills/subagent-orchestration/references/model-routing.md` exists.
@@ -264,7 +274,7 @@ After installation, verify:
 - `$CODEX_HOME/agents/docs.toml` exists.
 - Every current playbook-managed `agents/*.toml` file explicitly defines `model` and `model_reasoning_effort`; unrelated user profiles are outside this validation scope.
 - Installed reporting guidance preserves parent and peer task settings and omits destination-setting overrides from reports.
-- Each of the five bundled roles has one profile under its standard name with an approved model/effort pair: `gpt-6.1-sol`/`low` (Light), `gpt-6.1-sol`/`medium`, `gpt-6.1-sol`/`high`, or `gpt-6-astra`/`xhigh` (Extra High).
+- Each of the five bundled roles has one standard profile with an approved default model and effort. The installer checks those profile defaults. The main agent verifies the effective route when a helper runs. [Default routes and per-task selection](skills/subagent-orchestration/references/model-routing.md)
 - The installer does not change the main agent's configuration.
 - `$CODEX_HOME/skills/subagent-orchestration/SKILL.md` exists.
 - `$CODEX_HOME/skills/task-graph-orchestration/SKILL.md` exists.

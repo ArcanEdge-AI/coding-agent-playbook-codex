@@ -431,18 +431,15 @@ Ask:
 * Do old tests still describe the current intended behavior?
 * Are tests preserving branch-only transitional behavior that never shipped?
 * Are compatibility tests backed by an actual supported compatibility requirement?
-* Has every unit test created during the work been treated as temporary and removed after its still-required assertions are covered by passing E2E tests, regardless of its purpose or label?
+* What credible wrong result would the remaining checks accept if each new case were removed?
+* For any lasting focused test, does explicit repository policy cover this specified rule, and is the rule impractical to exercise adequately at a supported entry point?
 * Were fixtures, mocks, helpers, and dependencies used only by those temporary tests removed without affecting E2E or production code?
 
-Add or improve E2E tests where there is a meaningful gap introduced by this work.
+Start with zero new permanent tests. Retain E2E behavioral cases by default. Exercise supported entry points, relevant dependencies, and observable results. Prefer a missing case in an existing flow. Preserve mandatory checks and keep any migration of existing user tests within authorized scope.
 
-Remove or update work-delta tests that only preserve abandoned branch behavior and no longer describe the intended implementation.
+Diagnose failures independently of the test. Correct product defects against the supported contract. A new optional harness gets at most one evidence-based setup correction. If the same setup failure persists, stop that approach. Correct or discard a faulty task-created test while preserving any real requirement. Leave red mandatory gates or unresolved behavior open.
 
-Do not create excessive tests for trivial implementation details.
-
-Retain only E2E behavioral tests that exercise the intended final solution through real UI, API, or CLI entry points, relevant dependencies, and observable outcomes. Every unit test created is temporary, regardless of its purpose or who creates it; none may remain in a completed change. Once corresponding E2E coverage is ready and passing, remove all created unit tests and exclusively used fixtures, mocks, helpers, and dependencies. Carry still-required behavioral assertions, including meaningful failures and boundary cases, into E2E coverage first; a happy path alone is insufficient. If coverage or cleanup is incomplete, report unfinished work rather than treating unit tests as the final solution or declaring completion. Keep migration of pre-existing non-E2E suites within authorized scope and preserve required repository gates.
-
-Prefer extending existing E2E coverage for an identified important behavior or realistic regression risk that existing checks do not establish. As the approach changes, update, consolidate, or remove E2E tests and fixtures that only describe abandoned fixes. Preserve required assertions and investigate failures before removal; deleting a failing test is not a fix. Do not keep diagnostic probes merely because they were useful during investigation. Direct helper calls and mocked internal flows do not prove E2E behavior.
+Remove task-created diagnostics and their exclusively used support once still-required assertions and boundary cases have passing coverage of the permitted kind. Update or remove tests that captured only an abandoned implementation within this change. Report unfinished coverage or cleanup.
 
 ---
 
@@ -562,7 +559,7 @@ Inspect before deleting.
 
 ## Runtime Resource Disposition
 
-Reconcile in-scope resource identifiers, ownership, and recovery attempts before completion, including existing project resources recovered from earlier sessions. Apply the global runtime lifecycle rules; this pass does not authorize a sweep of unrelated processes, containers, virtualized environments, images, or caches.
+Reconcile in-scope resource identifiers, ownership, and recovery attempts before completion, including project resources recovered from earlier sessions. Use the shared runtime guidance in `reference-doc-routing`. Limit cleanup to the task's authorized resources.
 
 - While the task still needs an existing project environment, prefer its supported start, resume, or scoped restart over a replacement. A stopped or unhealthy prior-session environment is a recovery candidate, not automatically abandoned or untouchable. Verify readiness after recovery, and report an exhausted recovery allowance rather than launching another stack.
 - Recovery authority and cleanup authority are different. Recovering an existing environment does not make it task-created or disposable. Leave persistent project environments in the requested handoff state; do not stop or delete them merely because the current task is ending. A shared-backend or machine-wide restart must satisfy the global impact and authority gate, not a blanket prohibition on recovery.

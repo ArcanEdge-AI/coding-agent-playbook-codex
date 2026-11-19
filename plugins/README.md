@@ -7,7 +7,7 @@ Use the maintained Codex marketplace release of **Intuitive Software Design** al
 | Name | Intuitive Software Design |
 | Publisher | ArcanEdge AI |
 | Canonical plugin selector | `intuitive-software-design@openai-curated-remote` |
-| Verified marketplace version | 1.3.1 on 2026-10-27 |
+| Verified marketplace version | 1.3.1 on 2026-11-19 |
 | Source | [ArcanEdge-AI/intuitive-software-design](https://github.com/ArcanEdge-AI/intuitive-software-design) |
 | License | Apache-2.0; retained by the marketplace package |
 

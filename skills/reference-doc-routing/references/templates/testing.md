@@ -8,7 +8,9 @@ State which checks are mandatory, which changes trigger broader checks, and when
 
 ## Retained Test Policy
 
-Retain only end-to-end (E2E) behavioral tests. Do not retain unit or isolated integration suites. Exercise complete supported flows through real UI, API, or CLI entry points, relevant dependencies, and observable results such as persistence or user-visible state. Direct helper calls and mocked internal flows do not count as E2E evidence.
+Start with zero new permanent tests. Retain end-to-end (E2E) behavioral tests by default. Exercise supported flows through real UI, API, CLI, or other supported entry points, relevant dependencies, and observable results such as persistence or user-visible state. For each proposed case, name a credible wrong result the remaining checks would accept and the requirement it would violate.
+
+Document any explicit repository policy permitting a lasting focused test for a specified rule impractical to exercise adequately through a supported entry point. Record the applicable rule and reason only for an actual maintainer decision. This template grants no exception. A focused test supplies evidence for its named rule, and the full user flow still requires its applicable checks.
 
 Build, lint, type checking, and static validation remain appropriate checks. Visual or snapshot assertions may be part of an E2E flow; they do not establish the entire flow by themselves.
 
@@ -20,7 +22,7 @@ Reuse or extend existing E2E coverage for intended final behavior, important bus
 
 ## Runtime Reuse and Concurrency
 
-Document the established environment identity, supported recovery commands, test-isolation requirements, browser-test worker limits, and how to account for known overlapping heavy jobs on the same host. Apply the global runtime lifecycle rules; discover stopped and unhealthy prior-session resources as well as running ones. A new test invocation or retry does not by itself require a new browser, container stack, or virtualized environment.
+Document the established environment identity, supported recovery commands, test-isolation requirements, browser-test worker limits, and how to account for overlapping heavy jobs on the host. Use the shared runtime guidance in the installed `reference-doc-routing` skill. Discover stopped and unhealthy prior-session resources as well as running ones. A new test invocation or retry does not by itself require a new browser, container stack, or virtualized environment.
 
 - Reuse a compatible eligible browser instance through supported tools. Use fresh isolated contexts when clean test state is required and the tool supports them; do not carry cookies, authentication, or mutable state across isolation boundaries. Preserve the runner's required lifecycle when it cannot reuse an existing browser.
 - Start with one browser-test worker when safe capacity is unverified or heavy jobs already overlap, unless the required test scenario needs more. Increase concurrency only for an identified need and verified capacity. Coordinate or serialize browser suites, image builds, and other heavy validation; do not change another owner's jobs without authority.
@@ -37,11 +39,11 @@ Adapt this example to the repository's actual launcher, installed tools, and aut
 4. Use [WSL's installed-distribution inventory and lifecycle commands](https://learn.microsoft.com/en-us/windows/wsl/basic-commands) to start the registered distribution, or terminate and relaunch the affected distribution when its consumers and restart authority are verified. Prefer supported Docker controls for a Docker-managed backend. A WSL-wide shutdown stops all running distributions and its utility VM: establish the impact and obtain authority for unrelated or unresolved disruption before using it.
 5. Follow the global recovery allowance and bounded readiness waits; verify the same environment after recovery. Do not install or import another distribution, unregister an existing one, delete its virtual disk, reset data, or prune volumes as a workaround for a startup failure. If recovery is blocked, stop and report the blocker instead of multiplying environments.
 
-## Temporary Unit Tests and Cleanup
+## Failed Checks and Test Cleanup
 
-Every unit test created is temporary, regardless of its purpose or who creates it. None may remain in a completed change. Unit tests may guide development or diagnosis; map their still-required behavioral assertions to corresponding E2E cases. Once those cases pass, remove all created unit tests and any fixtures, mocks, helpers, or dependencies used only by them before completing the change. Do not remove support code still used by E2E tests or production. Classify tests by exercised behavior, not filenames or labels; renaming a unit test does not make it E2E.
+Establish expected behavior from the requirement or supported contract. Try the exact failing case independently when feasible. Fix a verified product defect. If a task-created optional test assumes an internal call order or misconfigures its fixture, correct or discard it while preserving any real requirement. Give a new optional harness at most one evidence-based correction for a setup failure. If the same setup failure persists, stop that approach. Production changes need a product or design reason.
 
-Migrate existing non-E2E suites only within authorized scope after replacement coverage passes. Investigate failing tests before removal; do not weaken required assertions or disable repository gates to obtain a pass. If E2E execution is unavailable or blocked, report the gap and unfinished cleanup rather than treating unit coverage as the completed solution.
+After required assertions are covered by passing tests of the permitted kind, remove task-created diagnostic tests and their exclusively used fixtures, mocks, helpers, and dependencies. Migrate pre-existing suites only within authorized scope. A red mandatory gate or unresolved behavior remains open. Repair its cause within authority or report the missing evidence.
 
 As the implementation changes, update, consolidate, or remove E2E tests and fixtures that only preserve abandoned fixes. Preserve still-required assertions and explicit coverage gates.
 

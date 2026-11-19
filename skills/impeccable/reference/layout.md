@@ -1,4 +1,4 @@
-<!-- Codex Playbook adaptation: installation paths, host policy, and role routing; upstream Apache-2.0 license retained. -->
+<!-- Codex Playbook adaptation: installed paths and role routing. -->
 
 Layout turns product priority into reading order, grouping, rhythm, and usable space. Diagnose the structural problem before moving boxes.
 

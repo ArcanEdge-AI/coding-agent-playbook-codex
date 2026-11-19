@@ -40,7 +40,7 @@ If a value can be reliably derived from existing state, storing another copy may
 
 A small patch that repeats a workaround can cost more to maintain than a focused change at the correct boundary. Compare completeness, affected surfaces, reliability, and verification needs rather than counting changed lines. A broader root cause is not permission for an unrelated redesign.
 
-Tests, fixtures, and mocks are part of the maintenance surface. Retain only E2E behavioral tests for the intended final flow, important rules, meaningful failures, boundary cases, and credible regression risks. Every unit test created is temporary, regardless of purpose; none may remain in a completed change. Remove them and exclusively used support code after corresponding E2E coverage passes, preserving still-required assertions. Keep existing non-E2E migration within authorized scope. Prefer extending existing E2E coverage over creating a parallel suite, and do not reshape sound production code solely to support low-value tests. Build, lint, type checking, and static validation remain appropriate checks.
+Tests, fixtures, and mocks also carry a maintenance cost. Start with existing checks. For each proposed case, identify a credible wrong result the remaining checks would accept. Extend an existing E2E flow when it can expose that result. A lasting focused test needs an explicit repository policy for a specified rule impractical to cover adequately at a supported entry point. A failing mock alone gives no design reason to expose private state or reorganize production code. Keep required assertions and gates, and remove temporary probes and their exclusive support after required coverage passes.
 
 ## Material Technical Debt
 

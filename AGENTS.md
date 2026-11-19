@@ -13,7 +13,7 @@ Follow the host's instruction hierarchy first. Within the same authority level, 
 - Make the main agent accountable for planning, any delegation it chooses, validation, and final reporting.
 - Keep the Codex subagent model aligned around `planner`, `engineer`, `reviewer`, `tester`, and `docs`.
 - Use subagents sparingly, only when their concrete benefit justifies context, coordination, and review costs or an independent-assistance requirement applies.
-- Give every bundled profile an explicit approved model and reasoning default. Select actual delegated routes by task: GPT-6.1 Sol at Light, Medium, or High, or GPT-6 Astra at Extra High. Light uses `low` in configuration. Preserve the main agent's user-selected configuration.
+- Give every bundled profile an explicit model and reasoning default. Keep the default task-routing table in `skills/subagent-orchestration/references/model-routing.md`. A user or authorized maintainer may select an exact per-task route within host, organization, and spending limits. Verify the effective child settings and preserve the main agent's configuration.
 - Keep the default delegation structure flat: root assigns bounded work directly, and bundled helpers do not spawn descendants.
 - Subagent progress and result messages must preserve parent and peer settings; never attach worker model or reasoning overrides to reports.
 - Keep one profile per bundled role under its standard name. Defaults do not replace task-based selection, and profile precedence must not silently override the chosen route.
@@ -38,8 +38,8 @@ This repo is mostly Markdown and TOML. Before finalizing meaningful changes:
 - Review Markdown headings and fenced code blocks for correctness.
 - Confirm TOML files are syntactically valid when a TOML parser is available.
 - Confirm every `agents/*.toml` file explicitly defines `model` and `model_reasoning_effort`.
-- Confirm each of the five bundled roles has one profile under its standard name, with an explicit model/effort pair from the approved task-routing table.
-- Confirm profiles retain clear scope and stop conditions; helpers report route issues, and only the main agent may reassign within approved routes and execution authority.
+- Confirm each of the five bundled roles has one profile under its standard name and declares an approved default model and effort. The installer validates the shipped defaults.
+- Confirm profiles preserve their scope and stop conditions. Helpers report route issues to the main agent, which owns reassignment within the task's authority.
 - Confirm helper-specific scope, escalation, reporting, and launch settings apply only to delegated execution; direct role use adds no mandatory sequence or separate reports.
 - Confirm reporting guidance uses team messages or normal returns and omits destination-setting overrides from any separately authorized task report.
 - Confirm each `SKILL.md` has YAML frontmatter with `name` and `description`.
@@ -51,7 +51,7 @@ This repo is mostly Markdown and TOML. Before finalizing meaningful changes:
 - Confirm the feature-branch lifecycle remains a self-contained skill, detects repository-specific branch names, preserves approval gates for remote deletion and production promotion, and is not conflated with worktree lifecycle.
 - Confirm legacy-path retirement requires dependency evidence or explicit retention requirements, separates code retirement from data disposal, preserves correctness safeguards, and does not treat uncertain dependency coverage as permission to remove behavior.
 - Confirm design guidance reviews the whole affected flow, improves existing implementations by default, and requires evidence of significant benefit before a substantial replacement.
-- Confirm retained behavioral tests are E2E only and every created unit test is temporary, regardless of purpose. No created unit test remains in a completed change; remove them and exclusively used support code once corresponding E2E coverage passes, with required assertions, failure cases, and repository gates preserved. Existing non-E2E migration stays within authorized scope; build, lint, type checking, and static validation remain valid checks.
+- Confirm retained behavioral coverage defaults to E2E. Each new permanent case must catch a credible wrong result existing checks would accept. A lasting focused exception requires explicit repository policy for a specified rule impractical to verify adequately through a supported entry point. Preserve required checks, existing user tests, and the distinction between a real defect and a faulty optional harness.
 - Keep Codex policy internally consistent and document Codex-specific capability assumptions where they affect behavior.
 - Search the final diff for paths, schemas, model names, and commands that belong to another coding-agent environment; remove any accidental contamination before merging.
 

@@ -33,7 +33,7 @@ For actual delegation, choose a role whose boundary fits the bounded assignment.
 
 Use direct root-to-helper assignments. Bundled helpers execute directly and do not spawn descendants. If a helper discovers additional work, ambiguity, a missing dependency, or a need for broader authority, it stops and reports upward.
 
-Recursive orchestration is not part of the default workflow. It requires separate explicit authorization, a bounded manifest, ownership and routing controls, and proportionate verification. The ordinary installed profiles do not provide that authorization.
+Recursive orchestration requires a separate, explicitly authorized workflow with a bounded manifest, ownership, routing, verification, and resource controls. It may not exceed two delegated generations. Bundled helpers do not confer that authority.
 
 ## Finite Execution Allowance
 
@@ -43,7 +43,7 @@ Expand the allowance only for an identified new dependency, invalidated gate, or
 
 ## Dependency-Aware Assignments
 
-For multi-node work, a helper may own a ready graph node or another bounded subset. Define:
+For multi-node work, a helper may own a ready graph node or a bounded implementation slice. A requested read-only reviewer may need the entire candidate to answer a specific review question. Root still owns decisions, integration, and delivery. Define:
 
 | Field | Purpose |
 | --- | --- |
@@ -66,9 +66,7 @@ Only root may raise the worktree budget, issue a permit, or create, adopt, repur
 
 ## Task-Based Model Selection
 
-Consult references/model-routing.md before launching a helper.
-
-Select every delegated execution, retry, and replacement by the actual assignment using the approved task table: GPT-6.1 Sol at Light, Medium, or High, or GPT-6 Astra at Extra High. Light uses `low` in configuration. A profile's explicit model and effort can override spawn arguments, so establish the effective route. The main agent's user-selected model and effort remain independent.
+Use the [model-routing reference](model-routing.md) for the default task routes and the rules for an authorized, exact per-task selection. Before relying on a helper's work, verify its actual model and effort using host runtime evidence. A profile can override launch arguments. Preserve the main agent's selected settings.
 
 A helper must stop and report if the route is unavailable. It may return evidence that another route is needed, but it may not silently inherit settings, substitute a model, or change its own effort. The main agent decides any reassignment. Progress and task-reporting messages must preserve parent and peer settings.
 

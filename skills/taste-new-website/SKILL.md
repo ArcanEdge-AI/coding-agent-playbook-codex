@@ -1,9 +1,11 @@
 ---
 name: taste-new-website
-description: Use when the user wants Taste's staged workflow for a new website, including brief questions or project autofill, design approval, a Next.js page, and written design audits.
+description: Build a new website with Taste through brief questions or project autofill, an approved direction, one Next.js page by default, and written visual audits.
 ---
 
-Run the new-website workflow from the Taste Skill prompt guide. Read the sibling [design-taste-frontend skill](../design-taste-frontend/SKILL.md) for the installed Taste release's design rules and commands. Resolve `<skill>` in those commands to that installed skill's folder, and run them from the project root. If the dependency is missing, report it before starting. Follow governing instructions and the user's project constraints.
+# Design a new website with Taste
+
+Use the installed [Taste design and verification guide](../design-taste-frontend/SKILL.md) for the business-kind table, design recipes, build, and checks. This workflow adds intake and a direction approval. Replace `<taste>` below with the absolute path to that sibling skill and substitute the brief's actual values for the other placeholders. Follow the user's supplied facts, brand requirements, and project constraints.
 
 ## Collect the brief
 
@@ -27,25 +29,42 @@ For `auto`, inspect relevant read-only project evidence: PRODUCT.md, DESIGN.md, 
 
 Once intake is complete, show the filled brief with any assumptions, then enter Step 1. Filling the brief does not approve implementation.
 
-## Step 1: Design read
+## Step 1. Propose the direction
 
-Use Taste's “Read the brief and the project,” “Write the argument,” and “Draw the direction” steps. Deal options with the sibling skill's [draw command](../design-taste-frontend/scripts/draw.mjs) and `--options 3`, using the brief's sector and section roles. Present the proposed option ID, a one-sentence design direction, and why it fits the audience and content.
+From the brief, identify the business kind, trade, main action, and available photographs, product UI, or other evidence. The dealer's `<kind>` is `software`, `gaming`, `tech`, `product`, `service`, or `place`. Describe the page's argument and plan each useful section around its content.
 
-Stop and request the user's approval of this direction. Do not create or edit the website before that approval. If the user changes the brief or direction, incorporate the change before proceeding.
+Run the proposal deal from a task-owned scratch directory outside the website and any active Taste build. The deal writes history and can arm or join a gate in its working directory or an ancestor. Keep its local files in scratch and disable shared deal history for this run. Use a supported trade or omit `--trade` when the brief has no matching trade.
 
-## Step 2: Build after approval
+```text
+node "<taste>/scripts/start.mjs" deal --page <kind> --trade "<trade>" --history .taste-skill/history.json --no-recent
+```
 
-Commit the approved option with the same draw arguments and `--direction <chosen id>` in place of `--options`. Build one Next.js page with at least eight sections that fit the product and at least four layout families. Follow the resulting direction sheet and Taste's “Build it, still” and “Move” steps. Use project imagery or authorized, credited assets according to Taste's imagery guidance. Keep one consistent theme across the page.
+Use the guide's layout and moment dealers there as needed. Record the actual palette and type pairing IDs and the chosen hero, section layouts, and motion. Recommend the first suitable deal under the guide's rules and explain how it fits the audience, materials, and brand.
 
-## Step 3: Verify
+The default deliverable is one Next.js page with at least eight sections that fit the product and at least four layout families. If the user or existing project requires a different stack or scope, name the proposed change and its reason in the direction approval.
 
-Report each audit in writing:
+Present the filled brief, direction, and reasons. Wait for the user's approval of the direction before changing the website, installing anything in it, or arming its project gate. Carry the approved choices into the build.
 
-- Dash audit: zero U+2014 em dashes or U+2013 en dashes in the produced content.
-- Follow Taste's “Gate” and “Look” steps. Lint the source and inspect the production build at the default 1440, 768, and 390 pixel widths. Run the scene check when the page uses scroll scenes. Open the screenshots, write the critique using Taste's rubric, and record inspector failures or warnings and their disposition. Repeat affected checks after fixes and after adding motion.
-- Section layout repetition: list the layout family of every section.
-- Hero discipline: check headline line count, subtext word count, and whether the primary CTA is visible without scrolling.
+## Step 2. Build the approved page
 
-Any Fail prevents completion. Correct in-scope failures and rerun the affected checks, or report the specific blocker. Do not mark an unverified item Pass.
+Work in the project root and use the approved stack's build command. The example arms a Next.js static export at `out/index.html` with `out` as its asset root. The second line generates a dealt palette and pairing with a soft radius. Substitute the approved choices. For plain HTML use the actual page path. For a server-rendered route, use the project's running local preview URL and omit `--root`.
 
-Source: [Taste Skill prompt guide](https://www.tasteskill.dev/guide), captured 2026-10-06. This skill adds interactive intake and optional project autofill to the guide's new-website workflow.
+```text
+node "<taste>/scripts/gate.mjs" --start out/index.html --root out --kind <kind> --category "<what is sold>" --primary "<main action>"
+node "<taste>/scripts/start.mjs" css --page <kind> --palette <approved-palette-id> --type <approved-type-id> --radius soft --history .taste-skill/history.json
+```
+
+Use the emitted style links and tokens for the approved IDs. For supplied brand colors, use the guide's `brand` command with the actual colors and an approved kit type ID. Keep a required custom typeface in the site's styles. Follow the guide's recipes for the approved hero, section layouts, moments, licensed assets, and credits. Identify stand-ins and outstanding client material in the handoff.
+
+## Step 3. Check the build and inspect the evidence
+
+Run the guide's copy lint on the built HTML or actual copy source, plus its full consistency, layout, and performance checks on the rendered route. Exercise the primary action and review motion and its reduced-motion behavior where used. Run applicable project checks. Rebuild after changes. Capture the finished page at **1440×900, 1024×768, 820×1180, 768×1024, and 390×844**. Run the following screenshot command for each pair, changing the width, height, and filename. Open each image.
+
+```text
+node "<taste>/scripts/shoot.mjs" --url out/index.html --root out --w 820 --h 1180 --out .taste-skill/after/820x1180.png
+node "<taste>/scripts/gate.mjs" out/index.html --root out
+```
+
+Run the manual gate on the current build. Follow the guide's three-round default. At `GATE: OPEN`, stop fixing and report the remaining failures. Report the final `GATE:` line first, with open failures, waivers and reasons, retained warnings, and checks that could not run. The gate also checks overflow at 320 pixels. Claim screenshot evidence only for dimensions actually captured.
+
+In the written audit, list the layout family of each section, the hero headline's line count, subtext word count, and whether the primary action is visible without scrolling at the measured viewports. Verify zero U+2014 and U+2013 characters in newly written copy. Report any occurrence in protected supplied text separately.
