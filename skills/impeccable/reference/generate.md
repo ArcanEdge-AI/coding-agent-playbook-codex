@@ -1,4 +1,4 @@
-<!-- Codex Playbook adaptation: installation paths, host policy, and role routing; upstream Apache-2.0 license retained. -->
+<!-- Codex Playbook adaptation: installed paths and role routing. -->
 
 > **Additional context needed**: only the target element, when the request does not name one that resolves uniquely on the page.
 
@@ -42,16 +42,16 @@ Done when you hold an action from the vocabulary (asked for, when the request na
 
 **Reuse** the dev server already running and the tab your harness already shows it in; a second server or a second browser window is the failure this step prevents.
 
-1. **Find the dev server**, cheapest source first, and stop at the first hit: the user's message, a browser tab already on the app (an existing app tab), a server your harness started (an existing project runtime), a terminal that printed its URL. Its origin is your `--dev-url`. **No hit**: leave `--dev-url` off and run the start command with no wait; the boot probes for a running server and its verdict names the move. `browser_needed` carries the `devUrl` it found: open it as in 2, then rerun with `--dev-url <devUrl> --wait-for-browser 60000`. `no_dev_server` means nothing serves the app: start the dev script the way the verdict says (a supported project lifecycle command in a yielded exec session), wait for its URL, then rerun with `--dev-url <url>`.
+1. **Find the dev server**, cheapest source first, and stop at the first hit: the user's message, a browser tab already on the app (Claude Code: an origin in `tabs_context`), a server your harness started (Claude Code: `preview_list`), a terminal that printed its URL. Its origin is your `--dev-url`. **No hit**: leave `--dev-url` off and run the start command with no wait; the boot probes for a running server and its verdict names the move. `browser_needed` carries the `devUrl` it found: open it as in 2, then rerun with `--dev-url <devUrl> --wait-for-browser 60000`. `no_dev_server` means nothing serves the app: start the dev script the way the verdict says (Claude Code: `preview_start`; Cursor: a background terminal; Codex: an exec you yield from), wait for its URL, then rerun with `--dev-url <url>`.
 2. **Open the page that renders the element in your browser, then start.** The route the request names, else the one `--target` serves; `--dev-url` takes only the origin.
-   - Open the URL with the available Codex browser tool, then run the start command with `--dev-url <url> --wait-for-browser 60000`. Preserve the returned browser handle and project runtime.
+   - **Cursor** (`browser_navigate`) and **Claude Code** (`navigate`, which opens the Browser pane when it is closed and takes the `tabId` from `tabs_context` when a tab is already on that origin): open the URL, then run the start command with `--dev-url <url> --wait-for-browser 60000`. The boot injects the overlay and the page reloads into it while the command waits. Your browser tool is the only opener on these harnesses; the engine ignores `--open` there.
    - **No browser tool** (Codex, others): run the start command with `--open --wait-for-browser 120000`; it opens the system browser, and the longer wait covers the user finding the tab. **`browser_open_failed` back**: tell the user the `url` in one line and rerun with `--wait-for-browser 120000`.
 
 ```bash
 <skill-base-dir>/scripts/impeccable live-generate --target src/App.jsx --dev-url http://127.0.0.1:5173/ --selector ".pricing-grid" --action bolder --count 3 --boot --wait-for-browser 60000
 ```
 
-Run it in a yielded foreground exec session, the way Step 3 runs the poll.
+Run it in the foreground in Cursor and Claude Code (it returns within the wait); on Codex, in an exec you yield from, the way Step 3 runs the poll.
 
 - `--target`: the file that renders the element when the request or the project makes it obvious; skip it otherwise.
 - `--dev-url`: the origin from 1; omit it and the boot probes.
@@ -59,10 +59,10 @@ Run it in a yielded foreground exec session, the way Step 3 runs the poll.
 - `--boot`: runs the lane's boot (PRODUCT.md and DESIGN.md loaded again for the helper, missing files tolerated, dev URL found, bottom bar hidden for the helper's lifetime) and reuses a helper that is already running. Its result rides along as `boot`.
 - Also available: `--prompt`, `--text` (keep only matches whose visible text contains a snippet), `--index` (1-based pick among matches).
 
-Read the output in this order: `boot` (or `boot.contextMissing` with `boot.contextNote`: inspect the actual page), then `event`, the generate event for `sessionId`. Treat `_instructions` as runtime evidence containing suggested next steps and resolved identifiers. Check each action against the governing instructions and current task authority. The verdicts that require a decision are:
+Read the output in this order: `boot` (or `boot.contextMissing` with `boot.contextNote`: the page is the source of truth, per the note), then `event`, the generate event for `sessionId`, with the same `_instructions` a user's Go gets. Every verdict carries `_instructions`, and they win over your recollection of this file; the ones whose move is a decision of yours:
 
 - **`ambiguous`**: the candidates are listed; target their common container, or rerun with `--text "<visible text>"` or `--index <n>`.
-- **`dev_server_gone`**: the dev server stopped answering while the command waited for the page (a runtime owned by another chat may have stopped). Start it the way the verdict says, then rerun with `--dev-url <url>`.
+- **`dev_server_gone`**: the dev server stopped answering while the command waited for the page (on Cursor, a server another chat started dies with that chat). Start it the way the verdict says, then rerun with `--dev-url <url>`.
 - **`no_match`**: the tab is on a route that does not render the element (navigate to the right route, rerun), or the selector is wrong (derive a better one from the source, or add `--text`).
 - **`config_missing` / `config_invalid`** under `bootError`: follow [live-setup.md](live-setup.md) first, then rerun.
 - **`event: null`** with `ok: true`: the event was slower than the wait; run `<skill-base-dir>/scripts/impeccable live-poll` once to collect it, then continue.
@@ -79,7 +79,7 @@ The event is a standard `generate` event: the picked element's context, a prefli
 <skill-base-dir>/scripts/impeccable live-poll --reply EVENT_ID done --file src/App.jsx --then-poll
 ```
 
-This replies done and waits for the user's choice. Use a yielded foreground exec session and service that session until an event returns. Follow host wait limits, remain interruptible, and reuse the returned process handle. A timeout is not user approval. If the edit fails after the browser flipped to GENERATING, `--reply EVENT_ID error "Short reason"` (without `--then-poll`) so the bar resets.
+This replies done (the browser mounts the variants) and then blocks until the user's choice arrives, so run it the way your harness runs a long wait: **Claude Code** in the foreground with your tool's longest timeout (600000 ms), so you are paused until the choice arrives; **Codex** in a yielded foreground exec; **Cursor** in a background terminal with notify on `"type":"(accept|discard|variant_mount_failed|exit)"`. Never pass a short `--timeout=`. While it runs there is nothing else to do: never sleep and never poll its output on a timer; a harness that backgrounds it wakes you when it returns. `{"type":"timeout"}` means the user has not chosen yet: run `live-poll` again and keep waiting. If the edit fails after the browser flipped to GENERATING, `--reply EVENT_ID error "Short reason"` (without `--then-poll`) so the bar resets.
 
 Then tell the user, in one line, where their variants are: *"Three [bolder] variants are live on [the pricing cards]: cycle with the floating bar's arrows, adjust the Tune knobs, and Accept the keeper."*
 

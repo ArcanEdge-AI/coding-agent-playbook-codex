@@ -10,18 +10,30 @@ The `skill/reference/ios.md` and `skill/reference/android.md` platform reference
 **Original license:** MIT
 **Author:** ehmo
 
+## Fonts in the browser extension
 
-## Codex Playbook adaptation
+The browser extension ships two fonts under `extension/fonts/`, each with its licence text beside it.
 
-The skill, references, and scripts come from the Codex-compatible package in
-[Impeccable Skill 4.8.0](https://github.com/pbakaus/impeccable/releases/tag/skill-v4.8.0),
-commit `414603bf14c7a344edb466bb1f85690c77ce8b7d`.
+**Albert Sans** (`albertsans.ttf`)
+**Original work:** https://github.com/usted/Albert-Sans
+**Original license:** SIL Open Font License 1.1 (`albertsans-OFL.txt`)
+**Copyright:** 2021 The Albert Sans Project Authors
 
-Modified Markdown files carry a Codex Playbook adaptation notice. The changes
-resolve the installed skill path, preserve host permissions, and map the
-upstream helper contracts to the playbook's existing roles. The upstream
-launchers and checksum manifest are included for engine 0.1.18. The installer
-copies the skill package. Engine acquisition occurs through the launcher on use.
+**Alumni Sans** (`alumnisans.ttf`)
+**Original work:** https://github.com/googlefonts/alumni
+**Original license:** SIL Open Font License 1.1 (`alumnisans-OFL.txt`)
+**Copyright:** 2015 The Alumni Sans Project Authors
 
-The modern-screenshot library and platform design guidance retain their MIT
-notices in LICENSE.modern-screenshot and LICENSE.platform-design-skills.
+## Consent rules in the browser extension
+
+The browser extension's journeys answer cookie and consent banners with DuckDuckGo's autoconsent: its engine and rule set, unmodified, ship in `extension/walks/consent-rules.js` behind a small bridge of our own.
+
+**Original work:** https://github.com/duckduckgo/autoconsent (its `dist/autoconsent.playwright.js` and `rules/compact-rules.json`, at the version named on the first line of `consent-rules.js`)
+**Original license:** Mozilla Public License 2.0, https://mozilla.org/MPL/2.0/ (the whole of `consent-rules.js`, our bridge included; the rest of this repository is Apache-2.0)
+**Copyright:** DuckDuckGo, Inc.
+
+
+## Codex Playbook installation source
+
+[skill-v4.10.0](https://github.com/pbakaus/impeccable/releases/tag/skill-v4.10.0), commit `b49177d32788f2dc585c42831d845dacf1ebed2c`.
+The playbook adapts the upstream Markdown for Codex installation and workflow compatibility.

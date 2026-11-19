@@ -45,9 +45,9 @@ Before opening a PR:
 - Confirm links and paths match the repository tree.
 - Confirm `SKILL.md` files include `name` and `description` frontmatter.
 - Confirm `agents/*.toml` files are syntactically valid and define explicit `model` and `model_reasoning_effort` values if changed.
-- Confirm each of the five bundled roles has one profile under its standard name, explicit defaults match an approved task route, actual routes follow the assignment, and all profiles retain clear stop conditions.
+- Confirm each bundled role has one profile under its standard name, an approved default from the routing reference, and clear stop conditions. Verify the effective route for a delegated run, including an expressly authorized per-task override.
 - Confirm profiles support direct main-agent perspective use without changing its settings or authority, requiring a role sequence, or implying independent verification; keep delegated-execution rules conditional.
-- Confirm testing guidance retains E2E tests only and classifies every created unit test as temporary, regardless of purpose. No created unit test may remain in a completed change; require passing replacement E2E coverage before removing those tests and exclusively used support code. Preserve static checks, required assertions, and repository gates.
+- Confirm the guidance keeps E2E as the default for retained behavior tests. Each new case needs a distinct, credible regression. A lasting focused test requires explicit repository policy for a specified rule impractical to verify adequately through a supported entry point. Preserve existing tests and required gates.
 - Confirm Unix shell scripts remain LF-only.
 - Confirm the change is valid for Codex without assuming or modifying the independently maintained Claude Code edition.
 - Confirm no sensitive or private material was added.

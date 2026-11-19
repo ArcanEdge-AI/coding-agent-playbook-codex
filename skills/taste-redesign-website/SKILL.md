@@ -1,9 +1,11 @@
 ---
 name: taste-redesign-website
-description: Use when the user wants Taste's staged workflow to redesign an existing website, including brief questions or project autofill, a site audit, an approved modernization plan, protected content, and written design audits.
+description: Redesign an existing website with Taste through brief questions or project autofill, a baseline audit, an approved plan, and before-and-after checks on the protected experience.
 ---
 
-Run the existing-website workflow from the Taste Skill prompt guide. Read the sibling [design-taste-frontend skill](../design-taste-frontend/SKILL.md) for the installed Taste release's design rules and commands, including its existing-page special case. Resolve `<skill>` in those commands to that installed skill's folder, and run them from the project root. If the dependency is missing, report it before starting. Follow governing instructions and the user's project constraints.
+# Redesign a website with Taste
+
+Use the installed [Taste design and verification guide](../design-taste-frontend/SKILL.md) for the business-kind table, design recipes, build, and checks. This workflow adds separate approvals for the audit and the redesign plan. In the examples, replace `<taste>` with the absolute path to that sibling skill, `<evidence>` with a task-owned scratch directory outside the website and any active Taste build, and other placeholders with the site's actual values.
 
 ## Collect the brief
 
@@ -27,38 +29,54 @@ For `auto`, use the active project as the repository target and inspect relevant
 
 Once intake is complete, show the filled brief with any assumptions, then enter Step 1. Filling the brief does not approve changes.
 
-## Step 1: Audit the existing site
+## Step 1. Audit the existing site
 
-Follow Taste's “Record the before” step. Lint the existing source and run the sibling skill's [inspector](../design-taste-frontend/scripts/inspect.mjs) against the running site with `--out .taste-skill/before`. Open the baseline screenshots and report:
+Record the affected routes, page states, and source or URL used for the baseline. Use a working local preview when available. A supplied public URL can provide read-only visual evidence. Run checks that exercise controls against a safe preview. Keep preapproval evidence in scratch and leave the website and its gate untouched.
 
-- Current brand tokens: primary and accent colors, typography stack, and radii.
-- Information architecture: page tree, navigation, and conversion paths.
-- Patterns to preserve: signature interactions, recognizable hero treatment, and copy voice.
-- Patterns to retire: generic design patterns, broken layouts, and dead links.
-- Baseline measurements and the most important findings from Taste's critique rubric.
-- SEO baseline: relevant pages, titles, and anchors; state which ranking information is unverified.
+Capture each affected route in the same state at **1440×900, 1024×768, 820×1180, 768×1024, and 390×844**. Repeat the screenshot command for each pair with its actual width, height, and filename. Use a separate directory per route when capturing several. The examples show a local preview URL.
 
-Stop and request the user's approval before proposing the next stage. Keep website source unchanged and write audit evidence separately.
+```text
+node "<taste>/scripts/shoot.mjs" --url "<before-url>" --w 820 --h 1180 --out "<evidence>/before/820x1180.png"
+node "<taste>/scripts/consistency.mjs" "<before-url>" --page <kind> --category "<what is sold>" --primary "<main action>" --widths 1440,1024,820,768,390 --rhythm-widths 1440,820,768,390 --out "<evidence>/before/consistency"
+```
 
-## Step 2: Propose the mode after audit approval
+Open the images and read the measurements. Lint the available HTML or copy source. Record the current colors, type, radii, logo, signature interactions, and voice. Trace navigation and conversion paths, including form fields and destinations. Identify the routes, titles, headings, and anchors that matter for SEO, any broken layouts or links, and which findings justify a change. Mark unavailable evidence. Present the audit and wait for the user's approval before proposing a plan.
 
-Declare Preserve, Overhaul, or Greenfield-with-content-preserved. Start with type, then follow Taste's order through colour, layout, states, and stock components. Use Taste's direction options where needed, passing `--keep` for palette or type the brand fixes. State the proposed option ID if drawn. Identify any proposed exception to the preservation rules below so the user can approve that specific change.
+## Step 2. Propose the redesign after audit approval
 
-Stop and request the user's approval of this plan. Audit approval alone does not approve implementation.
+Recommend Preserve, Overhaul, or Greenfield-with-content-preserved. Describe what will change in type, color, layout, and interactions, what will survive, and how the chosen scope answers the audit. Keep the site's URLs, primary navigation labels, form field names and behavior, logo, legal copy, and protected headings and anchors. List any proposed exception individually for approval, including changes to established brand type or accent.
 
-## Step 3: Implement after plan approval
+When proposing a new palette or kit type pairing, run the deal from `<evidence>`. It writes history and can arm or join a build in its working directory or an ancestor. Disable shared history for this proposal. Use the guide's business kind and a supported trade, omitting `--trade` if none fits.
 
-Apply the approved plan in the existing stack. When a direction was approved, commit it with `--direction <chosen id>` and use the resulting sheet. Preserve URL structure, primary navigation labels, form field names, brand logo, and legal copy unless the user explicitly approves a particular change. Preserve the brief's protected headings and anchors. Do not infer permission to change these from a general choice of Overhaul.
+```text
+node "<taste>/scripts/start.mjs" deal --page <kind> --trade "<trade>" --history .taste-skill/history.json --no-recent
+```
 
-## Step 4: Verify
+Record proposed palette and type IDs alongside the current values. When preserving a supplied palette or custom typeface, record the actual tokens or font family. Wait for approval of the plan and its specific exceptions before editing the website or arming its gate.
 
-Report each audit in writing:
+## Step 3. Implement the approved plan
 
-- Dash audit: zero U+2014 em dashes or U+2013 en dashes in the produced content.
-- Follow Taste's “Gate,” “Look,” and “Prove it” steps. Lint the changed source and inspect the production build into `.taste-skill/after` at the same widths as the baseline. Run the scene check when the page uses scroll scenes. Compare screenshots and measurements at each width, report inspector failures or warnings and their disposition, and exercise the existing links, forms, and menus.
-- Preservation audit: list every changed URL, navigation label, form field, and anchor. The list must be empty except for explicitly approved changes. Also check protected headings, the brand logo, and legal copy.
-- Brand fidelity audit: confirm the existing accent color, typography stack, and logo treatment survived, or identify each explicitly approved exception.
+Work in the existing project and stack. Arm the gate on the affected local route. This example uses a built page in `dist` and names the asset root so root-relative links work. For a server-rendered page, use the running local preview URL and omit `--root`.
 
-Any Fail prevents completion. Correct in-scope failures and rerun the affected checks, or report the specific blocker. Do not mark an unverified item Pass.
+```text
+node "<taste>/scripts/gate.mjs" --start dist/index.html --root dist --kind <kind> --category "<what is sold>" --primary "<main action>"
+```
 
-Source: [Taste Skill prompt guide](https://www.tasteskill.dev/guide), captured 2026-10-06. This skill adds interactive intake and optional project autofill to the guide's redesign workflow.
+Use the approved IDs with the guide's `css` command for a new palette and pairing. For supplied brand colors and an approved kit pairing, generate tokens with the following command. Keep a protected custom font in the site's styles. Apply only approved exceptions and use the project's existing navigation and form contracts.
+
+```text
+node "<taste>/scripts/start.mjs" brand --page <kind> --bg "<background-hex>" --ink "<ink-hex>" --accent "<accent-hex>" --type <approved-type-id>
+```
+
+## Step 4. Compare and verify
+
+Rebuild the production page. Repeat the baseline captures and measurements for the same routes, states, and five viewport pairs under `<evidence>/after`. Open each before-and-after pair. Apply the guide's full consistency, layout, copy, and performance checks to the finished page. Review motion and reduced-motion behavior where used. Exercise links, menus, form validation, and the submission path on the authorized preview. Report any unexercised destination.
+
+```text
+node "<taste>/scripts/shoot.mjs" --url dist/index.html --root dist --w 820 --h 1180 --out "<evidence>/after/820x1180.png"
+node "<taste>/scripts/gate.mjs" dist/index.html --root dist
+```
+
+Run the manual gate against the current build and follow its three-round default. At `GATE: OPEN`, stop fixing and report the remaining failures. Its additional 320-pixel check covers narrow-screen interactions and overflow. Report the final `GATE:` line first, with open failures, waivers and reasons, retained warnings, and any missing evidence.
+
+In the written audit, identify visible improvements and regressions with the route and viewport where each occurred. List changes to protected URLs, navigation labels, forms, headings, anchors, accent, typography, logo treatment, and legal copy against their specific approvals. Verify zero U+2014 and U+2013 characters in newly written content. Report occurrences in protected copy separately.

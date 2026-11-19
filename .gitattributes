@@ -1,2 +1,6 @@
+# Preserve the release bytes in both downloaded and offline skill packages.
+skills/design-taste-frontend/** -text
+skills/humanizer/** -text
+skills/impeccable/** -text
 *.sh text eol=lf
 skills/impeccable/scripts/impeccable text eol=lf

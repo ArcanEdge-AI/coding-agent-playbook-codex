@@ -30,6 +30,7 @@ Primary evidence includes:
 ## Available References
 
 - `references/engineering-design.md` — selective design questions for complete solutions, justified abstractions, change amplification, and material technical-debt tradeoffs.
+- [Shared runtime resources](runtime-resources.md) covers recovery, concurrency, isolation, and ownership-scoped teardown for local environments.
 - `references/reference-doc-routing.md` — how to choose and classify reference documents.
 - `references/templates/repository-AGENTS.md` — starter template for repo-specific instructions.
 - `references/templates/architecture.md` — architecture reference template.

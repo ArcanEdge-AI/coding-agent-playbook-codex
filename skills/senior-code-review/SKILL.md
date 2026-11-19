@@ -43,15 +43,15 @@ Review only the checks relevant to the final diff. Preserve required gates.
 
 - missing or weak evidence for the complete affected behavior
 - redundant tests, fixtures, or mocks, or tests preserving abandoned fixes or implementation details instead of required behavior
-- created unit tests left in the completed change, regardless of purpose or label
-- isolated integration tests retained as lasting coverage, unused unit-test support code, or cleanup before corresponding E2E assertions pass
+- proposed cases without a credible wrong result the remaining checks would miss, or focused tests outside an explicit repository exception for a named rule impractical to cover at a supported entry point
+- optional harness retries after one evidence-based setup correction fails, production changes made solely to satisfy a mock, or removal of temporary tests before their required assertions have passing coverage
 
 ## Delegation and worktrees, when used
 
 - subagent claims that were not independently verified
 - helper launches or retries that exceeded the recorded finite allowance or were not reconciled
 - unnecessary helper use whose concrete benefit does not justify context, coordination, and review overhead
-- child execution outside the approved task-based model/effort choices, conflicting profile overrides, or permissions, scope, authority, or workspace expansion beyond the parent assignment
+- child runtime that differs from the authorized per-task selection or applicable default, unverifiable settings, or permissions, scope, authority, or workspace expansion beyond the parent assignment
 - progress or task-reporting messages that set `model`, `reasoning_effort`, `thinking`, or analogous destination-setting overrides, or altered a parent or peer task
 - task-created auxiliary worktrees without integration evidence and a verified `removed` or exact-blocker `preserved` disposition
 
@@ -65,7 +65,7 @@ Would I approve this in code review?
 
 If not, fix the issue or report the remaining risk clearly.
 
-Recommend retained E2E tests only for an identified important behavior or realistic regression risk that existing coverage does not establish, including relevant failure and boundary cases. Every unit test created is temporary, regardless of purpose; none may remain in a completed change. Verify their still-required assertions in passing E2E coverage before removing them and exclusively used support code. Keep migration of existing non-E2E suites within authorized scope. Build, lint, type checking, and static validation remain appropriate. Preserve required assertions and repository gates, and never treat deleting a failing test as resolving its failure.
+For each proposed case, ask which specific wrong outcome could pass if this addition were removed. Prefer an existing E2E flow. A sufficient existing check can justify zero new tests. Investigate failures against the supported contract. Keep required assertions and repository gates, preserve user-owned tests, and remove only task-created diagnostics and their exclusive support after required coverage passes.
 
 Final report format:
 

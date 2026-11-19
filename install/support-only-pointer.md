@@ -4,6 +4,7 @@ Supporting references live inside their owning skill packages. The `skills/...` 
 
 - `skills/reference-doc-routing/references/README.md` — map of packaged reference docs
 - `skills/reference-doc-routing/references/engineering-design.md` — selective design questions and examples for complete solutions and justified complexity
+- `skills/reference-doc-routing/references/runtime-resources.md` covers shared runtime recovery, concurrency, and cleanup.
 - `skills/subagent-orchestration/references/model-routing.md` — task-based model and reasoning choices, escalation, and acceptance rules
 - `skills/subagent-orchestration/references/subagents.md` — subagent delegation rules, assignment template, and acceptance checklist
 - `skills/worktree-lifecycle/references/worktrees.md` — root-owned task-local worktree budgeting, permits, integration, cleanup, and preservation rules
@@ -31,8 +32,8 @@ The main agent may consult a profile's role perspective directly without launchi
 
 Reference documents are supporting context, not automatic truth. The main agent completes work directly by default and remains accountable for the requested outcome, final diff, validation, acceptance, and the final response.
 
-Retain E2E behavioral tests only. Every unit test created is temporary, regardless of purpose; none may remain in a completed change. They may guide development, but remove them and exclusively used support code after corresponding E2E coverage passes. Preserve required assertions and repository gates, and keep existing non-E2E migration within authorized scope. Build, lint, type checking, and static validation remain appropriate.
+Reuse existing checks and retain E2E behavioral tests by default. Each new case must catch a credible wrong result the remaining checks would accept. Keep a focused test only under an explicit repository policy for a specified rule impractical to verify adequately through a supported entry point. Diagnose failures against the required behavior, preserve user tests and required gates, and retire disposable task-created scaffolding.
 
-Use subagents sparingly when a bounded benefit outweighs the added overhead or independent assistance is required. Select each actual helper route by task using the model-routing reference: GPT-6.1 Sol at Light, Medium, or High, or GPT-6 Astra at Extra High. Light uses `low` in configuration. Establish the effective settings because profile values can override spawn arguments. Preserve the main agent's selected settings. Helpers execute directly without descendants, and reporting messages must omit destination model and reasoning overrides.
+Use subagents for a bounded benefit or a required independent check. For each helper, consult the model-routing reference and verify its effective settings. An expressly authorized per-task route must fit host, organization, and spending limits. Helpers execute directly and preserve parent and peer settings when reporting.
 
 The auxiliary-worktree budget starts at zero. Only root may issue a worktree permit or create, adopt, repurpose, move, or remove an auxiliary worktree. Before the final response, remove each task-created auxiliary under verified safety gates or preserve it with its exact owner, path, branch or HEAD, blocker, and next action.

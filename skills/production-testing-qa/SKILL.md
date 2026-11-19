@@ -44,7 +44,7 @@ Resolve the task mode first: assessment-only work reports findings without sourc
 2. Inspect existing test structure.
 3. Identify critical user flows from routes, UI, API, docs, or product structure.
 4. Classify test gaps as Blocker, High, Medium, or Low.
-5. For authorized test changes or remediation, add practical E2E tests for Blocker and High-risk areas. In assessment mode, run only authorized existing checks and report missing coverage without adding files.
+5. For authorized remediation, check whether existing coverage exposes the identified failure. Extend a real flow only for a credible gap. In assessment mode, run authorized existing checks and report missing coverage.
 6. Avoid writing brittle tests that only assert implementation details.
 7. Run the narrowest useful test command after changes.
 8. Run broader validation before final summary when practical.
@@ -82,7 +82,9 @@ Classify as Low for nice-to-have coverage or test cleanup.
 
 ## Guardrails
 
-- Retain E2E behavioral coverage only. Every created unit test is temporary, regardless of purpose; remove it and exclusively used support code after its still-required assertions, meaningful failures, and boundaries are covered by passing E2E tests.
+- Start with zero new permanent tests. For each proposed case, name a credible wrong result the remaining checks would accept. E2E is the default. A lasting focused test needs an explicit repository policy for a specified rule impractical to cover adequately at a supported entry point.
+- For a failed check, verify the expected behavior independently of the test and reproduce the exact case when feasible. Fix a genuine product defect. Correct or discard faulty task-created tests while preserving real requirements. Give a new optional harness at most one evidence-based correction for a setup failure. If that fails the same way, stop the approach. Production changes need a product or design reason.
+- Remove temporary diagnostics and their exclusively used support once required assertions have passing coverage. Keep unresolved behavior and mandatory failures open.
 - Preserve existing mandatory repository suites until migration is authorized and replacement coverage passes. Do not bulk-delete pre-existing unit or isolated integration tests. Build, lint, types, and static validation remain useful checks.
 - Do not delete failing tests unless they are clearly obsolete and documented.
 - Do not weaken assertions to force passing tests.

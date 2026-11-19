@@ -1,4 +1,4 @@
-<!-- Codex Playbook adaptation: installation paths, host policy, and role routing; upstream Apache-2.0 license retained. -->
+<!-- Codex Playbook adaptation: installed paths and role routing. -->
 
 # Command guidance
 

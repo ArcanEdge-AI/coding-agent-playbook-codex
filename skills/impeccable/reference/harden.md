@@ -1,5 +1,3 @@
-<!-- Codex Playbook adaptation: retained behavioral coverage follows the repository E2E policy; upstream Apache-2.0 license retained. -->
-
 Designs that only work with perfect data aren't production-ready. Harden the interface against the inputs, errors, languages, and network conditions that real users will throw at it.
 
 ## Assess Hardening Needs
@@ -142,9 +140,9 @@ new Intl.DateTimeFormat('ar-SA-u-ca-islamic').format(new Date());
 new Intl.DateTimeFormat('en-US').format(date); // 1/15/2024
 new Intl.DateTimeFormat('de-DE').format(date); // 15.1.2024
 
-new Intl.NumberFormat('en-US', {
-  style: 'currency',
-  currency: 'USD'
+new Intl.NumberFormat('en-US', { 
+  style: 'currency', 
+  currency: 'USD' 
 }).format(1234.56); // $1,234.56
 ```
 
@@ -261,7 +259,7 @@ t('items', { count }) // Handles complex plural rules
 **Constraint handling**:
 ```html
 <!-- Set clear constraints -->
-<input
+<input 
   type="text"
   maxlength="100"
   pattern="[A-Za-z0-9]+"
@@ -327,8 +325,8 @@ const throttledScroll = throttle(handleScroll, 100);
 - Test on old browsers
 
 **Automated testing**:
-- E2E coverage of important edge cases through the supported UI, API, or CLI flow
-- E2E coverage of meaningful error and recovery scenarios with the relevant dependencies
+- Unit tests for edge cases
+- Integration tests for error scenarios
 - E2E tests for critical paths
 - A behavioral regression for each confirmed gesture fix, when the project's test runner can drive input
 - Visual regression tests

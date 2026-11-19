@@ -74,7 +74,7 @@ Required validation is proportional to the repository and change and may include
 - final combined diff review
 - confirmation that no known required development work remains incomplete
 
-Retain E2E behavioral tests only. Every unit test created is temporary, regardless of purpose; none may remain in a completed feature. Remove them and exclusively used support code after corresponding E2E assertions pass, before considering the feature complete. Preserve required repository gates and keep migration of existing non-E2E suites within authorized scope.
+Reuse passing checks tied to the feature candidate. Retain E2E behavioral tests by default. A lasting focused test needs an explicit repository policy for a specified rule impractical to cover adequately at a supported entry point. Each added case must expose a credible wrong result other checks miss. Remove temporary diagnostics and their exclusive support once required assertions have passing coverage. Preserve repository gates and existing user tests.
 
 Do not use the long-lived integration branch as the workspace for assembling an unfinished feature.
 

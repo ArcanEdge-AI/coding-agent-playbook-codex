@@ -78,7 +78,7 @@ Use the relevant specialist production skills as lanes:
 
 Each lane should produce findings, classify risks, recommend fixes, and identify validation steps.
 
-Apply lanes directly as main-agent perspectives by default. A lane is not a separate agent. Use bounded helpers only when their concrete benefit justifies the cost or an independent check is required, following the governing `subagent-orchestration` policy and approved task-based routes. Preserve the main agent's configuration, authority, and final accountability.
+Apply lanes directly as main-agent perspectives by default. Launch authorized, bounded helpers only when their concrete benefit justifies the cost or an independent check is required. Apply the task defaults or authorized per-task settings in `subagent-orchestration`, and verify the actual child route. Preserve the main agent's configuration, authority, and final accountability.
 
 Complete the initial audit and risk assessment before broad implementation. Assessment-only requests stop at reporting; remediation requires task authority and release operations require their own authority.
 
@@ -204,7 +204,7 @@ Report validation in the requested deliverable; update `TESTING_SUMMARY.md` when
 
 If a command fails, investigate and document the evidence. Fix it only within authorized remediation scope; otherwise report the proposed fix.
 
-Retain new behavioral tests as E2E coverage only. Every created unit test is temporary; remove it and exclusively used support code once corresponding E2E assertions pass. Preserve still-required assertions and repository gates, and keep migration of pre-existing suites within authorized scope. Missing or skipped required coverage is a gap, not a pass.
+Reuse existing checks across lanes. Each proposed case must catch a credible wrong result the others miss. E2E is the default for retained behavior. Only an explicit repository policy may permit a lasting focused test for a specified rule impractical to cover adequately at a supported entry point. Preserve mandatory suites, remove task-created diagnostics when required coverage passes, and report missing or skipped evidence.
 
 ## Phase 6: Final release readiness
 

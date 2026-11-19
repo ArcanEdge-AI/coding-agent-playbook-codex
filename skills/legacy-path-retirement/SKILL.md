@@ -72,7 +72,7 @@ When implementation is authorized:
 - test meaningful failures and safeguards, including authorization, invalid input, reference integrity, and cleanup when affected
 - check that duplicate writes, competing sources of truth, and retired-path wiring are gone from the affected surface
 
-Preserve required regression assertions in E2E coverage of the accepted contract. Replace tests that only enforce obsolete behavior with relevant E2E cases. Every unit test created is temporary, regardless of purpose; none may remain in a completed change. Remove them and exclusively used support code after corresponding E2E assertions pass. Keep existing non-E2E migration within authorized scope and do not change an authoritative acceptance requirement merely to obtain a pass.
+Verify the accepted contract through existing supported entry points. Retain E2E cases by default and add a case only for a credible wrong result the remaining checks would accept. A focused exception requires an explicit repository policy for a specified rule impractical to exercise adequately at a supported entry point. Before replacing obsolete tests or removing task-created diagnostics and their exclusive support, preserve still-required assertions in passing coverage. Keep migration of existing suites scoped and mandatory gates open until verified.
 
 ## Completion Record
 

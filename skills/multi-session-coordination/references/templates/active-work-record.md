@@ -76,7 +76,7 @@ validation_required:
   - "targeted E2E tests"
   - "typecheck"
   - "combined-flow E2E tests"
-  - "every created unit test is temporary; remove all after replacement E2E coverage passes"
+  - "justify each new case against combined coverage, verify any explicit focused-test exception, and remove temporary diagnostics after required coverage passes"
 
 notes: >-
   Include only coordination-relevant assumptions, risks, or handoff details.

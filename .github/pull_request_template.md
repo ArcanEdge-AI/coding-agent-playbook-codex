@@ -16,7 +16,7 @@
 - [ ] Markdown formatting and fenced code blocks were reviewed.
 - [ ] Links and paths match the repository tree.
 - [ ] `SKILL.md` files include `name` and `description` frontmatter if changed.
-- [ ] Changed TOML custom-agent files are syntactically valid, declare an approved task-based model/effort pair, and retain stop conditions.
+- [ ] Changed TOML custom-agent files parse, declare an approved default model and effort, and retain their stop conditions.
 - [ ] Instruction changes preserve authority, scope, approval gates, exceptions, and required evidence.
 - [ ] The change is valid for Codex without assuming parity with or modifying the independently maintained Claude Code edition.
 - [ ] No sensitive or private material was added.

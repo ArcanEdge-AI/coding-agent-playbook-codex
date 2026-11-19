@@ -1,13 +1,13 @@
 ---
 name: reference-doc-routing
-description: Use when a task may need engineering-design, architecture, testing, access-control, design-system, API, release, data-model, subagent, or worktree-lifecycle reference documents. Helps select relevant docs, classify authority, and pass concise context to subagents.
+description: Select relevant project and engineering references, classify their authority, and use shared runtime guidance when starting, recovering, or stopping local environments.
 ---
 
 # Reference Doc Routing Skill
 
 Use this skill to choose and apply reference documents without polluting the main context.
 
-Consult `references/README.md` for the packaged reference catalog and `references/reference-doc-routing.md` for the complete authority and conflict-resolution guidance. For non-trivial or consequential design choices, consult `references/engineering-design.md`. Use the starter files listed in the catalog when creating repository-owned reference documents.
+Consult [the catalog](references/README.md) for available templates and [routing guidance](references/reference-doc-routing.md) to resolve conflicting sources. Use [engineering design](references/engineering-design.md) for consequential design choices. Use [shared runtime resources](references/runtime-resources.md) when starting, recovering, or stopping local environments, including work outside CI.
 
 Workflow:
 
